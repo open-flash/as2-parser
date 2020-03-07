@@ -1,0 +1,26 @@
+[package]
+name = "as2-parser"
+version = "0.1.0"
+authors = ["Charles Samborski <demurgos@demurgos.net>"]
+description = "ActionScript 2 parser"
+documentation = "https://github.com/open-flash/as2-parser"
+homepage = "https://github.com/open-flash/as2-parser"
+repository = "https://github.com/open-flash/as2-parser"
+readme = "./README.md"
+keywords = ["ast", "swf", "avm1"]
+license = "AGPL-3.0-or-later"
+edition = "2018"
+
+[lib]
+name = "as2_parser"
+path = "src/lib.rs"
+
+[dependencies]
+rowan = "0.9.1"
+
+[dev-dependencies]
+serde = "^1.0.104"
+test-generator = "^0.3.0"
+
+# [replace]
+# "avm1-types:0.9.0" = { path = '../../avm1-types/rs' }
