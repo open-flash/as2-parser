@@ -16,8 +16,15 @@ pub struct SeqExpr<S: syntax::Syntax> {
 }
 
 impl syntax::SeqExpr<OwnedSyntax> for SeqExpr<OwnedSyntax> {
+  #[cfg(not(feature = "gat"))]
+  fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Expr> + 'a> {
+    Box::new(self._exprs.iter())
+  }
+
+  #[cfg(feature = "gat")]
   type Iter<'a> = core::slice::Iter<'a, Expr>;
 
+  #[cfg(feature = "gat")]
   fn exprs<'a>(&'a self) -> Self::Iter<'a> {
     self._exprs.iter()
   }

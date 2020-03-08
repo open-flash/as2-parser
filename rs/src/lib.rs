@@ -1,4 +1,4 @@
-#![feature(generic_associated_types)]
+#![cfg_attr(feature = "gat", feature(generic_associated_types))]
 
 pub mod parser;
 pub mod types;

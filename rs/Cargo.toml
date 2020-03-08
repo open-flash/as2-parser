@@ -24,3 +24,7 @@ test-generator = "^0.3.0"
 
 # [replace]
 # "avm1-types:0.9.0" = { path = '../../avm1-types/rs' }
+
+[features]
+# Use Generic Associated Types
+gat = []
