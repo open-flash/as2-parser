@@ -17,7 +17,7 @@ pub trait Syntax: Sized {
 /// Trait representing any ActionScript expression
 pub trait Expr<S: Syntax> {
   /// Downcast the expression to its concrete type.
-  fn cast<'a>(&'a self) -> ExprCast<'a, S>;
+  fn cast(&self) -> ExprCast<S>;
 }
 
 /// Represents the result of downcasting an expression.
@@ -37,7 +37,7 @@ pub trait SeqExpr<S: Syntax> {
   type Iter<'a>: ExactSizeIterator<Item = &'a S::Expr>;
 
   #[cfg(feature = "gat")]
-  fn exprs<'a>(&'a self) -> Self::Iter<'a>;
+  fn exprs(&self) -> Self::Iter<'_>;
 }
 
 pub trait BinExpr<S: Syntax> {

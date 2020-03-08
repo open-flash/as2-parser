@@ -26,7 +26,7 @@ impl syntax::SeqExpr<OwnedSyntax> for SeqExpr<OwnedSyntax> {
   type Iter<'a> = core::slice::Iter<'a, Expr>;
 
   #[cfg(feature = "gat")]
-  fn exprs<'a>(&'a self) -> Self::Iter<'a> {
+  fn exprs(&self) -> Self::Iter<'_> {
     self._exprs.iter()
   }
 }
@@ -67,7 +67,7 @@ pub enum Expr {
 }
 
 impl syntax::Expr<OwnedSyntax> for Expr {
-  fn cast<'a>(&'a self) -> syntax::ExprCast<'a, OwnedSyntax> {
+  fn cast(&self) -> syntax::ExprCast<OwnedSyntax> {
     match self {
       Expr::StrLit(ref e) => syntax::ExprCast::StrLit(e),
       Expr::Error => syntax::ExprCast::Error,
@@ -77,7 +77,7 @@ impl syntax::Expr<OwnedSyntax> for Expr {
 
 #[cfg(test)]
 mod seq_expr_tests {
-  use super::{OwnedSyntax, SeqExpr, StrLit, Expr};
+  use super::{Expr, OwnedSyntax, SeqExpr, StrLit};
   use crate::types::syntax::SeqExpr as _;
 
   #[test]
@@ -85,17 +85,29 @@ mod seq_expr_tests {
     let left: SeqExpr<OwnedSyntax> = SeqExpr {
       _loc: (),
       _exprs: vec![
-        Expr::StrLit(StrLit { _loc: (), _value: String::from("foo") }),
-        Expr::StrLit(StrLit { _loc: (), _value: String::from("bar") }),
-      ]
+        Expr::StrLit(StrLit {
+          _loc: (),
+          _value: String::from("foo"),
+        }),
+        Expr::StrLit(StrLit {
+          _loc: (),
+          _value: String::from("bar"),
+        }),
+      ],
     };
 
     let right: SeqExpr<OwnedSyntax> = SeqExpr {
       _loc: (),
       _exprs: vec![
-        Expr::StrLit(StrLit { _loc: (), _value: String::from("foo") }),
-        Expr::StrLit(StrLit { _loc: (), _value: String::from("bar") }),
-      ]
+        Expr::StrLit(StrLit {
+          _loc: (),
+          _value: String::from("foo"),
+        }),
+        Expr::StrLit(StrLit {
+          _loc: (),
+          _value: String::from("bar"),
+        }),
+      ],
     };
 
     assert_eq!(left.exprs().len(), 2);

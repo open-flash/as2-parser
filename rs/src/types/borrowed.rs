@@ -17,7 +17,7 @@ impl<'a> syntax::Syntax for BorrowedSyntax<'a> {
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct SeqExpr<'a> {
   pub _loc: (),
-  pub _exprs: &'a[Expr<'a>],
+  pub _exprs: &'a [Expr<'a>],
 }
 
 impl<'s> syntax::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
@@ -30,7 +30,7 @@ impl<'s> syntax::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
   type Iter<'a> = core::slice::Iter<'a, Expr<'a>>;
 
   #[cfg(feature = "gat")]
-  fn exprs<'a>(&'a self) -> Self::Iter<'a> {
+  fn exprs(&self) -> Self::Iter<'_> {
     self._exprs.iter()
   }
 }
@@ -81,20 +81,38 @@ impl<'a> syntax::Expr<BorrowedSyntax<'a>> for Expr<'a> {
 
 #[cfg(test)]
 mod seq_expr_tests {
-  use super::{SeqExpr, StrLit, Expr};
+  use super::{Expr, SeqExpr, StrLit};
   use crate::types::syntax::SeqExpr as _;
 
   #[test]
   fn test_eq_empty() {
-    let left_foo = Expr::StrLit(StrLit { _loc: (), _value: "foo" });
-    let left_bar = Expr::StrLit(StrLit { _loc: (), _value: "bar" });
+    let left_foo = Expr::StrLit(StrLit {
+      _loc: (),
+      _value: "foo",
+    });
+    let left_bar = Expr::StrLit(StrLit {
+      _loc: (),
+      _value: "bar",
+    });
     let left_seq = vec![left_foo, left_bar];
-    let left = SeqExpr { _loc: (), _exprs: &left_seq };
+    let left = SeqExpr {
+      _loc: (),
+      _exprs: &left_seq,
+    };
 
-    let right_foo = Expr::StrLit(StrLit { _loc: (), _value: "foo" });
-    let right_bar = Expr::StrLit(StrLit { _loc: (), _value: "bar" });
+    let right_foo = Expr::StrLit(StrLit {
+      _loc: (),
+      _value: "foo",
+    });
+    let right_bar = Expr::StrLit(StrLit {
+      _loc: (),
+      _value: "bar",
+    });
     let right_seq = vec![right_foo, right_bar];
-    let right = SeqExpr { _loc: (), _exprs: &right_seq };
+    let right = SeqExpr {
+      _loc: (),
+      _exprs: &right_seq,
+    };
 
     assert_eq!(left.exprs().len(), 2);
     assert_eq!(left, right);

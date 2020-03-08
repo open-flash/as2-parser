@@ -1,0 +1,4 @@
+# Stable: cargo clippy --all-targets -- -D warnings
+# Nightly: cargo clippy --all-targets --all-features -- -D warnings
+
+# (Using default config)
