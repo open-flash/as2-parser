@@ -1,32 +1,36 @@
-use crate::types::syntax::{Expr, ExprCast, StrLit, Syntax, BinExpr};
+use crate::types::syntax;
 
 pub enum OwnedSyntax {}
 
-impl Syntax for OwnedSyntax {
-  type StrLit = OwnedStrLit;
-  type Expr = OwnedExpr;
+impl syntax::Syntax for OwnedSyntax {
+  type Expr = Expr;
+  type SeqExpr = SeqExpr<Self>;
+  type BinExpr = BinExpr<Self>;
+  type StrLit = StrLit;
 }
 
-#[derive(Debug)]
-pub struct OwnedStrLit {
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct SeqExpr<S: syntax::Syntax> {
   pub _loc: (),
-  pub _value: String,
+  pub _exprs: Vec<S::Expr>,
 }
 
-impl StrLit for OwnedStrLit {
-  fn value(&self) -> &str {
-    &self._value
+impl syntax::SeqExpr<OwnedSyntax> for SeqExpr<OwnedSyntax> {
+  type Iter<'a> = core::slice::Iter<'a, Expr>;
+
+  fn exprs<'a>(&'a self) -> Self::Iter<'a> {
+    self._exprs.iter()
   }
 }
 
-#[derive(Debug)]
-pub struct OwnedBinExpr<S: Syntax> {
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct BinExpr<S: syntax::Syntax> {
   pub _loc: (),
   pub _left: Box<S::Expr>,
   pub _right: Box<S::Expr>,
 }
 
-impl<S: Syntax> BinExpr<S> for OwnedBinExpr<S> {
+impl<S: syntax::Syntax> syntax::BinExpr<S> for BinExpr<S> {
   fn left(&self) -> &S::Expr {
     &self._left
   }
@@ -36,17 +40,29 @@ impl<S: Syntax> BinExpr<S> for OwnedBinExpr<S> {
   }
 }
 
-#[derive(Debug)]
-pub enum OwnedExpr {
-  StrLit(OwnedStrLit),
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct StrLit {
+  pub _loc: (),
+  pub _value: String,
+}
+
+impl syntax::StrLit for StrLit {
+  fn value(&self) -> &str {
+    &self._value
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub enum Expr {
+  StrLit(StrLit),
   Error,
 }
 
-impl Expr<OwnedSyntax> for OwnedExpr {
-  fn cast<'a>(&'a self) -> ExprCast<'a, OwnedSyntax> {
+impl syntax::Expr<OwnedSyntax> for Expr {
+  fn cast<'a>(&'a self) -> syntax::ExprCast<'a, OwnedSyntax> {
     match self {
-      OwnedExpr::StrLit(ref e) => ExprCast::StrLit(e),
-      OwnedExpr::Error => ExprCast::Error,
+      Expr::StrLit(ref e) => syntax::ExprCast::StrLit(e),
+      Expr::Error => syntax::ExprCast::Error,
     }
   }
 }

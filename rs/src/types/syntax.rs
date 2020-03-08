@@ -3,8 +3,15 @@ pub enum Empty {}
 
 /// Describes all the elements of a syntax.
 pub trait Syntax: Sized {
-  type StrLit: StrLit;
+  // The RFC 1598 (Generic Associated Types) may help here
+  // type List<T>: ExactSizeIterator<T>;
+  // type ExprList: ExactSizeIterator<Item = &Self::Expr>;
+  // type ExprRef: Borrow<Self::Expr>;
+
   type Expr: Expr<Self>;
+  type SeqExpr: SeqExpr<Self>;
+  type BinExpr: BinExpr<Self>;
+  type StrLit: StrLit;
 }
 
 /// Trait representing any ActionScript expression
@@ -17,6 +24,15 @@ pub trait Expr<S: Syntax> {
 pub enum ExprCast<'a, S: Syntax> {
   StrLit(&'a S::StrLit),
   Error,
+}
+
+/// Sequence expression
+///
+/// Corresponds to two or more expressions separated by commas.
+pub trait SeqExpr<S: Syntax> {
+  type Iter<'a>: ExactSizeIterator<Item = &'a S::Expr>;
+
+  fn exprs<'a>(&'a self) -> Self::Iter<'a>;
 }
 
 pub trait BinExpr<S: Syntax> {

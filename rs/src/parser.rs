@@ -1,4 +1,7 @@
 use crate::types::owned;
+use crate::types::syntax::Syntax;
+use crate::types::syntax::SeqExpr;
+
 // use crate::types::cast::ExprCast;
 //
 // struct OwnedAstBuilder {}
@@ -13,8 +16,16 @@ use crate::types::owned;
 //   }
 // }
 
-pub fn parse_script(_input: &str) -> owned::OwnedStrLit {
-  owned::OwnedStrLit {
+pub fn count_expressions<S: Syntax>(seq_expr: S::SeqExpr) -> usize {
+  let mut count: usize = 0;
+  for expr in seq_expr.exprs() {
+    count += 1;
+  }
+  count
+}
+
+pub fn parse_script(_input: &str) -> owned::StrLit {
+  owned::StrLit {
     _loc: (),
     _value: String::new(),
   }

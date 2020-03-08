@@ -1,3 +1,5 @@
+#![feature(generic_associated_types)]
+
 pub mod parser;
 pub mod types;
 
@@ -6,7 +8,6 @@ mod parser_tests {
   use std::path::Path;
   use ::test_generator::test_resources;
   use crate::types::owned;
-  use super::*;
   use crate::parser::parse_script;
 
   #[test_resources("../tests/as2/[!.]*/*/")]
@@ -27,9 +28,9 @@ mod parser_tests {
     let as2_path = path.join("main.as2");
     let as2_text: String = ::std::fs::read_to_string(as2_path).expect("Failed to read input");
 
-    let _actual_tree = parse_script(&as2_text);
-    let _expected_tree: owned::OwnedStrLit = owned::OwnedStrLit { _loc: (), _value: String::new() };
+    let actual_tree = parse_script(&as2_text);
+    let expected_tree: owned::StrLit = owned::StrLit { _loc: (), _value: String::new() };
 
-    // assert_eq!(actual_tree, expected_tree);
+    assert_eq!(actual_tree, expected_tree);
   }
 }
