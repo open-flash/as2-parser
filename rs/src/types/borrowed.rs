@@ -14,7 +14,7 @@ impl<'a> syntax::Syntax for BorrowedSyntax<'a> {
   type BinExpr = BinExpr<'a>;
 }
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct SeqExpr<'a> {
   pub _loc: (),
   pub _exprs: &'a[Expr<'a>],
@@ -35,7 +35,7 @@ impl<'s> syntax::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
   }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct BinExpr<'a> {
   pub _loc: (),
   pub _left: &'a Expr<'a>,
@@ -52,7 +52,7 @@ impl<'a> syntax::BinExpr<BorrowedSyntax<'a>> for BinExpr<'a> {
   }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct StrLit<'a> {
   pub _loc: (),
   pub _value: &'a str,
@@ -64,7 +64,7 @@ impl syntax::StrLit for StrLit<'_> {
   }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub enum Expr<'a> {
   StrLit(StrLit<'a>),
   Error,
@@ -76,5 +76,27 @@ impl<'a> syntax::Expr<BorrowedSyntax<'a>> for Expr<'a> {
       Expr::StrLit(ref e) => syntax::ExprCast::StrLit(e),
       Expr::Error => syntax::ExprCast::Error,
     }
+  }
+}
+
+#[cfg(test)]
+mod seq_expr_tests {
+  use super::{SeqExpr, StrLit, Expr};
+  use crate::types::syntax::SeqExpr as _;
+
+  #[test]
+  fn test_eq_empty() {
+    let left_foo = Expr::StrLit(StrLit { _loc: (), _value: "foo" });
+    let left_bar = Expr::StrLit(StrLit { _loc: (), _value: "bar" });
+    let left_seq = vec![left_foo, left_bar];
+    let left = SeqExpr { _loc: (), _exprs: &left_seq };
+
+    let right_foo = Expr::StrLit(StrLit { _loc: (), _value: "foo" });
+    let right_bar = Expr::StrLit(StrLit { _loc: (), _value: "bar" });
+    let right_seq = vec![right_foo, right_bar];
+    let right = SeqExpr { _loc: (), _exprs: &right_seq };
+
+    assert_eq!(left.exprs().len(), 2);
+    assert_eq!(left, right);
   }
 }

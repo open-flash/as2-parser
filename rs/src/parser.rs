@@ -1,6 +1,4 @@
 use crate::types::owned;
-use crate::types::syntax::Syntax;
-use crate::types::syntax::SeqExpr;
 
 // use crate::types::cast::ExprCast;
 //
@@ -15,14 +13,6 @@ use crate::types::syntax::SeqExpr;
 //     owned::NumLit { _loc: (), _value: value }
 //   }
 // }
-
-pub fn count_expressions<S: Syntax>(seq_expr: S::SeqExpr) -> usize {
-  let mut count: usize = 0;
-  for expr in seq_expr.exprs() {
-    count += 1;
-  }
-  count
-}
 
 pub fn parse_script(_input: &str) -> owned::StrLit {
   owned::StrLit {

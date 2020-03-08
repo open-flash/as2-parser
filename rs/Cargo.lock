@@ -4,7 +4,6 @@
 name = "as2-parser"
 version = "0.1.0"
 dependencies = [
- "rowan",
  "serde",
  "test-generator",
 ]
@@ -34,34 +33,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "rowan"
-version = "0.9.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1ea7cadf87a9d8432e85cb4eb86bd2e765ace60c24ef86e79084dcae5d1c5a19"
-dependencies = [
- "rustc-hash",
- "smol_str",
- "text_unit",
- "thin-dst",
-]
-
-[[package]]
-name = "rustc-hash"
-version = "1.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
-
-[[package]]
 name = "serde"
 version = "1.0.104"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "414115f25f818d7dfccec8ee535d76949ae78584fc4f79a6f45a904bf8ab4449"
-
-[[package]]
-name = "smol_str"
-version = "0.1.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34836c9a295c62c2ce3514471117c5cb269891e8421b2aafdd910050576c4d8b"
 
 [[package]]
 name = "syn"
@@ -85,18 +60,6 @@ dependencies = [
  "quote",
  "syn",
 ]
-
-[[package]]
-name = "text_unit"
-version = "0.1.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "20431e104bfecc1a40872578dbc390e10290a0e9c35fffe3ce6f73c15a9dbfc2"
-
-[[package]]
-name = "thin-dst"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c52fd98a9e4913c466d83381a59245691875d2f3e04611fca57f964bd8aa96e1"
 
 [[package]]
 name = "unicode-xid"

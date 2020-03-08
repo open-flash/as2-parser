@@ -16,7 +16,6 @@ name = "as2_parser"
 path = "src/lib.rs"
 
 [dependencies]
-rowan = "0.9.1"
 
 [dev-dependencies]
 serde = "^1.0.104"

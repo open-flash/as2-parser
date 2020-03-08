@@ -1,5 +1,6 @@
 use crate::types::syntax;
 
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub enum OwnedSyntax {}
 
 impl syntax::Syntax for OwnedSyntax {
@@ -71,5 +72,33 @@ impl syntax::Expr<OwnedSyntax> for Expr {
       Expr::StrLit(ref e) => syntax::ExprCast::StrLit(e),
       Expr::Error => syntax::ExprCast::Error,
     }
+  }
+}
+
+#[cfg(test)]
+mod seq_expr_tests {
+  use super::{OwnedSyntax, SeqExpr, StrLit, Expr};
+  use crate::types::syntax::SeqExpr as _;
+
+  #[test]
+  fn test_eq_empty() {
+    let left: SeqExpr<OwnedSyntax> = SeqExpr {
+      _loc: (),
+      _exprs: vec![
+        Expr::StrLit(StrLit { _loc: (), _value: String::from("foo") }),
+        Expr::StrLit(StrLit { _loc: (), _value: String::from("bar") }),
+      ]
+    };
+
+    let right: SeqExpr<OwnedSyntax> = SeqExpr {
+      _loc: (),
+      _exprs: vec![
+        Expr::StrLit(StrLit { _loc: (), _value: String::from("foo") }),
+        Expr::StrLit(StrLit { _loc: (), _value: String::from("bar") }),
+      ]
+    };
+
+    assert_eq!(left.exprs().len(), 2);
+    assert_eq!(left, right);
   }
 }
