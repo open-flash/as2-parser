@@ -4,6 +4,10 @@ use crate::types::syntax;
 pub enum OwnedSyntax {}
 
 impl syntax::Syntax for OwnedSyntax {
+  type Stmt = Stmt;
+  type ExprStmt = ExprStmt;
+  type TraceStmt = TraceStmt;
+
   type Expr = Expr;
   type SeqExpr = SeqExpr;
   type AssignExpr = AssignExpr;
@@ -27,16 +31,38 @@ pub enum Stmt {
   SyntaxError,
 }
 
+impl syntax::Stmt<OwnedSyntax> for Stmt {
+  fn cast(&self) -> syntax::StmtCast<OwnedSyntax> {
+    match self {
+      Stmt::Expr(ref e) => syntax::StmtCast::Expr(e),
+      Stmt::Trace(ref e) => syntax::StmtCast::Trace(e),
+      Stmt::SyntaxError => syntax::StmtCast::SyntaxError,
+    }
+  }
+}
+
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct ExprStmt {
   pub loc: (),
   pub expr: Box<Expr>,
 }
 
+impl syntax::ExprStmt<OwnedSyntax> for ExprStmt {
+  fn expr(&self) -> &Expr {
+    &self.expr
+  }
+}
+
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct TraceStmt {
   pub loc: (),
   pub value: Box<Expr>,
+}
+
+impl syntax::TraceStmt<OwnedSyntax> for TraceStmt {
+  fn value(&self) -> &Expr {
+    &self.value
+  }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]

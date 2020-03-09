@@ -3,10 +3,9 @@ pub enum Empty {}
 
 /// Describes all the elements of a syntax.
 pub trait Syntax: Sized {
-  // The RFC 1598 (Generic Associated Types) may help here
-  // type List<T>: ExactSizeIterator<T>;
-  // type ExprList: ExactSizeIterator<Item = &Self::Expr>;
-  // type ExprRef: Borrow<Self::Expr>;
+  type Stmt: Stmt<Self>;
+  type TraceStmt: TraceStmt<Self>;
+  type ExprStmt: ExprStmt<Self>;
 
   type Expr: Expr<Self>;
   type SeqExpr: SeqExpr<Self>;
@@ -17,6 +16,27 @@ pub trait Syntax: Sized {
   type Pat: Pat<Self>;
   type MemberPat: MemberPat<Self>;
   type IdentPat: IdentPat;
+}
+
+/// Trait representing any ActionScript statement
+pub trait Stmt<S: Syntax> {
+  /// Downcast the statement to its concrete type.
+  fn cast(&self) -> StmtCast<S>;
+}
+
+/// Represents the result of downcasting an expression.
+pub enum StmtCast<'a, S: Syntax> {
+  Trace(&'a S::TraceStmt),
+  Expr(&'a S::ExprStmt),
+  SyntaxError,
+}
+
+pub trait TraceStmt<S: Syntax> {
+  fn value(&self) -> &S::Expr;
+}
+
+pub trait ExprStmt<S: Syntax> {
+  fn expr(&self) -> &S::Expr;
 }
 
 /// Trait representing any ActionScript expression

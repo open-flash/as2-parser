@@ -6,7 +6,9 @@ pub struct BorrowedSyntax<'a> {
 }
 
 impl<'a> syntax::Syntax for BorrowedSyntax<'a> {
-  // type ExprRef = &'a Self::Expr;
+  type Stmt = Stmt<'a>;
+  type TraceStmt = TraceStmt<'a>;
+  type ExprStmt = ExprStmt<'a>;
 
   type Expr = Expr<'a>;
   type SeqExpr = SeqExpr<'a>;
@@ -17,6 +19,47 @@ impl<'a> syntax::Syntax for BorrowedSyntax<'a> {
   type Pat = Pat<'a>;
   type MemberPat = MemberPat<'a>;
   type IdentPat = IdentPat<'a>;
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub enum Stmt<'a> {
+  Trace(TraceStmt<'a>),
+  Expr(ExprStmt<'a>),
+  SyntaxError,
+}
+
+impl<'a> syntax::Stmt<BorrowedSyntax<'a>> for Stmt<'a> {
+  fn cast<'b>(&'b self) -> syntax::StmtCast<'b, BorrowedSyntax<'a>> {
+    match self {
+      Stmt::Trace(ref e) => syntax::StmtCast::Trace(e),
+      Stmt::Expr(ref e) => syntax::StmtCast::Expr(e),
+      Stmt::SyntaxError => syntax::StmtCast::SyntaxError,
+    }
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct TraceStmt<'a> {
+  pub loc: (),
+  pub value: &'a Expr<'a>,
+}
+
+impl<'a> syntax::TraceStmt<BorrowedSyntax<'a>> for TraceStmt<'a> {
+  fn value(&self) -> &Expr<'a> {
+    self.value
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct ExprStmt<'a> {
+  pub loc: (),
+  pub expr: &'a Expr<'a>,
+}
+
+impl<'a> syntax::ExprStmt<BorrowedSyntax<'a>> for ExprStmt<'a> {
+  fn expr(&self) -> &Expr<'a> {
+    self.expr
+  }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
