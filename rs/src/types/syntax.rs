@@ -1,4 +1,4 @@
-use crate::types::ast::syntax;
+use crate::types::ast::traits;
 use std::convert::TryFrom;
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Ord, PartialOrd, Hash)]
@@ -97,7 +97,7 @@ impl<'text> TryFrom<SyntaxToken<'text>> for IdentPat<'text> {
   }
 }
 
-impl<'text> syntax::IdentPat for IdentPat<'text> {
+impl<'text> traits::IdentPat for IdentPat<'text> {
   fn name(&self) -> &str {
     &self.syntax.text
   }

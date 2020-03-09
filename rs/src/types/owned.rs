@@ -1,9 +1,9 @@
-use crate::types::ast::syntax;
+use crate::types::ast::traits;
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub enum OwnedSyntax {}
 
-impl syntax::Syntax for OwnedSyntax {
+impl traits::Syntax for OwnedSyntax {
   type Script = Script;
 
   type Stmt = Stmt;
@@ -27,7 +27,7 @@ pub struct Script {
   pub stmts: Vec<Stmt>,
 }
 
-impl syntax::Script<OwnedSyntax> for Script {
+impl traits::Script<OwnedSyntax> for Script {
   #[cfg(not(feature = "gat"))]
   fn stmts<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Stmt> + 'a> {
     Box::new(self.stmts.iter())
@@ -54,12 +54,12 @@ pub enum Stmt {
   SyntaxError,
 }
 
-impl syntax::Stmt<OwnedSyntax> for Stmt {
-  fn cast(&self) -> syntax::StmtCast<OwnedSyntax> {
+impl traits::Stmt<OwnedSyntax> for Stmt {
+  fn cast(&self) -> traits::StmtCast<OwnedSyntax> {
     match self {
-      Stmt::Expr(ref e) => syntax::StmtCast::Expr(e),
-      Stmt::Trace(ref e) => syntax::StmtCast::Trace(e),
-      Stmt::SyntaxError => syntax::StmtCast::SyntaxError,
+      Stmt::Expr(ref e) => traits::StmtCast::Expr(e),
+      Stmt::Trace(ref e) => traits::StmtCast::Trace(e),
+      Stmt::SyntaxError => traits::StmtCast::SyntaxError,
     }
   }
 }
@@ -70,7 +70,7 @@ pub struct ExprStmt {
   pub expr: Box<Expr>,
 }
 
-impl syntax::ExprStmt<OwnedSyntax> for ExprStmt {
+impl traits::ExprStmt<OwnedSyntax> for ExprStmt {
   fn expr(&self) -> &Expr {
     &self.expr
   }
@@ -82,7 +82,7 @@ pub struct TraceStmt {
   pub value: Box<Expr>,
 }
 
-impl syntax::TraceStmt<OwnedSyntax> for TraceStmt {
+impl traits::TraceStmt<OwnedSyntax> for TraceStmt {
   fn value(&self) -> &Expr {
     &self.value
   }
@@ -96,12 +96,12 @@ pub enum Expr {
   SyntaxError,
 }
 
-impl syntax::Expr<OwnedSyntax> for Expr {
-  fn cast(&self) -> syntax::ExprCast<OwnedSyntax> {
+impl traits::Expr<OwnedSyntax> for Expr {
+  fn cast(&self) -> traits::ExprCast<OwnedSyntax> {
     match self {
-      Expr::Seq(ref e) => syntax::ExprCast::Seq(e),
-      Expr::StrLit(ref e) => syntax::ExprCast::StrLit(e),
-      Expr::SyntaxError => syntax::ExprCast::Error,
+      Expr::Seq(ref e) => traits::ExprCast::Seq(e),
+      Expr::StrLit(ref e) => traits::ExprCast::StrLit(e),
+      Expr::SyntaxError => traits::ExprCast::Error,
     }
   }
 }
@@ -112,7 +112,7 @@ pub struct SeqExpr {
   pub exprs: Vec<Expr>,
 }
 
-impl syntax::SeqExpr<OwnedSyntax> for SeqExpr {
+impl traits::SeqExpr<OwnedSyntax> for SeqExpr {
   #[cfg(not(feature = "gat"))]
   fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Expr> + 'a> {
     Box::new(self.exprs.iter())
@@ -134,7 +134,7 @@ pub struct AssignExpr {
   pub value: Box<Expr>,
 }
 
-impl syntax::AssignExpr<OwnedSyntax> for AssignExpr {
+impl traits::AssignExpr<OwnedSyntax> for AssignExpr {
   fn target(&self) -> &Pat {
     &self.target
   }
@@ -151,7 +151,7 @@ pub struct BinExpr {
   pub right: Box<Expr>,
 }
 
-impl syntax::BinExpr<OwnedSyntax> for BinExpr {
+impl traits::BinExpr<OwnedSyntax> for BinExpr {
   fn left(&self) -> &Expr {
     &self.left
   }
@@ -167,7 +167,7 @@ pub struct StrLit {
   pub value: String,
 }
 
-impl syntax::StrLit for StrLit {
+impl traits::StrLit for StrLit {
   fn value(&self) -> &str {
     &self.value
   }
@@ -180,12 +180,12 @@ pub enum Pat {
   SyntaxError,
 }
 
-impl syntax::Pat<OwnedSyntax> for Pat {
-  fn cast(&self) -> syntax::PatCast<OwnedSyntax> {
+impl traits::Pat<OwnedSyntax> for Pat {
+  fn cast(&self) -> traits::PatCast<OwnedSyntax> {
     match self {
-      Pat::MemberPat(ref e) => syntax::PatCast::Member(e),
-      Pat::IdentPat(ref e) => syntax::PatCast::Ident(e),
-      Pat::SyntaxError => syntax::PatCast::SyntaxError,
+      Pat::MemberPat(ref e) => traits::PatCast::Member(e),
+      Pat::IdentPat(ref e) => traits::PatCast::Ident(e),
+      Pat::SyntaxError => traits::PatCast::SyntaxError,
     }
   }
 }
@@ -197,7 +197,7 @@ pub struct MemberPat {
   pub key: Box<Expr>,
 }
 
-impl syntax::MemberPat<OwnedSyntax> for MemberPat {
+impl traits::MemberPat<OwnedSyntax> for MemberPat {
   fn base(&self) -> &Expr {
     &self.base
   }
@@ -213,7 +213,7 @@ pub struct IdentPat {
   pub name: String,
 }
 
-impl syntax::IdentPat for IdentPat {
+impl traits::IdentPat for IdentPat {
   fn name(&self) -> &str {
     &self.name
   }
@@ -222,7 +222,7 @@ impl syntax::IdentPat for IdentPat {
 #[cfg(test)]
 mod seq_expr_tests {
   use super::{Expr, SeqExpr, StrLit};
-  use crate::types::ast::syntax::SeqExpr as _;
+  use crate::types::ast::traits::SeqExpr as _;
 
   #[test]
   fn test_eq_empty() {

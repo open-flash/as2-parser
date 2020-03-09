@@ -1,11 +1,11 @@
-use crate::types::ast::syntax;
+use crate::types::ast::traits;
 use std::marker::PhantomData;
 
 pub struct BorrowedSyntax<'a> {
-  _phantom: PhantomData<&'a syntax::Empty>,
+  _phantom: PhantomData<&'a traits::Empty>,
 }
 
-impl<'a> syntax::Syntax for BorrowedSyntax<'a> {
+impl<'a> traits::Syntax for BorrowedSyntax<'a> {
   type Script = Script<'a>;
 
   type Stmt = Stmt<'a>;
@@ -29,7 +29,7 @@ pub struct Script<'a> {
   pub stmts: &'a [Stmt<'a>],
 }
 
-impl<'s> syntax::Script<BorrowedSyntax<'s>> for Script<'s> {
+impl<'s> traits::Script<BorrowedSyntax<'s>> for Script<'s> {
   #[cfg(not(feature = "gat"))]
   fn stmts<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Stmt<'s>> + 'a> {
     Box::new(self.stmts.iter())
@@ -51,12 +51,12 @@ pub enum Stmt<'a> {
   SyntaxError,
 }
 
-impl<'a> syntax::Stmt<BorrowedSyntax<'a>> for Stmt<'a> {
-  fn cast<'b>(&'b self) -> syntax::StmtCast<'b, BorrowedSyntax<'a>> {
+impl<'a> traits::Stmt<BorrowedSyntax<'a>> for Stmt<'a> {
+  fn cast<'b>(&'b self) -> traits::StmtCast<'b, BorrowedSyntax<'a>> {
     match self {
-      Stmt::Trace(ref e) => syntax::StmtCast::Trace(e),
-      Stmt::Expr(ref e) => syntax::StmtCast::Expr(e),
-      Stmt::SyntaxError => syntax::StmtCast::SyntaxError,
+      Stmt::Trace(ref e) => traits::StmtCast::Trace(e),
+      Stmt::Expr(ref e) => traits::StmtCast::Expr(e),
+      Stmt::SyntaxError => traits::StmtCast::SyntaxError,
     }
   }
 }
@@ -67,7 +67,7 @@ pub struct TraceStmt<'a> {
   pub value: &'a Expr<'a>,
 }
 
-impl<'a> syntax::TraceStmt<BorrowedSyntax<'a>> for TraceStmt<'a> {
+impl<'a> traits::TraceStmt<BorrowedSyntax<'a>> for TraceStmt<'a> {
   fn value(&self) -> &Expr<'a> {
     self.value
   }
@@ -79,7 +79,7 @@ pub struct ExprStmt<'a> {
   pub expr: &'a Expr<'a>,
 }
 
-impl<'a> syntax::ExprStmt<BorrowedSyntax<'a>> for ExprStmt<'a> {
+impl<'a> traits::ExprStmt<BorrowedSyntax<'a>> for ExprStmt<'a> {
   fn expr(&self) -> &Expr<'a> {
     self.expr
   }
@@ -91,11 +91,11 @@ pub enum Expr<'a> {
   Error,
 }
 
-impl<'a> syntax::Expr<BorrowedSyntax<'a>> for Expr<'a> {
-  fn cast<'b>(&'b self) -> syntax::ExprCast<'b, BorrowedSyntax<'a>> {
+impl<'a> traits::Expr<BorrowedSyntax<'a>> for Expr<'a> {
+  fn cast<'b>(&'b self) -> traits::ExprCast<'b, BorrowedSyntax<'a>> {
     match self {
-      Expr::StrLit(ref e) => syntax::ExprCast::StrLit(e),
-      Expr::Error => syntax::ExprCast::Error,
+      Expr::StrLit(ref e) => traits::ExprCast::StrLit(e),
+      Expr::Error => traits::ExprCast::Error,
     }
   }
 }
@@ -106,7 +106,7 @@ pub struct SeqExpr<'a> {
   pub exprs: &'a [Expr<'a>],
 }
 
-impl<'s> syntax::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
+impl<'s> traits::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
   #[cfg(not(feature = "gat"))]
   fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Expr<'s>> + 'a> {
     Box::new(self.exprs.iter())
@@ -128,7 +128,7 @@ pub struct AssignExpr<'a> {
   pub value: &'a Expr<'a>,
 }
 
-impl<'a> syntax::AssignExpr<BorrowedSyntax<'a>> for AssignExpr<'a> {
+impl<'a> traits::AssignExpr<BorrowedSyntax<'a>> for AssignExpr<'a> {
   fn target(&self) -> &Pat<'a> {
     self.target
   }
@@ -145,7 +145,7 @@ pub struct BinExpr<'a> {
   pub right: &'a Expr<'a>,
 }
 
-impl<'a> syntax::BinExpr<BorrowedSyntax<'a>> for BinExpr<'a> {
+impl<'a> traits::BinExpr<BorrowedSyntax<'a>> for BinExpr<'a> {
   fn left(&self) -> &Expr<'a> {
     self.left
   }
@@ -161,7 +161,7 @@ pub struct StrLit<'a> {
   pub value: &'a str,
 }
 
-impl syntax::StrLit for StrLit<'_> {
+impl traits::StrLit for StrLit<'_> {
   fn value(&self) -> &str {
     self.value
   }
@@ -174,12 +174,12 @@ pub enum Pat<'a> {
   SyntaxError,
 }
 
-impl<'a> syntax::Pat<BorrowedSyntax<'a>> for Pat<'a> {
-  fn cast<'b>(&'b self) -> syntax::PatCast<'b, BorrowedSyntax<'a>> {
+impl<'a> traits::Pat<BorrowedSyntax<'a>> for Pat<'a> {
+  fn cast<'b>(&'b self) -> traits::PatCast<'b, BorrowedSyntax<'a>> {
     match self {
-      Pat::Member(ref e) => syntax::PatCast::Member(e),
-      Pat::Ident(ref e) => syntax::PatCast::Ident(e),
-      Pat::SyntaxError => syntax::PatCast::SyntaxError,
+      Pat::Member(ref e) => traits::PatCast::Member(e),
+      Pat::Ident(ref e) => traits::PatCast::Ident(e),
+      Pat::SyntaxError => traits::PatCast::SyntaxError,
     }
   }
 }
@@ -191,7 +191,7 @@ pub struct MemberPat<'a> {
   pub key: &'a Expr<'a>,
 }
 
-impl<'a> syntax::MemberPat<BorrowedSyntax<'a>> for MemberPat<'a> {
+impl<'a> traits::MemberPat<BorrowedSyntax<'a>> for MemberPat<'a> {
   fn base(&self) -> &Expr<'a> {
     self.base
   }
@@ -207,7 +207,7 @@ pub struct IdentPat<'a> {
   pub name: &'a str,
 }
 
-impl syntax::IdentPat for IdentPat<'_> {
+impl traits::IdentPat for IdentPat<'_> {
   fn name(&self) -> &str {
     self.name
   }
@@ -216,7 +216,7 @@ impl syntax::IdentPat for IdentPat<'_> {
 #[cfg(test)]
 mod seq_expr_tests {
   use super::{Expr, SeqExpr, StrLit};
-  use crate::types::ast::syntax::SeqExpr as _;
+  use crate::types::ast::traits::SeqExpr as _;
 
   #[test]
   fn test_eq_empty() {
