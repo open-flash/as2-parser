@@ -3,6 +3,8 @@ pub enum Empty {}
 
 /// Describes all the elements of a syntax.
 pub trait Syntax: Sized {
+  type Script: Script<Self>;
+
   type Stmt: Stmt<Self>;
   type TraceStmt: TraceStmt<Self>;
   type ExprStmt: ExprStmt<Self>;
@@ -16,6 +18,18 @@ pub trait Syntax: Sized {
   type Pat: Pat<Self>;
   type MemberPat: MemberPat<Self>;
   type IdentPat: IdentPat;
+}
+
+/// Script root node
+pub trait Script<S: Syntax> {
+  #[cfg(not(feature = "gat"))]
+  fn stmts<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a S::Stmt> + 'a>;
+
+  #[cfg(feature = "gat")]
+  type Stmts<'a>: ExactSizeIterator<Item = &'a S::Stmt>;
+
+  #[cfg(feature = "gat")]
+  fn stmts(&self) -> Self::Stmts<'_>;
 }
 
 /// Trait representing any ActionScript statement

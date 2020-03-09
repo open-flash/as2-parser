@@ -4,6 +4,8 @@ use crate::types::syntax;
 pub enum OwnedSyntax {}
 
 impl syntax::Syntax for OwnedSyntax {
+  type Script = Script;
+
   type Stmt = Stmt;
   type ExprStmt = ExprStmt;
   type TraceStmt = TraceStmt;
@@ -17,6 +19,27 @@ impl syntax::Syntax for OwnedSyntax {
   type Pat = Pat;
   type MemberPat = MemberPat;
   type IdentPat = IdentPat;
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct Script {
+  pub loc: (),
+  pub stmts: Vec<Stmt>,
+}
+
+impl syntax::Script<OwnedSyntax> for Script {
+  #[cfg(not(feature = "gat"))]
+  fn stmts<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Stmt> + 'a> {
+    Box::new(self.stmts.iter())
+  }
+
+  #[cfg(feature = "gat")]
+  type Stmts<'a> = core::slice::Iter<'a, Stmt>;
+
+  #[cfg(feature = "gat")]
+  fn stmts(&self) -> Self::Stmts<'_> {
+    self.stmts.iter()
+  }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]

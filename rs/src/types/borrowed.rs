@@ -6,6 +6,8 @@ pub struct BorrowedSyntax<'a> {
 }
 
 impl<'a> syntax::Syntax for BorrowedSyntax<'a> {
+  type Script = Script<'a>;
+
   type Stmt = Stmt<'a>;
   type TraceStmt = TraceStmt<'a>;
   type ExprStmt = ExprStmt<'a>;
@@ -19,6 +21,27 @@ impl<'a> syntax::Syntax for BorrowedSyntax<'a> {
   type Pat = Pat<'a>;
   type MemberPat = MemberPat<'a>;
   type IdentPat = IdentPat<'a>;
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct Script<'a> {
+  pub loc: (),
+  pub stmts: &'a [Stmt<'a>],
+}
+
+impl<'s> syntax::Script<BorrowedSyntax<'s>> for Script<'s> {
+  #[cfg(not(feature = "gat"))]
+  fn stmts<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Stmt<'s>> + 'a> {
+    Box::new(self.stmts.iter())
+  }
+
+  #[cfg(feature = "gat")]
+  type Stmts<'a> = core::slice::Iter<'a, Stmt<'a>>;
+
+  #[cfg(feature = "gat")]
+  fn stmts(&self) -> Self::Stmts<'_> {
+    self.stmts.iter()
+  }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
