@@ -14,6 +14,42 @@ use crate::types::owned;
 //   }
 // }
 
+// struct ParseContext {
+//
+// }
+//
+// struct Parser<'i> {
+//   input: &'i str,
+// }
+//
+// #[derive(Debug, Eq, PartialEq, Copy, Clone, Ord, PartialOrd, Hash)]
+// enum Token<'a> {
+//   Ident(&'a str),
+//   Error(&'a str),
+//   End,
+// }
+//
+// impl Parser {
+//   fn parse_script() {
+//
+//   }
+//
+//   fn parse_statements(directives: bool, top_level: bool, end: Token) {
+//     let mut stmts: Vec<owned::Stmt> = Vec::new();
+//   }
+//
+//   fn peek(&self) -> Token {
+//     let chars = self.input.char_indices();
+//     match chars.next() {
+//       None => Token::End,
+//       Some((i, c @ 'a'..='z')) => {
+//
+//       },
+//       Some((i, c)) => Token::Error(self.input[i..c.len_utf8()])
+//     }
+//   }
+// }
+
 pub fn parse_script(_input: &str) -> owned::StrLit {
   owned::StrLit {
     loc: (),

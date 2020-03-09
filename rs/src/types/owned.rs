@@ -1,4 +1,4 @@
-use crate::types::syntax;
+use crate::types::ast::syntax;
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub enum OwnedSyntax {}
@@ -222,7 +222,7 @@ impl syntax::IdentPat for IdentPat {
 #[cfg(test)]
 mod seq_expr_tests {
   use super::{Expr, SeqExpr, StrLit};
-  use crate::types::syntax::SeqExpr as _;
+  use crate::types::ast::syntax::SeqExpr as _;
 
   #[test]
   fn test_eq_empty() {
