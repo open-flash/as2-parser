@@ -6,8 +6,10 @@ pub enum OwnedSyntax {}
 impl syntax::Syntax for OwnedSyntax {
   type Expr = Expr;
   type SeqExpr = SeqExpr;
+  type AssignExpr = AssignExpr;
   type BinExpr = BinExpr;
   type StrLit = StrLit;
+
   type Pat = Pat;
   type MemberPat = MemberPat;
   type IdentPat = IdentPat;
@@ -73,6 +75,23 @@ impl syntax::SeqExpr<OwnedSyntax> for SeqExpr {
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Iter<'_> {
     self.exprs.iter()
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct AssignExpr {
+  pub loc: (),
+  pub target: Box<Pat>,
+  pub value: Box<Expr>,
+}
+
+impl syntax::AssignExpr<OwnedSyntax> for AssignExpr {
+  fn target(&self) -> &Pat {
+    &self.target
+  }
+
+  fn value(&self) -> &Expr {
+    &self.value
   }
 }
 

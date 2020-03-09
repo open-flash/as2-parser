@@ -10,6 +10,7 @@ pub trait Syntax: Sized {
 
   type Expr: Expr<Self>;
   type SeqExpr: SeqExpr<Self>;
+  type AssignExpr: AssignExpr<Self>;
   type BinExpr: BinExpr<Self>;
   type StrLit: StrLit;
 
@@ -43,6 +44,11 @@ pub trait SeqExpr<S: Syntax> {
 
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Iter<'_>;
+}
+
+pub trait AssignExpr<S: Syntax> {
+  fn target(&self) -> &S::Pat;
+  fn value(&self) -> &S::Expr;
 }
 
 pub trait BinExpr<S: Syntax> {

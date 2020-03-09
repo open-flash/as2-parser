@@ -10,6 +10,7 @@ impl<'a> syntax::Syntax for BorrowedSyntax<'a> {
 
   type Expr = Expr<'a>;
   type SeqExpr = SeqExpr<'a>;
+  type AssignExpr = AssignExpr<'a>;
   type BinExpr = BinExpr<'a>;
   type StrLit = StrLit<'a>;
 
@@ -51,6 +52,23 @@ impl<'s> syntax::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Iter<'_> {
     self.exprs.iter()
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct AssignExpr<'a> {
+  pub loc: (),
+  pub target: &'a Pat<'a>,
+  pub value: &'a Expr<'a>,
+}
+
+impl<'a> syntax::AssignExpr<BorrowedSyntax<'a>> for AssignExpr<'a> {
+  fn target(&self) -> &Pat<'a> {
+    self.target
+  }
+
+  fn value(&self) -> &Expr<'a> {
+    self.value
   }
 }
 
