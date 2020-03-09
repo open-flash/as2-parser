@@ -8,10 +8,29 @@ pub struct BorrowedSyntax<'a> {
 impl<'a> syntax::Syntax for BorrowedSyntax<'a> {
   // type ExprRef = &'a Self::Expr;
 
-  type StrLit = StrLit<'a>;
   type Expr = Expr<'a>;
   type SeqExpr = SeqExpr<'a>;
   type BinExpr = BinExpr<'a>;
+  type StrLit = StrLit<'a>;
+
+  type Pat = Pat<'a>;
+  type MemberPat = MemberPat<'a>;
+  type IdentPat = IdentPat<'a>;
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub enum Expr<'a> {
+  StrLit(StrLit<'a>),
+  Error,
+}
+
+impl<'a> syntax::Expr<BorrowedSyntax<'a>> for Expr<'a> {
+  fn cast<'b>(&'b self) -> syntax::ExprCast<'b, BorrowedSyntax<'a>> {
+    match self {
+      Expr::StrLit(ref e) => syntax::ExprCast::StrLit(e),
+      Expr::Error => syntax::ExprCast::Error,
+    }
+  }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
@@ -65,17 +84,48 @@ impl syntax::StrLit for StrLit<'_> {
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
-pub enum Expr<'a> {
-  StrLit(StrLit<'a>),
-  Error,
+pub enum Pat<'a> {
+  Member(MemberPat<'a>),
+  Ident(IdentPat<'a>),
+  SyntaxError,
 }
 
-impl<'a> syntax::Expr<BorrowedSyntax<'a>> for Expr<'a> {
-  fn cast<'b>(&'b self) -> syntax::ExprCast<'b, BorrowedSyntax<'a>> {
+impl<'a> syntax::Pat<BorrowedSyntax<'a>> for Pat<'a> {
+  fn cast<'b>(&'b self) -> syntax::PatCast<'b, BorrowedSyntax<'a>> {
     match self {
-      Expr::StrLit(ref e) => syntax::ExprCast::StrLit(e),
-      Expr::Error => syntax::ExprCast::Error,
+      Pat::Member(ref e) => syntax::PatCast::Member(e),
+      Pat::Ident(ref e) => syntax::PatCast::Ident(e),
+      Pat::SyntaxError => syntax::PatCast::SyntaxError,
     }
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct MemberPat<'a> {
+  pub loc: (),
+  pub base: &'a Expr<'a>,
+  pub key: &'a Expr<'a>,
+}
+
+impl<'a> syntax::MemberPat<BorrowedSyntax<'a>> for MemberPat<'a> {
+  fn base(&self) -> &Expr<'a> {
+    self.base
+  }
+
+  fn key(&self) -> &Expr<'a> {
+    self.key
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct IdentPat<'a> {
+  pub loc: (),
+  pub name: &'a str,
+}
+
+impl syntax::IdentPat for IdentPat<'_> {
+  fn name(&self) -> &str {
+    self.name
   }
 }
 
@@ -86,28 +136,16 @@ mod seq_expr_tests {
 
   #[test]
   fn test_eq_empty() {
-    let left_foo = Expr::StrLit(StrLit {
-      loc: (),
-      value: "foo",
-    });
-    let left_bar = Expr::StrLit(StrLit {
-      loc: (),
-      value: "bar",
-    });
+    let left_foo = Expr::StrLit(StrLit { loc: (), value: "foo" });
+    let left_bar = Expr::StrLit(StrLit { loc: (), value: "bar" });
     let left_seq = vec![left_foo, left_bar];
     let left = SeqExpr {
       loc: (),
       exprs: &left_seq,
     };
 
-    let right_foo = Expr::StrLit(StrLit {
-      loc: (),
-      value: "foo",
-    });
-    let right_bar = Expr::StrLit(StrLit {
-      loc: (),
-      value: "bar",
-    });
+    let right_foo = Expr::StrLit(StrLit { loc: (), value: "foo" });
+    let right_bar = Expr::StrLit(StrLit { loc: (), value: "bar" });
     let right_seq = vec![right_foo, right_bar];
     let right = SeqExpr {
       loc: (),

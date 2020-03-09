@@ -12,6 +12,10 @@ pub trait Syntax: Sized {
   type SeqExpr: SeqExpr<Self>;
   type BinExpr: BinExpr<Self>;
   type StrLit: StrLit;
+
+  type Pat: Pat<Self>;
+  type MemberPat: MemberPat<Self>;
+  type IdentPat: IdentPat;
 }
 
 /// Trait representing any ActionScript expression
@@ -22,6 +26,7 @@ pub trait Expr<S: Syntax> {
 
 /// Represents the result of downcasting an expression.
 pub enum ExprCast<'a, S: Syntax> {
+  Seq(&'a S::SeqExpr),
   StrLit(&'a S::StrLit),
   Error,
 }
@@ -90,4 +95,26 @@ pub enum BinOp {
 
 pub trait StrLit {
   fn value(&self) -> &str;
+}
+
+/// Trait representing any ActionScript pattern (assignment left-hand side)
+pub trait Pat<S: Syntax> {
+  /// Downcast the pattern to its concrete type.
+  fn cast(&self) -> PatCast<S>;
+}
+
+/// Represents the result of downcasting a pattern.
+pub enum PatCast<'a, S: Syntax> {
+  Member(&'a S::MemberPat),
+  Ident(&'a S::IdentPat),
+  SyntaxError,
+}
+
+pub trait MemberPat<S: Syntax> {
+  fn base(&self) -> &S::Expr;
+  fn key(&self) -> &S::Expr;
+}
+
+pub trait IdentPat {
+  fn name(&self) -> &str;
 }

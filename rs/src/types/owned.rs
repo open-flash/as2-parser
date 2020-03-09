@@ -8,6 +8,51 @@ impl syntax::Syntax for OwnedSyntax {
   type SeqExpr = SeqExpr;
   type BinExpr = BinExpr;
   type StrLit = StrLit;
+  type Pat = Pat;
+  type MemberPat = MemberPat;
+  type IdentPat = IdentPat;
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub enum Stmt {
+  Expr(ExprStmt),
+  /// Abstract Trace Statement
+  ///
+  /// ```aas2
+  /// @trace("Hello, World!");
+  /// ```
+  Trace(TraceStmt),
+  SyntaxError,
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct ExprStmt {
+  pub loc: (),
+  pub expr: Box<Expr>,
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct TraceStmt {
+  pub loc: (),
+  pub value: Box<Expr>,
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub enum Expr {
+  Seq(SeqExpr),
+  // Assign(AssignExpr),
+  StrLit(StrLit),
+  SyntaxError,
+}
+
+impl syntax::Expr<OwnedSyntax> for Expr {
+  fn cast(&self) -> syntax::ExprCast<OwnedSyntax> {
+    match self {
+      Expr::Seq(ref e) => syntax::ExprCast::Seq(e),
+      Expr::StrLit(ref e) => syntax::ExprCast::StrLit(e),
+      Expr::SyntaxError => syntax::ExprCast::Error,
+    }
+  }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
@@ -61,17 +106,48 @@ impl syntax::StrLit for StrLit {
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
-pub enum Expr {
-  StrLit(StrLit),
-  Error,
+pub enum Pat {
+  MemberPat(MemberPat),
+  IdentPat(IdentPat),
+  SyntaxError,
 }
 
-impl syntax::Expr<OwnedSyntax> for Expr {
-  fn cast(&self) -> syntax::ExprCast<OwnedSyntax> {
+impl syntax::Pat<OwnedSyntax> for Pat {
+  fn cast(&self) -> syntax::PatCast<OwnedSyntax> {
     match self {
-      Expr::StrLit(ref e) => syntax::ExprCast::StrLit(e),
-      Expr::Error => syntax::ExprCast::Error,
+      Pat::MemberPat(ref e) => syntax::PatCast::Member(e),
+      Pat::IdentPat(ref e) => syntax::PatCast::Ident(e),
+      Pat::SyntaxError => syntax::PatCast::SyntaxError,
     }
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct MemberPat {
+  pub loc: (),
+  pub base: Box<Expr>,
+  pub key: Box<Expr>,
+}
+
+impl syntax::MemberPat<OwnedSyntax> for MemberPat {
+  fn base(&self) -> &Expr {
+    &self.base
+  }
+
+  fn key(&self) -> &Expr {
+    &self.key
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct IdentPat {
+  pub loc: (),
+  pub name: String,
+}
+
+impl syntax::IdentPat for IdentPat {
+  fn name(&self) -> &str {
+    &self.name
   }
 }
 
