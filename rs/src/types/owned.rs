@@ -1,4 +1,5 @@
 use crate::types::ast::traits;
+use std::borrow::Cow;
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub enum OwnedSyntax {}
@@ -168,8 +169,8 @@ pub struct StrLit {
 }
 
 impl traits::StrLit for StrLit {
-  fn value(&self) -> &str {
-    &self.value
+  fn value(&self) -> Cow<str> {
+    Cow::Borrowed(&self.value)
   }
 }
 

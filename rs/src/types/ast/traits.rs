@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 /// A poor man's never type represented as an empty type so it works on stable Rust.
 pub enum Empty {}
 
@@ -134,7 +136,7 @@ pub enum BinOp {
 }
 
 pub trait StrLit {
-  fn value(&self) -> &str;
+  fn value(&self) -> Cow<str>;
 }
 
 /// Trait representing any ActionScript pattern (assignment left-hand side)

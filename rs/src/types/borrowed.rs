@@ -1,5 +1,6 @@
 use crate::types::ast::traits;
 use std::marker::PhantomData;
+use std::borrow::Cow;
 
 pub struct BorrowedSyntax<'a> {
   _phantom: PhantomData<&'a traits::Empty>,
@@ -162,8 +163,8 @@ pub struct StrLit<'a> {
 }
 
 impl traits::StrLit for StrLit<'_> {
-  fn value(&self) -> &str {
-    self.value
+  fn value(&self) -> Cow<str> {
+    Cow::Borrowed(self.value)
   }
 }
 
