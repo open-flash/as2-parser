@@ -30,8 +30,8 @@ mod parser_tests {
 
     let actual_tree = parse_script(&as2_text);
     let expected_tree: owned::StrLit = owned::StrLit {
-      _loc: (),
-      _value: String::new(),
+      loc: (),
+      value: String::new(),
     };
 
     assert_eq!(actual_tree, expected_tree);

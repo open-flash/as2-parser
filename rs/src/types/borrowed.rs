@@ -16,14 +16,14 @@ impl<'a> syntax::Syntax for BorrowedSyntax<'a> {
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct SeqExpr<'a> {
-  pub _loc: (),
-  pub _exprs: &'a [Expr<'a>],
+  pub loc: (),
+  pub exprs: &'a [Expr<'a>],
 }
 
 impl<'s> syntax::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
   #[cfg(not(feature = "gat"))]
   fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Expr<'s>> + 'a> {
-    Box::new(self._exprs.iter())
+    Box::new(self.exprs.iter())
   }
 
   #[cfg(feature = "gat")]
@@ -31,36 +31,36 @@ impl<'s> syntax::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
 
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Iter<'_> {
-    self._exprs.iter()
+    self.exprs.iter()
   }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct BinExpr<'a> {
-  pub _loc: (),
-  pub _left: &'a Expr<'a>,
-  pub _right: &'a Expr<'a>,
+  pub loc: (),
+  pub left: &'a Expr<'a>,
+  pub right: &'a Expr<'a>,
 }
 
 impl<'a> syntax::BinExpr<BorrowedSyntax<'a>> for BinExpr<'a> {
   fn left(&self) -> &Expr<'a> {
-    self._left
+    self.left
   }
 
   fn right(&self) -> &Expr<'a> {
-    self._right
+    self.right
   }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct StrLit<'a> {
-  pub _loc: (),
-  pub _value: &'a str,
+  pub loc: (),
+  pub value: &'a str,
 }
 
 impl syntax::StrLit for StrLit<'_> {
   fn value(&self) -> &str {
-    self._value
+    self.value
   }
 }
 
@@ -87,31 +87,31 @@ mod seq_expr_tests {
   #[test]
   fn test_eq_empty() {
     let left_foo = Expr::StrLit(StrLit {
-      _loc: (),
-      _value: "foo",
+      loc: (),
+      value: "foo",
     });
     let left_bar = Expr::StrLit(StrLit {
-      _loc: (),
-      _value: "bar",
+      loc: (),
+      value: "bar",
     });
     let left_seq = vec![left_foo, left_bar];
     let left = SeqExpr {
-      _loc: (),
-      _exprs: &left_seq,
+      loc: (),
+      exprs: &left_seq,
     };
 
     let right_foo = Expr::StrLit(StrLit {
-      _loc: (),
-      _value: "foo",
+      loc: (),
+      value: "foo",
     });
     let right_bar = Expr::StrLit(StrLit {
-      _loc: (),
-      _value: "bar",
+      loc: (),
+      value: "bar",
     });
     let right_seq = vec![right_foo, right_bar];
     let right = SeqExpr {
-      _loc: (),
-      _exprs: &right_seq,
+      loc: (),
+      exprs: &right_seq,
     };
 
     assert_eq!(left.exprs().len(), 2);

@@ -16,8 +16,8 @@ use crate::types::owned;
 
 pub fn parse_script(_input: &str) -> owned::StrLit {
   owned::StrLit {
-    _loc: (),
-    _value: String::new(),
+    loc: (),
+    value: String::new(),
   }
 }
 

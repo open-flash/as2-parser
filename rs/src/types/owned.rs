@@ -5,21 +5,21 @@ pub enum OwnedSyntax {}
 
 impl syntax::Syntax for OwnedSyntax {
   type Expr = Expr;
-  type SeqExpr = SeqExpr<Self>;
-  type BinExpr = BinExpr<Self>;
+  type SeqExpr = SeqExpr;
+  type BinExpr = BinExpr;
   type StrLit = StrLit;
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
-pub struct SeqExpr<S: syntax::Syntax> {
-  pub _loc: (),
-  pub _exprs: Vec<S::Expr>,
+pub struct SeqExpr {
+  pub loc: (),
+  pub exprs: Vec<Expr>,
 }
 
-impl syntax::SeqExpr<OwnedSyntax> for SeqExpr<OwnedSyntax> {
+impl syntax::SeqExpr<OwnedSyntax> for SeqExpr {
   #[cfg(not(feature = "gat"))]
   fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Expr> + 'a> {
-    Box::new(self._exprs.iter())
+    Box::new(self.exprs.iter())
   }
 
   #[cfg(feature = "gat")]
@@ -27,36 +27,36 @@ impl syntax::SeqExpr<OwnedSyntax> for SeqExpr<OwnedSyntax> {
 
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Iter<'_> {
-    self._exprs.iter()
+    self.exprs.iter()
   }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
-pub struct BinExpr<S: syntax::Syntax> {
-  pub _loc: (),
-  pub _left: Box<S::Expr>,
-  pub _right: Box<S::Expr>,
+pub struct BinExpr {
+  pub loc: (),
+  pub left: Box<Expr>,
+  pub right: Box<Expr>,
 }
 
-impl<S: syntax::Syntax> syntax::BinExpr<S> for BinExpr<S> {
-  fn left(&self) -> &S::Expr {
-    &self._left
+impl syntax::BinExpr<OwnedSyntax> for BinExpr {
+  fn left(&self) -> &Expr {
+    &self.left
   }
 
-  fn right(&self) -> &S::Expr {
-    &self._right
+  fn right(&self) -> &Expr {
+    &self.right
   }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct StrLit {
-  pub _loc: (),
-  pub _value: String,
+  pub loc: (),
+  pub value: String,
 }
 
 impl syntax::StrLit for StrLit {
   fn value(&self) -> &str {
-    &self._value
+    &self.value
   }
 }
 
@@ -77,35 +77,35 @@ impl syntax::Expr<OwnedSyntax> for Expr {
 
 #[cfg(test)]
 mod seq_expr_tests {
-  use super::{Expr, OwnedSyntax, SeqExpr, StrLit};
+  use super::{Expr, SeqExpr, StrLit};
   use crate::types::syntax::SeqExpr as _;
 
   #[test]
   fn test_eq_empty() {
-    let left: SeqExpr<OwnedSyntax> = SeqExpr {
-      _loc: (),
-      _exprs: vec![
+    let left: SeqExpr = SeqExpr {
+      loc: (),
+      exprs: vec![
         Expr::StrLit(StrLit {
-          _loc: (),
-          _value: String::from("foo"),
+          loc: (),
+          value: String::from("foo"),
         }),
         Expr::StrLit(StrLit {
-          _loc: (),
-          _value: String::from("bar"),
+          loc: (),
+          value: String::from("bar"),
         }),
       ],
     };
 
-    let right: SeqExpr<OwnedSyntax> = SeqExpr {
-      _loc: (),
-      _exprs: vec![
+    let right: SeqExpr = SeqExpr {
+      loc: (),
+      exprs: vec![
         Expr::StrLit(StrLit {
-          _loc: (),
-          _value: String::from("foo"),
+          loc: (),
+          value: String::from("foo"),
         }),
         Expr::StrLit(StrLit {
-          _loc: (),
-          _value: String::from("bar"),
+          loc: (),
+          value: String::from("bar"),
         }),
       ],
     };
