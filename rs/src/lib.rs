@@ -1,7 +1,7 @@
 #![cfg_attr(feature = "gat", allow(incomplete_features), feature(generic_associated_types))]
 
-pub mod parser;
 pub mod lexer;
+pub mod parser;
 pub mod types;
 
 #[cfg(test)]

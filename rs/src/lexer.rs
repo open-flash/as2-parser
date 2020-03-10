@@ -1,6 +1,13 @@
 use std::str::Chars;
 
-use crate::types::syntax::{SyntaxKind, SyntaxToken};
+use crate::types::syntax::SyntaxKind;
+use rowan::SmolStr;
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct LexerToken {
+  pub kind: SyntaxKind,
+  pub text: SmolStr,
+}
 
 // #[derive(Debug, Clone)]
 // pub struct TokenIterator<'text> {
@@ -11,7 +18,7 @@ use crate::types::syntax::{SyntaxKind, SyntaxToken};
 //   type Item = SyntaxToken<'text>,
 // }
 
-pub fn tokenize(mut text: &str) -> Vec<SyntaxToken> {
+pub fn tokenize(mut text: &str) -> Vec<LexerToken> {
   let mut tokens = Vec::new();
   while let Some(token) = next_token(text) {
     text = &text[token.text.len()..];
@@ -20,31 +27,32 @@ pub fn tokenize(mut text: &str) -> Vec<SyntaxToken> {
   tokens
 }
 
-fn next_token(input: &str) -> Option<SyntaxToken> {
+fn next_token(input: &str) -> Option<LexerToken> {
   let input_len = input.len();
   let mut chars = input.chars();
   let chars = &mut chars;
   let first = match chars.next() {
     None => return None,
-    Some(c) => c
+    Some(c) => c,
   };
   let kind: SyntaxKind = match first {
     '/' => match chars.next() {
       Some('/') => end_trailing_comment(chars),
-      _ => unimplemented!()
+      _ => unimplemented!(),
     },
     c if is_id_start(c) => end_id_or_keyword(c, chars),
     c if is_whitespace(c) => end_whitespace(c, chars),
-    ';' => SyntaxKind::Semicolon,
-    '(' => SyntaxKind::OpenParen,
-    ')' => SyntaxKind::CloseParen,
+    ';' => SyntaxKind::TokenSemicolon,
+    '(' => SyntaxKind::TokenOpenParen,
+    ')' => SyntaxKind::TokenCloseParen,
     '"' => end_double_quoted_string(chars),
-    c => {
-      unimplemented!("Tokens starting with: {:?}", c)
-    }
+    c => unimplemented!("Tokens starting with: {:?}", c),
   };
   let token_len = input_len - chars.as_str().len();
-  Some(SyntaxToken { kind, text: &input[..token_len] })
+  Some(LexerToken {
+    kind,
+    text: input[..token_len].into(),
+  })
 }
 
 /// Consumes a trailing comment.
@@ -60,15 +68,15 @@ fn end_trailing_comment(chars: &mut Chars) -> SyntaxKind {
       _ => {}
     }
   }
-  SyntaxKind::TrailingComment
+  SyntaxKind::TokenTrailingComment
 }
 
 fn end_double_quoted_string(chars: &mut Chars) -> SyntaxKind {
   // TODO: Handle line terminators
   loop {
     match chars.next() {
-      None => return SyntaxKind::Error,
-      Some('"') => return SyntaxKind::StrLit,
+      None => return SyntaxKind::TokenError,
+      Some('"') => return SyntaxKind::TokenStrLit,
       Some('\\') => {
         chars.next(); // Skip next char
       }
@@ -83,88 +91,74 @@ fn end_double_quoted_string(chars: &mut Chars) -> SyntaxKind {
 fn end_id_or_keyword(first: char, chars: &mut Chars) -> SyntaxKind {
   debug_assert!(is_id_start(first));
   match first {
-    't' => {
-      match chars.next() {
-        Some('h') => {
-          match chars.next() {
-            Some('i') => {
-              match chars.next() {
-                Some('s') => {
-                  let old_chars = chars.clone();
-                  match chars.next() {
-                    Some(c) if is_id_continue(c) => end_id(chars),
-                    _ => {
-                      *chars = old_chars;
-                      SyntaxKind::ThisKw
-                    }
-                  }
-                }
-                Some(c) if is_id_continue(c) => end_id(chars),
-                _ => SyntaxKind::Identifier,
+    't' => match chars.next() {
+      Some('h') => match chars.next() {
+        Some('i') => match chars.next() {
+          Some('s') => {
+            let old_chars = chars.clone();
+            match chars.next() {
+              Some(c) if is_id_continue(c) => end_id(chars),
+              _ => {
+                *chars = old_chars;
+                SyntaxKind::TokenThis
               }
             }
-            Some('r') => {
-              match chars.next() {
-                Some('o') => {
-                  match chars.next() {
-                    Some('w') => {
-                      let old_chars = chars.clone();
-                      match chars.next() {
-                        Some(c) if is_id_continue(c) => end_id(chars),
-                        _ => {
-                          *chars = old_chars;
-                          SyntaxKind::ThrowKw
-                        }
-                      }
-                    }
-                    Some(c) if is_id_continue(c) => end_id(chars),
-                    _ => SyntaxKind::Identifier,
-                  }
-                }
-                Some(c) if is_id_continue(c) => end_id(chars),
-                _ => SyntaxKind::Identifier,
-              }
-            }
-            Some(c) if is_id_continue(c) => end_id(chars),
-            _ => SyntaxKind::Identifier,
           }
-        }
-        Some('r') => {
-          match chars.next() {
-            Some('u') => {
-              match chars.next() {
-                Some('e') => {
-                  let old_chars = chars.clone();
-                  match chars.next() {
-                    Some(c) if is_id_continue(c) => end_id(chars),
-                    _ => {
-                      *chars = old_chars;
-                      SyntaxKind::TrueKw
-                    }
-                  }
-                }
-                Some(c) if is_id_continue(c) => end_id(chars),
-                _ => SyntaxKind::Identifier,
-              }
-            }
-            Some('y') => {
+          Some(c) if is_id_continue(c) => end_id(chars),
+          _ => SyntaxKind::TokenIdent,
+        },
+        Some('r') => match chars.next() {
+          Some('o') => match chars.next() {
+            Some('w') => {
               let old_chars = chars.clone();
               match chars.next() {
                 Some(c) if is_id_continue(c) => end_id(chars),
                 _ => {
                   *chars = old_chars;
-                  SyntaxKind::TryKw
+                  SyntaxKind::TokenThrow
                 }
               }
             }
             Some(c) if is_id_continue(c) => end_id(chars),
-            _ => SyntaxKind::Identifier,
+            _ => SyntaxKind::TokenIdent,
+          },
+          Some(c) if is_id_continue(c) => end_id(chars),
+          _ => SyntaxKind::TokenIdent,
+        },
+        Some(c) if is_id_continue(c) => end_id(chars),
+        _ => SyntaxKind::TokenIdent,
+      },
+      Some('r') => match chars.next() {
+        Some('u') => match chars.next() {
+          Some('e') => {
+            let old_chars = chars.clone();
+            match chars.next() {
+              Some(c) if is_id_continue(c) => end_id(chars),
+              _ => {
+                *chars = old_chars;
+                SyntaxKind::TokenTrue
+              }
+            }
+          }
+          Some(c) if is_id_continue(c) => end_id(chars),
+          _ => SyntaxKind::TokenIdent,
+        },
+        Some('y') => {
+          let old_chars = chars.clone();
+          match chars.next() {
+            Some(c) if is_id_continue(c) => end_id(chars),
+            _ => {
+              *chars = old_chars;
+              SyntaxKind::TokenTry
+            }
           }
         }
         Some(c) if is_id_continue(c) => end_id(chars),
-        _ => SyntaxKind::Identifier,
-      }
-    }
+        _ => SyntaxKind::TokenIdent,
+      },
+      Some(c) if is_id_continue(c) => end_id(chars),
+      _ => SyntaxKind::TokenIdent,
+    },
     _ => unimplemented!(),
   }
 }
@@ -177,10 +171,11 @@ fn end_id(chars: &mut Chars) -> SyntaxKind {
       Some(c) if is_id_continue(c) => {}
       _ => {
         *chars = old_chars;
-        break; }
+        break;
+      }
     }
   }
-  SyntaxKind::Identifier
+  SyntaxKind::TokenIdent
 }
 
 fn end_whitespace(first: char, chars: &mut Chars) -> SyntaxKind {
@@ -199,14 +194,19 @@ fn end_whitespace(first: char, chars: &mut Chars) -> SyntaxKind {
         end_line_terminator_sequence(c, chars);
         multiline = true;
       }
-      Some(c) if is_whitespace(c) => {},
+      Some(c) if is_whitespace(c) => {}
       _ => {
         *chars = old_chars;
-        break; }
+        break;
+      }
     }
   }
 
-  if multiline { SyntaxKind::MultilineWhitespace } else { SyntaxKind::UnilineWhitespace }
+  if multiline {
+    SyntaxKind::TokenMultilineWhitespace
+  } else {
+    SyntaxKind::TokenUnilineWhitespace
+  }
 }
 
 fn end_line_terminator_sequence(first: char, chars: &mut Chars) {
@@ -214,8 +214,10 @@ fn end_line_terminator_sequence(first: char, chars: &mut Chars) {
   if first == '\r' {
     let old_chars = chars.clone();
     match chars.next() {
-      Some('\n') => {},
-      _ => {*chars = old_chars;},
+      Some('\n') => {}
+      _ => {
+        *chars = old_chars;
+      }
     };
   }
 }
@@ -244,10 +246,10 @@ fn is_id_continue(c: char) -> bool {
 
 #[cfg(test)]
 mod parser_tests {
+  use crate::lexer::{tokenize, LexerToken};
+  use crate::types::syntax::SyntaxKind;
   use ::test_generator::test_resources;
   use std::path::Path;
-  use crate::lexer::tokenize;
-  use crate::types::syntax::{SyntaxToken, SyntaxKind};
 
   #[test_resources("../tests/as2/[!.]*/*/")]
   fn test_lex_as2(path: &str) {
@@ -270,12 +272,30 @@ mod parser_tests {
     let tokens = tokenize(&as2_text);
 
     let expected = vec![
-      SyntaxToken { kind: SyntaxKind::Identifier, text: "trace" },
-      SyntaxToken { kind: SyntaxKind::OpenParen, text: "(" },
-      SyntaxToken { kind: SyntaxKind::StrLit, text: "\"Hello, World!\"" },
-      SyntaxToken { kind: SyntaxKind::CloseParen, text: ")" },
-      SyntaxToken { kind: SyntaxKind::Semicolon, text: ";" },
-      SyntaxToken { kind: SyntaxKind::MultilineWhitespace, text: "\n" },
+      LexerToken {
+        kind: SyntaxKind::TokenIdent,
+        text: "trace".into(),
+      },
+      LexerToken {
+        kind: SyntaxKind::TokenOpenParen,
+        text: "(".into(),
+      },
+      LexerToken {
+        kind: SyntaxKind::TokenStrLit,
+        text: "\"Hello, World!\"".into(),
+      },
+      LexerToken {
+        kind: SyntaxKind::TokenCloseParen,
+        text: ")".into(),
+      },
+      LexerToken {
+        kind: SyntaxKind::TokenSemicolon,
+        text: ";".into(),
+      },
+      LexerToken {
+        kind: SyntaxKind::TokenMultilineWhitespace,
+        text: "\n".into(),
+      },
     ];
 
     assert_eq!(&tokens, &expected);

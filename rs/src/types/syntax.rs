@@ -1,36 +1,56 @@
 use crate::types::ast::traits;
-use std::convert::TryFrom;
 use std::borrow::Cow;
-use std::str::Chars;
+use std::convert::TryFrom;
 use std::ops::Range;
+use std::str::Chars;
+use variant_count::VariantCount;
 
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Ord, PartialOrd, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, VariantCount)]
+#[repr(u16)]
 pub enum SyntaxKind {
   /// Invalid token
-  Error,
+  TokenError,
 
-  /// End of input
-  End,
+  // Trivia
+  /// Whitespace without any newline
+  TokenUnilineWhitespace,
 
-  /// Identifier
+  /// Whitespace containing at least one newline
+  TokenMultilineWhitespace,
+
+  /// Trailing comment: from `//` to the end of the line
+  TokenTrailingComment,
+
+  /// Comment between `/*` and `*/`, containing a newline
+  TokenMultilineComment,
+
+  /// Comment between `/*` and `*/`, without a newline
+  TokenUnilineComment,
+
+  // Keywords
+  /// The keyword `throw`
+  TokenThrow,
+
+  /// The keyword `this`
+  TokenThis,
+
+  /// The keyword `true`
+  TokenTrue,
+
+  /// The keyword `try`
+  TokenTry,
+
+  // Atoms
+  /// Identifier name
   ///
   /// In ActionScript, keywords are never valid identifiers so there is no
-  /// ambiguity here.
+  /// ambiguity here. (e.g. `throw` is _not_ an identifier)
   ///
   /// Examples:
   /// - `foo`
   /// - `$foo`
   /// - `_foo_$123`
-  Identifier,
-
-  /// `;`
-  Semicolon,
-
-  /// `(`
-  OpenParen,
-
-  /// `)`
-  CloseParen,
+  TokenIdent,
 
   /// String literal
   ///
@@ -40,110 +60,146 @@ pub enum SyntaxKind {
   /// - `'"'`
   /// - `'\''`
   /// - `"\""`
-  StrLit,
+  TokenStrLit,
 
-  /// Whitespace without any newline
-  UnilineWhitespace,
+  // Punctuators
+  /// `;`
+  TokenSemicolon,
 
-  /// Whitespace containing at least one newline
-  MultilineWhitespace,
+  /// `(`
+  TokenOpenParen,
 
-  /// Trailing comment: from `//` to the end of the line
-  TrailingComment,
+  /// `)`
+  TokenCloseParen,
 
-  /// Comment between `/*` and `*/`, containing a newline
-  MultilineComment,
+  // Simple nodes
+  /// String literal expression
+  NodeStrLit,
 
-  /// Comment between `/*` and `*/`, without a newline
-  UnilineComment,
+  /// Identifier reference expression
+  NodeIdentRef,
 
-  /// The keyword `throw`
-  ThrowKw,
-
-  /// The keyword `this`
-  ThisKw,
-
-  /// The keyword `true`
-  TrueKw,
-
-  /// The keyword `try`
-  TryKw,
-
+  // Composite nodes
   /// Any statement
-  Statement,
+  NodeStatement,
 
   /// Any expression
-  Expression,
+  NodeExpression,
+
+  /// Identifier pattern
+  NodeIdentPat,
 
   /// Root node
-  Script,
+  NodeScript,
 }
 
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Ord, PartialOrd, Hash)]
-pub struct SyntaxToken<'text> {
-  pub(crate) kind: SyntaxKind,
-  pub(crate) text: &'text str,
+impl From<SyntaxKind> for u16 {
+  fn from(value: SyntaxKind) -> Self {
+    value as u16
+  }
 }
 
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
-pub struct SyntaxNode<'text> {
-  pub(crate) kind: SyntaxKind,
-  pub(crate) children: Vec<SyntaxSymbol<'text>>
-}
-
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
-pub enum SyntaxSymbol<'text> {
-  Token(SyntaxToken<'text>),
-  Node(SyntaxNode<'text>),
-}
-
-/// Represents an identifier pattern backed by a lossless syntax node.
-///
-/// # Invariant
-///
-/// `IdentPat` maintains `identPat.syntax.kind === SyntaxKind::Identifier`.
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
-pub struct IdentPat<'text> {
-  syntax: SyntaxToken<'text>,
-}
-
-impl<'text> TryFrom<SyntaxToken<'text>> for IdentPat<'text> {
+impl TryFrom<u16> for SyntaxKind {
   type Error = ();
 
-  fn try_from(syntax: SyntaxToken<'text>) -> Result<Self, Self::Error> {
-    match syntax.kind {
-      SyntaxKind::Identifier => Ok(IdentPat { syntax }),
+  fn try_from(value: u16) -> Result<Self, Self::Error> {
+    if usize::from(value) < SyntaxKind::VARIANT_COUNT {
+      Ok(unsafe { std::mem::transmute::<u16, SyntaxKind>(value) })
+    } else {
+      Err(())
+    }
+  }
+}
+
+impl SyntaxKind {
+  pub fn is_trivia(self) -> bool {
+    use SyntaxKind::*;
+    match self {
+      TokenMultilineWhitespace | TokenUnilineWhitespace => true,
+      TokenTrailingComment | TokenMultilineComment | TokenUnilineComment => true,
+      _ => false,
+    }
+  }
+}
+
+/// Enum representing the ActionScript 2 language supported by OpenFlash
+/// It is used as a bridge between Rowan's untyped node and AS2's syntax kinds.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum As2Lang {}
+
+impl rowan::Language for As2Lang {
+  type Kind = SyntaxKind;
+
+  fn kind_from_raw(raw: rowan::SyntaxKind) -> Self::Kind {
+    SyntaxKind::try_from(raw.0).unwrap()
+  }
+
+  fn kind_to_raw(kind: Self::Kind) -> rowan::SyntaxKind {
+    rowan::SyntaxKind(u16::from(kind))
+  }
+}
+
+/// Represents an AS2 syntax token
+///
+/// A token is a terminal symbol of the syntax tree. It has a kind, range and text.
+/// The text is owned by the token and stored as a `rowan::SmolStr`.
+pub type SyntaxToken = rowan::SyntaxToken<As2Lang>;
+
+/// Represents an AS2 syntax node
+///
+/// A node is a non-terminal symbol of the syntax tree. It has a kind, range and
+/// child symbols. It does not own text directly: the text is retrieved by
+/// iterating on the descendant children.
+pub type SyntaxNode = rowan::SyntaxNode<As2Lang>;
+/// Represents an AS2 syntax symbol: token (terminal) or node (non-terminal).
+pub type SyntaxSymbol = rowan::NodeOrToken<SyntaxNode, SyntaxToken>;
+
+/// Represents an identifier pattern backed by a lossless syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct IdentPat {
+  syntax: SyntaxNode,
+}
+
+impl TryFrom<SyntaxNode> for IdentPat {
+  type Error = ();
+
+  fn try_from(syntax: SyntaxNode) -> Result<Self, Self::Error> {
+    match syntax.kind() {
+      SyntaxKind::NodeIdentPat => Ok(IdentPat { syntax }),
       _ => Err(()),
     }
   }
 }
 
-impl<'text> traits::IdentPat for IdentPat<'text> {
+impl traits::IdentPat for IdentPat {
   fn name(&self) -> &str {
-    &self.syntax.text
+    unimplemented!()
+    // self.syntax.first_token().unwrap().text().as_str()
   }
 }
 
 /// Represents a string literal backed by a lossless syntax node.
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
-pub struct StrLit<'text> {
-  syntax: SyntaxToken<'text>,
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct StrLit {
+  syntax: SyntaxNode,
 }
 
-impl<'text> TryFrom<SyntaxToken<'text>> for StrLit<'text> {
+impl TryFrom<SyntaxNode> for StrLit {
   type Error = ();
 
-  fn try_from(syntax: SyntaxToken<'text>) -> Result<Self, Self::Error> {
-    match syntax.kind {
-      SyntaxKind::StrLit => Ok(StrLit { syntax }),
+  fn try_from(syntax: SyntaxNode) -> Result<Self, Self::Error> {
+    match syntax.kind() {
+      SyntaxKind::NodeStrLit => Ok(StrLit { syntax }),
       _ => Err(()),
     }
   }
 }
 
-impl<'text> traits::StrLit for StrLit<'text> {
+impl traits::StrLit for StrLit {
   fn value(&self) -> Cow<str> {
-    Cow::Owned(unescape_string(self.syntax.text).unwrap())
+    let token = self.syntax.first_token().unwrap();
+    let text = token.text().as_str();
+    Cow::Owned(unescape_string(text).unwrap())
   }
 }
 
@@ -161,7 +217,11 @@ fn unescape_string(quoted: &str) -> Option<String> {
       Err(_) => has_error = true,
     },
   );
-  if has_error { None } else { Some(unescaped) }
+  if has_error {
+    None
+  } else {
+    Some(unescaped)
+  }
 }
 
 fn find_quoted_content(quoted: &str) -> Option<QuotedContent> {
@@ -170,17 +230,19 @@ fn find_quoted_content(quoted: &str) -> Option<QuotedContent> {
   let (last_idx, last_char) = chars.clone().next_back()?;
   if first_idx == last_idx {
     // There is only one character in `quoted`
-    return None
+    return None;
   }
   debug_assert!(first_idx < last_idx);
   match (first_char, last_char) {
-    ('"', '"') => {
-      Some(QuotedContent {quotes: QuoteKind::Double, range: first_char.len_utf8()..last_idx})
-    },
-    ('\'', '\'') => {
-      Some(QuotedContent {quotes: QuoteKind::Single, range: first_char.len_utf8()..last_idx})
-    },
-    _ => None
+    ('"', '"') => Some(QuotedContent {
+      quotes: QuoteKind::Double,
+      range: first_char.len_utf8()..last_idx,
+    }),
+    ('\'', '\'') => Some(QuotedContent {
+      quotes: QuoteKind::Single,
+      range: first_char.len_utf8()..last_idx,
+    }),
+    _ => None,
   }
 }
 
@@ -193,12 +255,12 @@ struct QuotedContent {
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 enum QuoteKind {
   Single,
-  Double
+  Double,
 }
 
 fn unescape_string_content<F>(str_content: &str, quotes: QuoteKind, callback: &mut F)
-  where
-    F: FnMut(Range<usize>, Result<char, UnescapeError>)
+where
+  F: FnMut(Range<usize>, Result<char, UnescapeError>),
 {
   let content_len: usize = str_content.len();
   let mut chars = str_content.chars();
@@ -221,33 +283,23 @@ fn unescape_char(first_char: char, chars: &mut Chars, quotes: QuoteKind) -> Resu
   match first_char {
     '"' if quotes == QuoteKind::Double => Err(UnescapeError::EscapeOnlyChar),
     '\'' if quotes == QuoteKind::Single => Err(UnescapeError::EscapeOnlyChar),
-    '\\' => {
-      match chars.next() {
-        None => Err(UnescapeError::LoneSlash),
-        Some('\'') => Ok('\''),
-        Some('"') => Ok('"'),
-        Some('\\') => Ok('\\'),
-        Some('b') => Ok('\x08'),
-        Some('f') => Ok('\x0c'),
-        Some('n') => Ok('\n'),
-        Some('r') => Ok('\r'),
-        Some('t') => Ok('\t'),
-        Some('v') => Ok('\x0b'),
-        Some('x') => {
-          unimplemented!("UnescapeHexSequence")
-        },
-        Some('u') => {
-          unimplemented!("UnescapeUnicodeSequence")
-        },
-        Some('0') => {
-          unimplemented!("UnescapeNulOrOctal")
-        },
-        Some(_) => {
-          unimplemented!("UnescapeNonEscapeChar")
-        },
-      }
+    '\\' => match chars.next() {
+      None => Err(UnescapeError::LoneSlash),
+      Some('\'') => Ok('\''),
+      Some('"') => Ok('"'),
+      Some('\\') => Ok('\\'),
+      Some('b') => Ok('\x08'),
+      Some('f') => Ok('\x0c'),
+      Some('n') => Ok('\n'),
+      Some('r') => Ok('\r'),
+      Some('t') => Ok('\t'),
+      Some('v') => Ok('\x0b'),
+      Some('x') => unimplemented!("UnescapeHexSequence"),
+      Some('u') => unimplemented!("UnescapeUnicodeSequence"),
+      Some('0') => unimplemented!("UnescapeNulOrOctal"),
+      Some(_) => unimplemented!("UnescapeNonEscapeChar"),
     },
-    _ => Ok(first_char)
+    _ => Ok(first_char),
   }
 }
 
@@ -257,4 +309,14 @@ enum UnescapeError {
   /// Found a non-escaped character that can only appear as escaped
   /// For example `"` must always be escaped inside a double-quoted string literal
   EscapeOnlyChar,
+}
+
+#[cfg(test)]
+mod tests {
+  use super::SyntaxKind;
+
+  #[test]
+  fn test_syntax_kind_variant_count() {
+    assert_eq!(SyntaxKind::VARIANT_COUNT, 21);
+  }
 }

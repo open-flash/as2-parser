@@ -1,6 +1,6 @@
 use crate::types::ast::traits;
-use std::marker::PhantomData;
 use std::borrow::Cow;
+use std::marker::PhantomData;
 
 pub struct BorrowedSyntax<'a> {
   _phantom: PhantomData<&'a traits::Empty>,
