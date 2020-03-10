@@ -1,6 +1,7 @@
 #![cfg_attr(feature = "gat", allow(incomplete_features), feature(generic_associated_types))]
 
 pub mod parser;
+pub mod lexer;
 pub mod types;
 
 #[cfg(test)]
@@ -11,7 +12,7 @@ mod parser_tests {
   use std::path::Path;
 
   #[test_resources("../tests/as2/[!.]*/*/")]
-  fn test_parse_cfg(path: &str) {
+  fn test_parse_as2(path: &str) {
     let path: &Path = Path::new(path);
     let _name = path
       .components()
