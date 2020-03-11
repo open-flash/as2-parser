@@ -9,22 +9,31 @@ pub struct LexerToken {
   pub text: SmolStr,
 }
 
-// #[derive(Debug, Clone)]
-// pub struct TokenIterator<'text> {
-//   text: &'text str,
-// }
-//
-// impl<'text> Iterator for TokenIterator {
-//   type Item = SyntaxToken<'text>,
-// }
+#[derive(Debug, Clone)]
+pub struct Lexer<'text> {
+  text: &'text str,
+}
 
-pub fn tokenize(mut text: &str) -> Vec<LexerToken> {
-  let mut tokens = Vec::new();
-  while let Some(token) = next_token(text) {
-    text = &text[token.text.len()..];
-    tokens.push(token);
+impl Lexer<'_> {
+  pub fn new(text: &str) -> Lexer {
+    Lexer { text }
   }
-  tokens
+}
+
+impl<'text> Iterator for Lexer<'text> {
+  type Item = LexerToken;
+
+  fn next(&mut self) -> Option<Self::Item> {
+    let token = next_token(self.text);
+    if let Some(ref token) = &token {
+      self.text = &self.text[token.text.len()..];
+    }
+    token
+  }
+}
+
+pub fn lex(text: &str) -> Vec<LexerToken> {
+  Lexer::new(text).collect()
 }
 
 fn next_token(input: &str) -> Option<LexerToken> {
@@ -245,8 +254,8 @@ fn is_id_continue(c: char) -> bool {
 }
 
 #[cfg(test)]
-mod parser_tests {
-  use crate::lexer::{tokenize, LexerToken};
+mod lexer_tests {
+  use crate::lexer::{lex, LexerToken};
   use crate::types::syntax::SyntaxKind;
   use ::test_generator::test_resources;
   use std::path::Path;
@@ -269,7 +278,7 @@ mod parser_tests {
     let as2_path = path.join("main.as2");
     let as2_text: String = ::std::fs::read_to_string(as2_path).expect("Failed to read input");
 
-    let tokens = tokenize(&as2_text);
+    let tokens = lex(&as2_text);
 
     let expected = vec![
       LexerToken {

@@ -72,12 +72,18 @@ pub enum SyntaxKind {
   /// `)`
   TokenCloseParen,
 
+  /// `!`
+  TokenExcl,
+
   // Simple nodes
   /// String literal expression
   NodeStrLit,
 
-  /// Identifier reference expression
-  NodeIdentRef,
+  /// Identifier reference expression, or identifier pattern, or label identifier
+  NodeIdent,
+
+  /// Call expression
+  NodeCall,
 
   // Composite nodes
   /// Any statement
@@ -86,11 +92,14 @@ pub enum SyntaxKind {
   /// Any expression
   NodeExpression,
 
-  /// Identifier pattern
-  NodeIdentPat,
-
   /// Root node
   NodeScript,
+}
+
+impl From<SyntaxKind> for rowan::SyntaxKind {
+  fn from(kind: SyntaxKind) -> Self {
+    Self(u16::from(kind))
+  }
 }
 
 impl From<SyntaxKind> for u16 {
@@ -115,8 +124,41 @@ impl SyntaxKind {
   pub fn is_trivia(self) -> bool {
     use SyntaxKind::*;
     match self {
-      TokenMultilineWhitespace | TokenUnilineWhitespace => true,
-      TokenTrailingComment | TokenMultilineComment | TokenUnilineComment => true,
+      TokenMultilineWhitespace
+      | TokenUnilineWhitespace
+      | TokenTrailingComment
+      | TokenMultilineComment
+      | TokenUnilineComment => true,
+      _ => false,
+    }
+  }
+
+  pub fn is_multiline_trivia(self) -> bool {
+    use SyntaxKind::*;
+    match self {
+      TokenMultilineWhitespace | TokenTrailingComment | TokenMultilineComment => true,
+      _ => false,
+    }
+  }
+
+  pub fn is_token(self) -> bool {
+    use SyntaxKind::*;
+    match self {
+      TokenError
+      | TokenUnilineWhitespace
+      | TokenMultilineWhitespace
+      | TokenTrailingComment
+      | TokenMultilineComment
+      | TokenUnilineComment
+      | TokenThrow
+      | TokenThis
+      | TokenTrue
+      | TokenTry
+      | TokenIdent
+      | TokenStrLit
+      | TokenSemicolon
+      | TokenOpenParen
+      | TokenCloseParen => true,
       _ => false,
     }
   }
@@ -165,7 +207,7 @@ impl TryFrom<SyntaxNode> for IdentPat {
 
   fn try_from(syntax: SyntaxNode) -> Result<Self, Self::Error> {
     match syntax.kind() {
-      SyntaxKind::NodeIdentPat => Ok(IdentPat { syntax }),
+      SyntaxKind::NodeIdent => Ok(IdentPat { syntax }),
       _ => Err(()),
     }
   }
@@ -317,6 +359,6 @@ mod tests {
 
   #[test]
   fn test_syntax_kind_variant_count() {
-    assert_eq!(SyntaxKind::VARIANT_COUNT, 21);
+    assert_eq!(SyntaxKind::VARIANT_COUNT, 22);
   }
 }
