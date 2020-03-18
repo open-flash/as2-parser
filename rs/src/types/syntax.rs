@@ -28,6 +28,15 @@ pub enum SyntaxKind {
   TokenUnilineComment,
 
   // Keywords
+  /// The keyword `delete`
+  TokenDelete,
+
+  /// The keyword `false`
+  TokenFalse,
+
+  /// The keyword `for`
+  TokenFor,
+
   /// The keyword `throw`
   TokenThrow,
 
@@ -39,6 +48,12 @@ pub enum SyntaxKind {
 
   /// The keyword `try`
   TokenTry,
+
+  /// The keyword `var`
+  TokenVar,
+
+  /// The keyword `void`
+  TokenVoid,
 
   // Atoms
   /// Identifier name
@@ -62,9 +77,30 @@ pub enum SyntaxKind {
   /// - `"\""`
   TokenStrLit,
 
+  /// Number literal
+  TokenNumLit,
+
   // Punctuators
   /// `;`
   TokenSemicolon,
+
+  /// `:`
+  TokenColon,
+
+  /// `,`
+  TokenComa,
+
+  /// `{`
+  TokenOpenBrace,
+
+  /// `}`
+  TokenCloseBrace,
+
+  /// `[`
+  TokenOpenBracket,
+
+  /// `]`
+  TokenCloseBracket,
 
   /// `(`
   TokenOpenParen,
@@ -72,22 +108,153 @@ pub enum SyntaxKind {
   /// `)`
   TokenCloseParen,
 
+  /// `=`
+  TokenEq,
+
+  /// `==`
+  TokenEqEq,
+
+  /// `===`
+  TokenEqEqEq,
+
+  /// `!=`
+  TokenNotEq,
+
+  /// `!==`
+  TokenNotEqEq,
+
   /// `!`
   TokenExcl,
 
+  /// `?`
+  TokenQuestion,
+
+  /// `<`
+  TokenLt,
+
+  /// `<<`
+  TokenLtLt,
+
+  /// `<=`
+  TokenLtEq,
+
+  /// `>`
+  TokenGt,
+
+  /// `>>`
+  TokenGtGt,
+
+  /// `>>>`
+  TokenGtGtGt,
+
+  /// `>=`
+  TokenGtEq,
+
+  /// `+`
+  TokenPlus,
+
+  /// `++`
+  TokenPlusPlus,
+
+  /// `-`
+  TokenMinus,
+
+  /// `--`
+  TokenMinusMinus,
+
+  /// `|`
+  TokenPipe,
+
+  /// `||`
+  TokenPipePipe,
+
+  /// `&`
+  ///
+  /// "amp" is an abbreviation for "ampersand".
+  TokenAmp,
+
+  /// `&&`
+  ///
+  /// "amp" is an abbreviation for "ampersand".
+  TokenAmpAmp,
+
+  /// `/`
+  TokenSlash,
+
+  /// `%`
+  TokenPercent,
+
+  /// `*`
+  TokenStar,
+
+  /// `^`
+  TokenCaret,
+
+  /// `.`
+  TokenDot,
+
   // Simple nodes
+  /// Boolean literal expression
+  NodeBoolLit,
+
+  /// Number literal expression
+  NodeNumLit,
+
+  /// Object literal expression
+  NodeObjectLit,
+
+  /// A single property from an object literal expression
+  NodeObjectLitProp,
+
   /// String literal expression
   NodeStrLit,
 
   /// Identifier reference expression, or identifier pattern, or label identifier
   NodeIdent,
 
-  /// Call expression
+  /// Sequence expression
+  NodeSeqExpr,
+
+  /// Assignment expression
+  NodeAssignmentExpr,
+
+  /// Conditional expression
+  NodeCondExpr,
+
+  /// Binary expression
+  NodeBinExpr,
+
+  /// Prefix expression
+  NodePrefixExpr,
+
+  /// Postfix expression
+  NodePostfixExpr,
+
+  /// Parenthesized expression
+  NodeParenExpr,
+
+  /// Identifier member expression
+  ///
+  /// ```as2
+  /// foo.bar
+  /// ```
+  NodeIdentMemberExpr,
+
+  /// Computed member expression
+  ///
+  /// ```as2
+  /// foo["bar"]
+  /// ```
+  NodeComputedMemberExpr,
+
   NodeCall,
 
   // Composite nodes
   /// Any statement
   NodeStatement,
+
+  /// Variable declaration
+  NodeVarDecl,
 
   /// Any expression
   NodeExpression,
@@ -104,7 +271,7 @@ impl From<SyntaxKind> for rowan::SyntaxKind {
 
 impl From<SyntaxKind> for u16 {
   fn from(value: SyntaxKind) -> Self {
-    value as u16
+    value.into_u16()
   }
 }
 
@@ -121,6 +288,12 @@ impl TryFrom<u16> for SyntaxKind {
 }
 
 impl SyntaxKind {
+  // TODO: Move this function to the `From` trait once possible (requires const fn in traits)
+  //       (and remove this function)
+  pub const fn into_u16(self) -> u16 {
+    self as u16
+  }
+
   pub fn is_trivia(self) -> bool {
     use SyntaxKind::*;
     match self {
@@ -359,6 +532,6 @@ mod tests {
 
   #[test]
   fn test_syntax_kind_variant_count() {
-    assert_eq!(SyntaxKind::VARIANT_COUNT, 22);
+    assert_eq!(SyntaxKind::VARIANT_COUNT, 74);
   }
 }

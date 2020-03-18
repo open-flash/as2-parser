@@ -1,0 +1,6 @@
+TokenIdent "trace"
+TokenOpenParen "("
+TokenStrLit "\"Hello, World!\""
+TokenCloseParen ")"
+TokenSemicolon ";"
+TokenMultilineWhitespace "\n"

@@ -1,6 +1,8 @@
 use crate::lexer::{Lexer, LexerToken};
+use crate::token_set::TokenSet;
 use crate::types::owned;
 use crate::types::syntax::{SyntaxKind, SyntaxNode};
+use std::convert::TryFrom;
 
 // use crate::types::cast::ExprCast;
 //
@@ -73,6 +75,16 @@ impl<'text> PeekableLexer<'text> {
   }
 
   /// Peeks the next non-trivia token
+  pub(crate) fn peek_over_trivia(&self) -> Option<&LexerToken> {
+    self.peeked.as_ref()
+  }
+
+  /// Peeks the kind of the next non-trivia token
+  pub(crate) fn peek_kind_over_trivia(&self) -> Option<SyntaxKind> {
+    self.peek_over_trivia().map(|token| token.kind)
+  }
+
+  /// Peeks the next non-trivia token
   ///
   /// # Precondition
   ///
@@ -80,15 +92,6 @@ impl<'text> PeekableLexer<'text> {
   pub(crate) fn peek(&self) -> Option<&LexerToken> {
     debug_assert_eq!(self.trivia_kind, TriviaKind::None);
     self.peeked.as_ref()
-  }
-
-  /// Peeks the kind of the next non-trivia token
-  ///
-  /// # Precondition
-  ///
-  /// `self.trivia_kind == TriviaKind::None`
-  pub(crate) fn peek_kind(&self) -> Option<SyntaxKind> {
-    self.peek().map(|token| token.kind)
   }
 
   // /// Peeks the next non-trivia token and preceding trivia kind.
@@ -167,15 +170,15 @@ impl<'text> Parser<'text> {
 
   fn script(mut self) -> Parsed {
     self.builder.start_node(SyntaxKind::NodeScript.into());
-    self.stmt_list(None);
+    self.stmt_list(token_set!(None));
     self.builder.finish_node();
     let green_node: rowan::GreenNode = self.builder.finish();
     Parsed { green_node }
   }
 
-  fn stmt_list(&mut self, end: Option<SyntaxKind>) {
+  fn stmt_list(&mut self, end: TokenSet) {
     self.eat_trivia();
-    while self.lexer.peek_kind() != end {
+    while !end.contains(self.lexer.peek_kind_over_trivia()) {
       self.stmt();
       self.eat_trivia();
     }
@@ -188,39 +191,59 @@ impl<'text> Parser<'text> {
       Some(token) => token,
     };
     match first.kind {
-      kind if is_expr_start(kind) => {
-        self.expr(Some(SyntaxKind::TokenSemicolon));
+      SyntaxKind::TokenVar => self.var_decl(),
+      kind if EXPR_START.contains(Some(kind)) => {
+        self.expr(token_set!(SyntaxKind::TokenSemicolon));
         // Labelled statement or expression
       }
       kind => unimplemented!("{:?}", kind),
     }
     debug_assert!(matches!(
-      self.lexer.peek(),
-      Some(LexerToken {
-        kind: SyntaxKind::TokenSemicolon,
-        ..
-      })
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenSemicolon)
     ));
     self.eat_trivia();
     self.bump();
     self.builder.finish_node();
   }
 
-  fn expr(&mut self, end: Option<SyntaxKind>) {
-    let first = match self.lexer.peek() {
-      None => return,
-      Some(token) => token,
-    };
-    match first.kind {
-      SyntaxKind::TokenIdent => {
-        self.expr_bp(0, end);
-        // Labelled statement or expression
-      }
-      _ => unimplemented!(),
-    }
+  fn var_decl(&mut self) {
+    self.builder.start_node(SyntaxKind::NodeVarDecl.into());
+    debug_assert!(matches!(
+      self.lexer.peek(),
+      Some(LexerToken {
+        kind: SyntaxKind::TokenVar,
+        ..
+      })
+    ));
+    self.bump();
+    self.eat_trivia();
+    self.ident();
+    self.eat_trivia();
+    debug_assert!(matches!(
+      self.lexer.peek(),
+      Some(LexerToken {
+        kind: SyntaxKind::TokenEq,
+        ..
+      })
+    ));
+    self.bump();
+    self.eat_trivia();
+    self.expr(token_set!(None, SyntaxKind::TokenSemicolon));
+    self.eat_trivia();
+
+    self.builder.finish_node();
   }
 
-  fn expr_bp(&mut self, _bp: u8, end: Option<SyntaxKind>) {
+  fn expr(&mut self, end: TokenSet) {
+    match self.lexer.peek_kind_over_trivia() {
+      kind if end.contains(kind) => {}
+      kind if EXPR_START.contains(kind) => self.expr_bp(InfixPrecedence::Sequence, end),
+      kind => unimplemented!("Unexpected expr start {:?}", kind),
+    };
+  }
+
+  fn expr_bp(&mut self, expr_precedence: InfixPrecedence, end: TokenSet) {
     let cp = self.builder.checkpoint();
     let first = match self.lexer.peek() {
       Some(first) => first,
@@ -228,17 +251,52 @@ impl<'text> Parser<'text> {
     };
     match first.kind {
       SyntaxKind::TokenIdent => self.ident(),
+      SyntaxKind::TokenFalse | SyntaxKind::TokenTrue => self.bool_lit(),
+      SyntaxKind::TokenNumLit => self.num_lit(),
+      SyntaxKind::TokenOpenBrace => self.object_lit(),
+      SyntaxKind::TokenOpenParen => self.paren_expr(),
       SyntaxKind::TokenStrLit => self.str_lit(),
-      _ => unimplemented!(),
+      SyntaxKind::TokenDelete | SyntaxKind::TokenPlus | SyntaxKind::TokenPlusPlus => self.prefix_expr(end),
+      kind => unimplemented!("Unexpected epxression start: {:?}", kind),
     }
-    let operator = match self.lexer.peek() {
-      e if e.map(|t| t.kind) == end => return,
-      None => panic!("Unexpected end of file"),
-      Some(token) => token,
-    };
-    match operator.kind {
-      SyntaxKind::TokenOpenParen => self.end_call(cp),
-      _ => unimplemented!(),
+    loop {
+      let operator_kind = match self.lexer.peek_kind_over_trivia() {
+        kind if end.contains(kind) => return,
+        None => panic!("Unexpected end of file"),
+        Some(kind) => kind,
+      };
+      match operator_kind {
+        SyntaxKind::TokenComa => {
+          if expr_precedence == InfixPrecedence::Sequence {
+            self.end_seq_expr(cp, end);
+          } else {
+            break;
+          }
+        }
+        SyntaxKind::TokenEq => self.end_assignment_expr(cp, end),
+        SyntaxKind::TokenQuestion => self.end_cond_expr(cp, end),
+        SyntaxKind::TokenDot => self.end_ident_member_expr(cp),
+        SyntaxKind::TokenOpenBracket => self.end_computed_member_expr(cp),
+        kind if InfixPrecedence::try_from(kind) == Ok(InfixPrecedence::Postfix) => {
+          if InfixPrecedence::Postfix > expr_precedence {
+            self.eat_trivia();
+            self.end_postfix_expr(cp);
+          } else {
+            break;
+          }
+        }
+        kind if InfixPrecedence::try_from(kind).is_ok() => {
+          let operator_precedence = InfixPrecedence::try_from(kind).unwrap();
+          if operator_precedence > expr_precedence {
+            self.eat_trivia();
+            self.end_bin_expr(cp, end);
+          } else {
+            break;
+          }
+        }
+        SyntaxKind::TokenOpenParen => self.end_call(cp),
+        kind => unimplemented!("Unexpected expression operator: {:?}", kind),
+      }
     }
   }
 
@@ -255,6 +313,96 @@ impl<'text> Parser<'text> {
     self.builder.finish_node();
   }
 
+  fn bool_lit(&mut self) {
+    self.builder.start_node(SyntaxKind::NodeBoolLit.into());
+    debug_assert!(matches!(
+      self.lexer.peek(),
+      Some(LexerToken {kind: SyntaxKind::TokenFalse, ..})
+      | Some(LexerToken {kind: SyntaxKind::TokenTrue, ..})
+    ));
+    self.bump();
+    self.builder.finish_node();
+  }
+
+  fn num_lit(&mut self) {
+    self.builder.start_node(SyntaxKind::NodeNumLit.into());
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenNumLit)
+    ));
+    self.bump();
+    self.builder.finish_node();
+  }
+
+  fn object_lit(&mut self) {
+    self.builder.start_node(SyntaxKind::NodeObjectLit.into());
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenOpenBrace)
+    ));
+    self.bump();
+
+    loop {
+      self.eat_trivia();
+      self.object_lit_prop();
+      match self.lexer.peek_kind_over_trivia() {
+        Some(SyntaxKind::TokenComa) => {}
+        Some(SyntaxKind::TokenCloseBrace) => break,
+        _ => panic!("Unexpected token"),
+      }
+    }
+
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenCloseBrace)
+    ));
+    self.eat_trivia();
+    self.bump();
+
+    self.builder.finish_node();
+  }
+
+  fn object_lit_prop(&mut self) {
+    let prop_follow = token_set!(SyntaxKind::TokenComa, SyntaxKind::TokenCloseBrace);
+
+    self.builder.start_node(SyntaxKind::NodeObjectLitProp.into());
+    self.ident();
+
+    match self.lexer.peek_kind_over_trivia() {
+      Some(SyntaxKind::TokenColon) => {}
+      _ => panic!("Unexpected token"),
+    }
+    self.eat_trivia();
+    self.bump();
+
+    self.eat_trivia();
+    self.expr(prop_follow);
+
+    self.builder.finish_node();
+  }
+
+  fn paren_expr(&mut self) {
+    self.builder.start_node(SyntaxKind::NodeParenExpr.into());
+
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenOpenParen)
+    ));
+    self.eat_trivia();
+    self.bump();
+
+    self.expr_bp(InfixPrecedence::Sequence, token_set!(SyntaxKind::TokenCloseParen));
+
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenCloseParen)
+    ));
+    self.eat_trivia();
+    self.bump();
+
+    self.builder.finish_node();
+  }
+
   fn str_lit(&mut self) {
     self.builder.start_node(SyntaxKind::NodeStrLit.into());
     debug_assert!(matches!(
@@ -268,18 +416,167 @@ impl<'text> Parser<'text> {
     self.builder.finish_node();
   }
 
-  fn end_call(&mut self, cp: rowan::Checkpoint) {
-    self.builder.start_node_at(cp, SyntaxKind::NodeCall.into());
+  fn prefix_expr(&mut self, end: TokenSet) {
+    self.builder.start_node(SyntaxKind::NodePrefixExpr.into());
+
+    debug_assert!(token_set!(
+      SyntaxKind::TokenDelete,
+      SyntaxKind::TokenPlus,
+      SyntaxKind::TokenPlusPlus
+    )
+    .contains(self.lexer.peek_kind_over_trivia()));
+    self.bump();
+
+    self.eat_trivia();
+    self.expr_bp(InfixPrecedence::Prefix, end);
+
+    self.builder.finish_node();
+  }
+
+  fn end_seq_expr(&mut self, cp: rowan::Checkpoint, end: TokenSet) {
+    self.builder.start_node_at(cp, SyntaxKind::NodeSeqExpr.into());
+
     debug_assert!(matches!(
-      self.lexer.peek(),
-      Some(LexerToken {
-        kind: SyntaxKind::TokenOpenParen,
-        ..
-      })
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenComa)
     ));
     self.eat_trivia();
     self.bump();
-    self.expr_bp(0, Some(SyntaxKind::TokenCloseParen));
+
+    loop {
+      self.eat_trivia();
+      self.expr_bp(InfixPrecedence::Assignment, end);
+      match self.lexer.peek_kind_over_trivia() {
+        Some(SyntaxKind::TokenComa) => {
+          self.eat_trivia();
+          self.bump();
+        }
+        kind if end.contains(kind) => break,
+        _ => panic!(),
+      };
+    }
+
+    self.builder.finish_node();
+  }
+
+  fn end_assignment_expr(&mut self, cp: rowan::Checkpoint, end: TokenSet) {
+    self.builder.start_node_at(cp, SyntaxKind::NodeAssignmentExpr.into());
+
+    debug_assert!(matches!(self.lexer.peek_kind_over_trivia(), Some(SyntaxKind::TokenEq)));
+    self.eat_trivia();
+    self.bump();
+
+    self.eat_trivia();
+    self.expr_bp(InfixPrecedence::Assignment, end);
+
+    self.builder.finish_node();
+  }
+
+  fn end_cond_expr(&mut self, cp: rowan::Checkpoint, end: TokenSet) {
+    self.builder.start_node_at(cp, SyntaxKind::NodeCondExpr.into());
+
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenQuestion)
+    ));
+    self.eat_trivia();
+    self.bump();
+
+    self.eat_trivia();
+    self.expr_bp(InfixPrecedence::Assignment, token_set!(SyntaxKind::TokenColon));
+
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenColon)
+    ));
+    self.eat_trivia();
+    self.bump();
+
+    self.eat_trivia();
+    self.expr_bp(InfixPrecedence::Assignment, end);
+
+    self.builder.finish_node();
+  }
+
+  fn end_bin_expr(&mut self, cp: rowan::Checkpoint, end: TokenSet) {
+    self.builder.start_node_at(cp, SyntaxKind::NodeBinExpr.into());
+
+    let bp: InfixPrecedence = match self.lexer.peek_kind_over_trivia() {
+      Some(kind) if InfixPrecedence::try_from(kind).is_ok() => InfixPrecedence::try_from(kind).unwrap(),
+      _ => panic!("UnexpectedBinOp"),
+    };
+    self.eat_trivia();
+    self.bump();
+
+    self.eat_trivia();
+    self.expr_bp(bp, end);
+
+    self.builder.finish_node();
+  }
+
+  fn end_ident_member_expr(&mut self, cp: rowan::Checkpoint) {
+    self.builder.start_node_at(cp, SyntaxKind::NodeIdentMemberExpr.into());
+
+    debug_assert!(matches!(self.lexer.peek_kind_over_trivia(), Some(SyntaxKind::TokenDot)));
+    self.eat_trivia();
+    self.bump();
+
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenIdent)
+    ));
+    self.eat_trivia();
+    self.ident();
+
+    self.builder.finish_node();
+  }
+
+  fn end_computed_member_expr(&mut self, cp: rowan::Checkpoint) {
+    self
+      .builder
+      .start_node_at(cp, SyntaxKind::NodeComputedMemberExpr.into());
+
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenOpenBracket)
+    ));
+    self.eat_trivia();
+    self.bump();
+
+    self.expr_bp(InfixPrecedence::Sequence, token_set!(SyntaxKind::TokenCloseBracket));
+
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenCloseBracket)
+    ));
+    self.eat_trivia();
+    self.bump();
+
+    self.builder.finish_node();
+  }
+
+  fn end_postfix_expr(&mut self, cp: rowan::Checkpoint) {
+    self.builder.start_node_at(cp, SyntaxKind::NodePostfixExpr.into());
+
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenPlusPlus)
+    ));
+    self.eat_trivia();
+    self.bump();
+
+    self.builder.finish_node();
+  }
+
+  fn end_call(&mut self, cp: rowan::Checkpoint) {
+    self.builder.start_node_at(cp, SyntaxKind::NodeCall.into());
+    debug_assert!(matches!(
+      self.lexer.peek_kind_over_trivia(),
+      Some(SyntaxKind::TokenOpenParen)
+    ));
+    self.eat_trivia();
+    self.bump();
+    self.expr_bp(InfixPrecedence::Assignment, token_set!(SyntaxKind::TokenCloseParen));
     debug_assert!(matches!(
       self.lexer.peek(),
       Some(LexerToken {
@@ -306,47 +603,16 @@ pub fn parse(text: &str) -> Parsed {
   parser.script()
 }
 
-fn is_expr_start(token_kind: SyntaxKind) -> bool {
-  debug_assert!(token_kind.is_token());
-  use SyntaxKind::*;
-  match token_kind {
-    TokenIdent | TokenStrLit | TokenExcl => true,
-    _ => false,
-  }
-}
-
-//
-// struct Parser<'i> {
-//   input: &'i str,
-// }
-//
-// #[derive(Debug, Eq, PartialEq, Copy, Clone, Ord, PartialOrd, Hash)]
-// enum Token<'a> {
-//   Ident(&'a str),
-//   Error(&'a str),
-//   End,
-// }
-//
-// impl Parser {
-//   fn parse_script() {
-//
-//   }
-//
-//   fn parse_statements(directives: bool, top_level: bool, end: Token) {
-//     let mut stmts: Vec<owned::Stmt> = Vec::new();
-//   }
-//
-//   fn peek(&self) -> Token {
-//     let chars = self.input.char_indices();
-//     match chars.next() {
-//       None => Token::End,
-//       Some((i, c @ 'a'..='z')) => {
-//
-//       },
-//       Some((i, c)) => Token::Error(self.input[i..c.len_utf8()])
-//     }
-//   }
-// }
+const EXPR_START: TokenSet = token_set!(
+  SyntaxKind::TokenTrue,
+  SyntaxKind::TokenFalse,
+  SyntaxKind::TokenIdent,
+  SyntaxKind::TokenNumLit,
+  SyntaxKind::TokenStrLit,
+  SyntaxKind::TokenOpenBrace,
+  SyntaxKind::TokenOpenBracket,
+  SyntaxKind::TokenExcl
+);
 
 pub fn parse_script(_input: &str) -> owned::StrLit {
   owned::StrLit {
@@ -355,23 +621,48 @@ pub fn parse_script(_input: &str) -> owned::StrLit {
   }
 }
 
-// pub fn eval_expr(input: &owned::Expr) -> f64 {
-//   match input.downcast() {
-//     ExprCast::BinExpr(e) => eval_bin_expr(e),
-//     ExprCast::NumLit(e) => eval_num_lit(e),
-//     ExprCast::StrLit(e) => unimplemented!("StrLit"),
-//   }
-// }
-//
-// pub fn eval_num_lit(input: &owned::NumLit) -> f64 {
-//   input.value()
-// }
-//
-// pub fn eval_bin_expr(input: &owned::BinExpr) -> f64 {
-//   let left = eval_expr(input.left());
-//   let right = eval_expr(input.right());
-//   left + right
-// }
+// TODO: Rename to just `precedence`
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+enum InfixPrecedence {
+  Sequence,
+  Assignment,
+  // Conditional,
+  LogicalOr,
+  LogicalAnd,
+  BitwiseOr,
+  BitwiseXor,
+  BitwiseAnd,
+  Equality,
+  Relational,
+  Shift,
+  Additive,
+  Multiplicative,
+  Prefix,
+  Postfix,
+  // Member,
+}
+
+impl TryFrom<SyntaxKind> for InfixPrecedence {
+  type Error = ();
+
+  fn try_from(value: SyntaxKind) -> Result<Self, Self::Error> {
+    match value {
+      SyntaxKind::TokenPipePipe => Ok(InfixPrecedence::LogicalOr),
+      SyntaxKind::TokenAmpAmp => Ok(InfixPrecedence::LogicalAnd),
+      SyntaxKind::TokenPipe => Ok(InfixPrecedence::BitwiseOr),
+      SyntaxKind::TokenCaret => Ok(InfixPrecedence::BitwiseXor),
+      SyntaxKind::TokenAmp => Ok(InfixPrecedence::BitwiseAnd),
+      SyntaxKind::TokenEqEq => Ok(InfixPrecedence::Equality),
+      SyntaxKind::TokenLt => Ok(InfixPrecedence::Relational),
+      SyntaxKind::TokenLtLt => Ok(InfixPrecedence::Shift),
+      SyntaxKind::TokenPlus | SyntaxKind::TokenMinus => Ok(InfixPrecedence::Additive),
+      SyntaxKind::TokenStar | SyntaxKind::TokenSlash => Ok(InfixPrecedence::Multiplicative),
+      SyntaxKind::TokenPlusPlus | SyntaxKind::TokenMinusMinus => Ok(InfixPrecedence::Postfix),
+      // SyntaxKind::TokenOpenParen | SyntaxKind::TokenDot | SyntaxKind::TokenOpenBracket => Ok(InfixPrecedence::Member),
+      _ => Err(()),
+    }
+  }
+}
 
 #[cfg(test)]
 mod parser_tests {
