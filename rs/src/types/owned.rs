@@ -1,4 +1,6 @@
+use crate::types::ast::ser::SerializeScript;
 use crate::types::ast::traits;
+use serde::{Serialize, Serializer};
 use std::borrow::Cow;
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
@@ -10,6 +12,7 @@ impl traits::Syntax for OwnedSyntax {
   type Stmt = Stmt;
   type ExprStmt = ExprStmt;
   type TraceStmt = TraceStmt;
+  type BreakStmt = BreakStmt;
 
   type Expr = Expr;
   type SeqExpr = SeqExpr;
@@ -43,8 +46,15 @@ impl traits::Script<OwnedSyntax> for Script {
   }
 }
 
+impl Serialize for Script {
+  fn serialize<S: Serializer>(&self, serializer: S) -> Result<<S as Serializer>::Ok, <S as Serializer>::Error> {
+    SerializeScript::<OwnedSyntax>(self).serialize(serializer)
+  }
+}
+
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub enum Stmt {
+  Break(BreakStmt),
   Expr(ExprStmt),
   /// Abstract Trace Statement
   ///
@@ -58,6 +68,7 @@ pub enum Stmt {
 impl traits::Stmt<OwnedSyntax> for Stmt {
   fn cast(&self) -> traits::StmtCast<OwnedSyntax> {
     match self {
+      Stmt::Break(ref e) => traits::StmtCast::Break(e),
       Stmt::Expr(ref e) => traits::StmtCast::Expr(e),
       Stmt::Trace(ref e) => traits::StmtCast::Trace(e),
       Stmt::SyntaxError => traits::StmtCast::SyntaxError,
@@ -88,6 +99,13 @@ impl traits::TraceStmt<OwnedSyntax> for TraceStmt {
     &self.value
   }
 }
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct BreakStmt {
+  pub loc: (),
+}
+
+impl traits::BreakStmt<OwnedSyntax> for BreakStmt {}
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub enum Expr {
@@ -257,5 +275,23 @@ mod seq_expr_tests {
 
     assert_eq!(left.exprs().len(), 2);
     assert_eq!(left, right);
+  }
+}
+
+#[cfg(test)]
+mod script_tests {
+  use super::{BreakStmt, Script, Stmt};
+
+  #[test]
+  fn test_serialize() {
+    let script: Script = Script {
+      loc: (),
+      stmts: vec![Stmt::Break(BreakStmt { loc: () }), Stmt::Break(BreakStmt { loc: () })],
+    };
+
+    let actual_json = serde_json::to_string(&script).unwrap();
+    let expected_json = String::from("{\"body\":[{\"type\":\"BreakStmt\"},{\"type\":\"BreakStmt\"}]}");
+
+    assert_eq!(actual_json, expected_json);
   }
 }

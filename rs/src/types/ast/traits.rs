@@ -10,6 +10,7 @@ pub trait Syntax: Sized {
   type Stmt: Stmt<Self>;
   type TraceStmt: TraceStmt<Self>;
   type ExprStmt: ExprStmt<Self>;
+  type BreakStmt: BreakStmt<Self>;
 
   type Expr: Expr<Self>;
   type SeqExpr: SeqExpr<Self>;
@@ -44,6 +45,7 @@ pub trait Stmt<S: Syntax> {
 pub enum StmtCast<'a, S: Syntax> {
   Trace(&'a S::TraceStmt),
   Expr(&'a S::ExprStmt),
+  Break(&'a S::BreakStmt),
   SyntaxError,
 }
 
@@ -54,6 +56,8 @@ pub trait TraceStmt<S: Syntax> {
 pub trait ExprStmt<S: Syntax> {
   fn expr(&self) -> &S::Expr;
 }
+
+pub trait BreakStmt<S: Syntax> {}
 
 /// Trait representing any ActionScript expression
 pub trait Expr<S: Syntax> {

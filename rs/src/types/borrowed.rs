@@ -12,6 +12,7 @@ impl<'a> traits::Syntax for BorrowedSyntax<'a> {
   type Stmt = Stmt<'a>;
   type TraceStmt = TraceStmt<'a>;
   type ExprStmt = ExprStmt<'a>;
+  type BreakStmt = BreakStmt<'a>;
 
   type Expr = Expr<'a>;
   type SeqExpr = SeqExpr<'a>;
@@ -85,6 +86,14 @@ impl<'a> traits::ExprStmt<BorrowedSyntax<'a>> for ExprStmt<'a> {
     self.expr
   }
 }
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct BreakStmt<'a> {
+  pub loc: (),
+  pub phantom: PhantomData<&'a ()>,
+}
+
+impl<'a> traits::BreakStmt<BorrowedSyntax<'a>> for BreakStmt<'a> {}
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub enum Expr<'a> {
