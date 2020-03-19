@@ -670,6 +670,7 @@ mod parser_tests {
   use crate::types::syntax::SyntaxNode;
   use ::test_generator::test_resources;
   use rowan::WalkEvent;
+  use std::convert::TryFrom;
   use std::fs;
   use std::io;
   use std::path::Path;
@@ -707,6 +708,13 @@ mod parser_tests {
     let cst_text: String = fs::read_to_string(path.join("main.cst.txt")).expect("Failed to read CST");
 
     assert_eq!(&actual_cst_text, &cst_text);
+
+    let actual_ast = crate::types::syntax::Script::try_from(actual_cst).unwrap();
+    let actual_ast_json = serde_json::to_string_pretty(&actual_ast).unwrap();
+    fs::write(path.join("local-main.ast.json"), &actual_ast_json).unwrap();
+    let expected_ast_json: String = fs::read_to_string(path.join("main.ast.json")).expect("Failed to read AST");
+
+    assert_eq!(actual_ast_json, expected_ast_json);
   }
 
   fn dump_node<W: io::Write>(writer: &mut W, node: &SyntaxNode) -> Result<(), io::Error> {

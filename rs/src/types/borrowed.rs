@@ -33,16 +33,18 @@ pub struct Script<'a> {
 
 impl<'s> traits::Script<BorrowedSyntax<'s>> for Script<'s> {
   #[cfg(not(feature = "gat"))]
-  fn stmts<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Stmt<'s>> + 'a> {
-    Box::new(self.stmts.iter())
+  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Stmt<'s>>> + 'a> {
+    Box::new(self.stmts.iter().map(|stmt| traits::MaybeOwned::Borrowed(stmt)))
   }
 
+  #[allow(clippy::type_complexity)]
   #[cfg(feature = "gat")]
-  type Stmts<'a> = core::slice::Iter<'a, Stmt<'a>>;
+  type Stmts<'a> =
+    core::iter::Map<core::slice::Iter<'a, Stmt<'a>>, for<'r> fn(&'r Stmt<'a>) -> traits::MaybeOwned<'r, Stmt<'a>>>;
 
   #[cfg(feature = "gat")]
   fn stmts(&self) -> Self::Stmts<'_> {
-    self.stmts.iter()
+    self.stmts.iter().map(|s| traits::MaybeOwned::Borrowed(s))
   }
 }
 
@@ -56,8 +58,8 @@ pub enum Stmt<'a> {
 impl<'a> traits::Stmt<BorrowedSyntax<'a>> for Stmt<'a> {
   fn cast<'b>(&'b self) -> traits::StmtCast<'b, BorrowedSyntax<'a>> {
     match self {
-      Stmt::Trace(ref e) => traits::StmtCast::Trace(e),
-      Stmt::Expr(ref e) => traits::StmtCast::Expr(e),
+      Stmt::Trace(ref e) => traits::StmtCast::Trace(traits::MaybeOwned::Borrowed(e)),
+      Stmt::Expr(ref e) => traits::StmtCast::Expr(traits::MaybeOwned::Borrowed(e)),
       Stmt::SyntaxError => traits::StmtCast::SyntaxError,
     }
   }

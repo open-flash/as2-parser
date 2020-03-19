@@ -1,4 +1,6 @@
 use crate::types::ast::traits;
+use crate::types::ast::traits::{ExprCast, PatCast, StmtCast, Syntax};
+use rowan::SyntaxNodeChildren;
 use std::borrow::Cow;
 use std::convert::TryFrom;
 use std::ops::Range;
@@ -369,7 +371,250 @@ pub type SyntaxNode = rowan::SyntaxNode<As2Lang>;
 /// Represents an AS2 syntax symbol: token (terminal) or node (non-terminal).
 pub type SyntaxSymbol = rowan::NodeOrToken<SyntaxNode, SyntaxToken>;
 
-/// Represents an identifier pattern backed by a lossless syntax node.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub enum ConcreteSyntax {}
+
+impl traits::Syntax for ConcreteSyntax {
+  type Script = Script;
+
+  type Stmt = Stmt;
+  type BreakStmt = BreakStmt;
+  type ExprStmt = ExprStmt;
+  type TraceStmt = TraceStmt;
+
+  type Expr = Expr;
+  type AssignExpr = AssignExpr;
+  type BinExpr = BinExpr;
+  type SeqExpr = SeqExpr;
+  type StrLit = StrLit;
+
+  type Pat = Pat;
+  type MemberPat = MemberPat;
+  type IdentPat = IdentPat;
+}
+
+macro_rules! impl_serialize {
+  ($struct_name:ident, $adapter_name:ident) => {
+    impl serde::Serialize for $struct_name {
+      fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        crate::types::ast::ser::$adapter_name::<ConcreteSyntax>(self).serialize(serializer)
+      }
+    }
+  };
+}
+
+/// Represents an AST Script root backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct Script {
+  syntax: SyntaxNode,
+}
+
+impl_serialize!(Script, SerializeScript);
+
+impl TryFrom<SyntaxNode> for Script {
+  type Error = ();
+
+  fn try_from(syntax: SyntaxNode) -> Result<Self, Self::Error> {
+    match syntax.kind() {
+      SyntaxKind::NodeScript => Ok(Self { syntax }),
+      _ => Err(()),
+    }
+  }
+}
+
+impl traits::Script<ConcreteSyntax> for Script {
+  #[cfg(not(feature = "gat"))]
+  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Stmt>> + 'a> {
+    Box::new(ScriptStmts {
+      inner: self.syntax.children(),
+    })
+  }
+
+  // #[cfg(feature = "gat")]
+  // type StmtRef<'a> = &'static Stmt;
+
+  #[cfg(feature = "gat")]
+  type Stmts<'a> = ScriptStmts;
+
+  #[cfg(feature = "gat")]
+  fn stmts(&self) -> Self::Stmts<'_> {
+    ScriptStmts {
+      inner: self.syntax.children(),
+    }
+  }
+}
+
+pub struct ScriptStmts {
+  inner: SyntaxNodeChildren<As2Lang>,
+}
+
+impl Iterator for ScriptStmts {
+  type Item = traits::MaybeOwned<'static, Stmt>;
+
+  fn next(&mut self) -> Option<Self::Item> {
+    while let Some(node) = self.inner.next() {
+      match Stmt::try_from(node) {
+        Ok(s) => return Some(traits::MaybeOwned::Owned(s)),
+        Err(()) => {}
+      }
+    }
+    None
+  }
+}
+
+/// Represents a statement backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct Stmt {
+  syntax: SyntaxNode,
+}
+
+impl TryFrom<SyntaxNode> for Stmt {
+  type Error = ();
+
+  fn try_from(syntax: SyntaxNode) -> Result<Self, Self::Error> {
+    match syntax.kind() {
+      SyntaxKind::NodeStatement => Ok(Self { syntax }),
+      _ => Err(()),
+    }
+  }
+}
+
+impl traits::Stmt<ConcreteSyntax> for Stmt {
+  fn cast(&self) -> StmtCast<ConcreteSyntax> {
+    traits::StmtCast::Break(traits::MaybeOwned::Owned(BreakStmt {
+      syntax: self.syntax.clone(),
+    }))
+  }
+}
+
+/// Represents a break statement backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct BreakStmt {
+  syntax: SyntaxNode,
+}
+
+impl traits::BreakStmt<ConcreteSyntax> for BreakStmt {}
+
+/// Represents an expression statement backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct ExprStmt {
+  syntax: SyntaxNode,
+}
+
+impl traits::ExprStmt<ConcreteSyntax> for ExprStmt {
+  fn expr(&self) -> &<ConcreteSyntax as Syntax>::Expr {
+    unimplemented!()
+  }
+}
+
+/// Represents an abstract trace statement backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct TraceStmt {
+  syntax: SyntaxNode,
+}
+
+impl traits::TraceStmt<ConcreteSyntax> for TraceStmt {
+  fn value(&self) -> &<ConcreteSyntax as Syntax>::Expr {
+    unimplemented!()
+  }
+}
+
+/// Represents an expression backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct Expr {
+  syntax: SyntaxNode,
+}
+
+impl traits::Expr<ConcreteSyntax> for Expr {
+  fn cast(&self) -> ExprCast<ConcreteSyntax> {
+    unimplemented!()
+  }
+}
+
+/// Represents an assignment expression backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct AssignExpr {
+  syntax: SyntaxNode,
+}
+
+impl traits::AssignExpr<ConcreteSyntax> for AssignExpr {
+  fn target(&self) -> &<ConcreteSyntax as Syntax>::Pat {
+    unimplemented!()
+  }
+
+  fn value(&self) -> &<ConcreteSyntax as Syntax>::Expr {
+    unimplemented!()
+  }
+}
+
+/// Represents a binary expression backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct BinExpr {
+  syntax: SyntaxNode,
+}
+
+impl traits::BinExpr<ConcreteSyntax> for BinExpr {
+  fn left(&self) -> &<ConcreteSyntax as Syntax>::Expr {
+    unimplemented!()
+  }
+
+  fn right(&self) -> &<ConcreteSyntax as Syntax>::Expr {
+    unimplemented!()
+  }
+}
+
+/// Represents a sequence expression backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct SeqExpr {
+  syntax: SyntaxNode,
+}
+
+impl traits::SeqExpr<ConcreteSyntax> for SeqExpr {
+  #[cfg(not(feature = "gat"))]
+  fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Expr> + 'a> {
+    unimplemented!()
+  }
+
+  #[cfg(feature = "gat")]
+  type Iter<'a> = core::slice::Iter<'a, Expr>;
+
+  #[cfg(feature = "gat")]
+  fn exprs(&self) -> Self::Iter<'_> {
+    unimplemented!()
+  }
+}
+
+/// Represents a pattern backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct Pat {
+  syntax: SyntaxNode,
+}
+
+impl traits::Pat<ConcreteSyntax> for Pat {
+  fn cast(&self) -> PatCast<ConcreteSyntax> {
+    unimplemented!()
+  }
+}
+
+/// Represents a member pattern backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct MemberPat {
+  syntax: SyntaxNode,
+}
+
+impl traits::MemberPat<ConcreteSyntax> for MemberPat {
+  fn base(&self) -> &<ConcreteSyntax as Syntax>::Expr {
+    unimplemented!()
+  }
+
+  fn key(&self) -> &<ConcreteSyntax as Syntax>::Expr {
+    unimplemented!()
+  }
+}
+
+/// Represents an identifier pattern backed by a concrete syntax node.
 #[derive(Debug, Eq, PartialEq, Clone, Hash)]
 pub struct IdentPat {
   syntax: SyntaxNode,
@@ -380,7 +625,7 @@ impl TryFrom<SyntaxNode> for IdentPat {
 
   fn try_from(syntax: SyntaxNode) -> Result<Self, Self::Error> {
     match syntax.kind() {
-      SyntaxKind::NodeIdent => Ok(IdentPat { syntax }),
+      SyntaxKind::NodeIdent => Ok(Self { syntax }),
       _ => Err(()),
     }
   }

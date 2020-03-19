@@ -20,8 +20,16 @@ impl<'a, Ast: Syntax> Serialize for SerializeScriptStmts<'a, Ast> {
   fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
     use serde::ser::SerializeSeq;
     let stmts = self.0.stmts();
-    let mut seq_serializer = serializer.serialize_seq(Some(stmts.len()))?;
+    let len = match stmts.size_hint() {
+      (min_len, Some(max_len)) if min_len == max_len => Some(min_len),
+      _ => None,
+    };
+    let mut seq_serializer = serializer.serialize_seq(len)?;
     for stmt in stmts {
+      let stmt: &Ast::Stmt = match stmt {
+        MaybeOwned::Owned(ref s) => s,
+        MaybeOwned::Borrowed(s) => &*s,
+      };
       seq_serializer.serialize_element(&SerializeStmt::<Ast>(stmt))?;
     }
     seq_serializer.end()
@@ -33,7 +41,7 @@ pub struct SerializeStmt<'a, Ast: Syntax>(pub &'a Ast::Stmt);
 impl<Ast: Syntax> Serialize for SerializeStmt<'_, Ast> {
   fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
     match self.0.cast() {
-      StmtCast::Break(s) => SerializeBreakStmt::<Ast>(s).serialize(serializer),
+      StmtCast::Break(s) => SerializeBreakStmt::<Ast>(&*s).serialize(serializer),
       _ => unimplemented!(),
     }
   }

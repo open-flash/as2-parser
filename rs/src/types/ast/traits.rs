@@ -8,14 +8,14 @@ pub trait Syntax: Sized {
   type Script: Script<Self>;
 
   type Stmt: Stmt<Self>;
-  type TraceStmt: TraceStmt<Self>;
-  type ExprStmt: ExprStmt<Self>;
   type BreakStmt: BreakStmt<Self>;
+  type ExprStmt: ExprStmt<Self>;
+  type TraceStmt: TraceStmt<Self>;
 
   type Expr: Expr<Self>;
-  type SeqExpr: SeqExpr<Self>;
   type AssignExpr: AssignExpr<Self>;
   type BinExpr: BinExpr<Self>;
+  type SeqExpr: SeqExpr<Self>;
   type StrLit: StrLit;
 
   type Pat: Pat<Self>;
@@ -23,13 +23,43 @@ pub trait Syntax: Sized {
   type IdentPat: IdentPat;
 }
 
+/// A `Cow` variant that does not require `ToOwned`.
+///
+/// It is intended as a workaround until Generic Associated Types are improved.
+/// Once rust-lang/rust#30472 is fixed, this type could be removed.
+#[derive(Debug)]
+pub enum MaybeOwned<'a, T>
+where
+  T: 'a,
+{
+  Borrowed(&'a T),
+  Owned(T),
+}
+
+impl<T> std::ops::Deref for MaybeOwned<'_, T> {
+  type Target = T;
+  fn deref(&self) -> &T {
+    match self {
+      MaybeOwned::Borrowed(ref borrowed) => *borrowed,
+      MaybeOwned::Owned(ref owned) => owned,
+    }
+  }
+}
+
 /// Script root node
 pub trait Script<S: Syntax> {
   #[cfg(not(feature = "gat"))]
-  fn stmts<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a S::Stmt> + 'a>;
+  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item = MaybeOwned<'a, S::Stmt>> + 'a>;
+
+  // TODO: Use the following code once rust-lang/rust#30472 is fixed. (It a
+  // #[cfg(feature = "gat")]
+  // type StmtRef<'a>;
+  //
+  // #[cfg(feature = "gat")]
+  // type Stmts<'a>: Iterator<Item = &Self::StmtRef<'a>>;
 
   #[cfg(feature = "gat")]
-  type Stmts<'a>: ExactSizeIterator<Item = &'a S::Stmt>;
+  type Stmts<'a>: Iterator<Item = MaybeOwned<'a, S::Stmt>>;
 
   #[cfg(feature = "gat")]
   fn stmts(&self) -> Self::Stmts<'_>;
@@ -43,9 +73,9 @@ pub trait Stmt<S: Syntax> {
 
 /// Represents the result of downcasting an expression.
 pub enum StmtCast<'a, S: Syntax> {
-  Trace(&'a S::TraceStmt),
-  Expr(&'a S::ExprStmt),
-  Break(&'a S::BreakStmt),
+  Trace(MaybeOwned<'a, S::TraceStmt>),
+  Expr(MaybeOwned<'a, S::ExprStmt>),
+  Break(MaybeOwned<'a, S::BreakStmt>),
   SyntaxError,
 }
 
