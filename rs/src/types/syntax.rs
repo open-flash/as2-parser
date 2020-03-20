@@ -218,7 +218,7 @@ pub enum SyntaxKind {
   NodeSeqExpr,
 
   /// Assignment expression
-  NodeAssignmentExpr,
+  NodeAssignExpr,
 
   /// Conditional expression
   NodeCondExpr,
@@ -349,7 +349,24 @@ impl SyntaxKind {
   pub fn is_expr(self) -> bool {
     use SyntaxKind::*;
     match self {
-      NodeAssignmentExpr | NodeCall | NodeBinExpr => true,
+      NodeAssignExpr
+      | NodeBinExpr
+      | NodeBoolLit
+      | NodeCall
+      | NodeNumLit
+      | NodeParenExpr
+      | NodePostfixExpr
+      | NodePrefixExpr
+      | NodeSeqExpr
+      | NodeStrLit => true,
+      _ => false,
+    }
+  }
+
+  pub fn is_assign_op(self) -> bool {
+    use SyntaxKind::*;
+    match self {
+      TokenEq => true,
       _ => false,
     }
   }
@@ -445,14 +462,11 @@ impl TryFrom<SyntaxNode> for Script {
 
 impl traits::Script<ConcreteSyntax> for Script {
   #[cfg(not(feature = "gat"))]
-  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Stmt>> + 'a> {
+  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Stmt>> + 'a> {
     Box::new(ScriptStmts {
       inner: self.syntax.children(),
     })
   }
-
-  // #[cfg(feature = "gat")]
-  // type StmtRef<'a> = &'static Stmt;
 
   #[cfg(feature = "gat")]
   type Stmts<'a> = ScriptStmts;
@@ -577,10 +591,28 @@ pub struct Expr {
   syntax: SyntaxNode,
 }
 
+/// Find the first non-paren expression (including self)
+fn trim_paren(mut node: SyntaxNode) -> SyntaxNode {
+  loop {
+    assert!(node.kind().is_expr(), "kind = {:?}", node.kind());
+    if node.kind() != SyntaxKind::NodeParenExpr {
+      return node;
+    } else {
+      node = node.first_child().unwrap();
+    }
+  }
+}
+
 impl traits::Expr<ConcreteSyntax> for Expr {
   fn cast(&self) -> ExprCast<ConcreteSyntax> {
-    match self.syntax.kind() {
+    match trim_paren(self.syntax.clone()).kind() {
+      SyntaxKind::NodeAssignExpr => traits::ExprCast::Assign(traits::MaybeOwned::Owned(AssignExpr {
+        syntax: self.syntax.clone(),
+      })),
       SyntaxKind::NodeBinExpr => traits::ExprCast::Bin(traits::MaybeOwned::Owned(BinExpr {
+        syntax: self.syntax.clone(),
+      })),
+      SyntaxKind::NodeSeqExpr => traits::ExprCast::Seq(traits::MaybeOwned::Owned(SeqExpr {
         syntax: self.syntax.clone(),
       })),
       _ => traits::ExprCast::Error(traits::MaybeOwned::Owned(ErrorExpr {
@@ -613,8 +645,26 @@ impl traits::AssignExpr<ConcreteSyntax> for AssignExpr {
     unimplemented!()
   }
 
-  fn value(&self) -> &<ConcreteSyntax as Syntax>::Expr {
-    unimplemented!()
+  fn value(&self) -> traits::MaybeOwned<Expr> {
+    let mut found_assign_op: bool = false;
+    for symbol in self.syntax.children_with_tokens() {
+      match symbol {
+        rowan::NodeOrToken::Token(t) => {
+          if t.kind().is_assign_op() {
+            found_assign_op = true;
+          }
+        }
+        rowan::NodeOrToken::Node(node) => {
+          if found_assign_op {
+            match Expr::try_from(node) {
+              Ok(e) => return traits::MaybeOwned::Owned(e),
+              Err(()) => {}
+            }
+          }
+        }
+      }
+    }
+    panic!("InvalidAssignExpr");
   }
 }
 
@@ -650,16 +700,38 @@ pub struct SeqExpr {
 
 impl traits::SeqExpr<ConcreteSyntax> for SeqExpr {
   #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Expr> + 'a> {
-    unimplemented!()
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Expr>> + 'a> {
+    Box::new(ExprIter {
+      inner: self.syntax.children(),
+    })
   }
 
   #[cfg(feature = "gat")]
-  type Iter<'a> = core::slice::Iter<'a, Expr>;
+  type Exprs<'a> = ExprIter;
 
   #[cfg(feature = "gat")]
-  fn exprs(&self) -> Self::Iter<'_> {
-    unimplemented!()
+  fn exprs(&self) -> Self::Exprs<'_> {
+    ExprIter {
+      inner: trim_paren(self.syntax.clone()).children(),
+    }
+  }
+}
+
+pub struct ExprIter {
+  inner: SyntaxNodeChildren<As2Lang>,
+}
+
+impl Iterator for ExprIter {
+  type Item = traits::MaybeOwned<'static, Expr>;
+
+  fn next(&mut self) -> Option<Self::Item> {
+    while let Some(node) = self.inner.next() {
+      match Expr::try_from(node) {
+        Ok(e) => return Some(traits::MaybeOwned::Owned(e)),
+        Err(()) => {}
+      }
+    }
+    None
   }
 }
 
@@ -796,8 +868,8 @@ enum QuoteKind {
 }
 
 fn unescape_string_content<F>(str_content: &str, quotes: QuoteKind, callback: &mut F)
-where
-  F: FnMut(Range<usize>, Result<char, UnescapeError>),
+  where
+    F: FnMut(Range<usize>, Result<char, UnescapeError>),
 {
   let content_len: usize = str_content.len();
   let mut chars = str_content.chars();

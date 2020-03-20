@@ -71,7 +71,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[57; 59) "\n\n"
   NodeExprStmt@[59; 73) {
-    NodeAssignmentExpr@[59; 72) {
+    NodeAssignExpr@[59; 72) {
       NodeIdent@[59; 60) {
         TokenIdent@[59; 60) "x"
       }
@@ -102,7 +102,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[73; 74) "\n"
   NodeExprStmt@[74; 89) {
-    NodeAssignmentExpr@[74; 88) {
+    NodeAssignExpr@[74; 88) {
       NodeIdent@[74; 75) {
         TokenIdent@[74; 75) "x"
       }
@@ -117,7 +117,7 @@ NodeScript@[0; 787) {
           }
           TokenComa@[80; 81) ","
           TokenUnilineWhitespace@[81; 82) " "
-          NodeAssignmentExpr@[82; 87) {
+          NodeAssignExpr@[82; 87) {
             NodeIdent@[82; 83) {
               TokenIdent@[82; 83) "y"
             }
@@ -136,7 +136,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[89; 90) "\n"
   NodeExprStmt@[90; 105) {
-    NodeAssignmentExpr@[90; 104) {
+    NodeAssignExpr@[90; 104) {
       NodeIdent@[90; 91) {
         TokenIdent@[90; 91) "x"
       }
@@ -146,7 +146,7 @@ NodeScript@[0; 787) {
       NodeParenExpr@[94; 104) {
         TokenOpenParen@[94; 95) "("
         NodeSeqExpr@[95; 103) {
-          NodeAssignmentExpr@[95; 100) {
+          NodeAssignExpr@[95; 100) {
             NodeIdent@[95; 96) {
               TokenIdent@[95; 96) "y"
             }
@@ -170,7 +170,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[105; 106) "\n"
   NodeExprStmt@[106; 125) {
-    NodeAssignmentExpr@[106; 124) {
+    NodeAssignExpr@[106; 124) {
       NodeIdent@[106; 107) {
         TokenIdent@[106; 107) "x"
       }
@@ -211,7 +211,7 @@ NodeScript@[0; 787) {
   TokenMultilineWhitespace@[125; 126) "\n"
   TokenTrailingComment@[126; 180) "// x = (1 ? 2, 3 : 4); // TODO: test that this errors\n"
   NodeExprStmt@[180; 199) {
-    NodeAssignmentExpr@[180; 198) {
+    NodeAssignExpr@[180; 198) {
       NodeIdent@[180; 181) {
         TokenIdent@[180; 181) "x"
       }
@@ -251,7 +251,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[199; 200) "\n"
   NodeExprStmt@[200; 216) {
-    NodeAssignmentExpr@[200; 215) {
+    NodeAssignExpr@[200; 215) {
       NodeIdent@[200; 201) {
         TokenIdent@[200; 201) "x"
       }
@@ -285,7 +285,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[216; 217) "\n"
   NodeExprStmt@[217; 233) {
-    NodeAssignmentExpr@[217; 232) {
+    NodeAssignExpr@[217; 232) {
       NodeIdent@[217; 218) {
         TokenIdent@[217; 218) "x"
       }
@@ -319,7 +319,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[233; 234) "\n"
   NodeExprStmt@[234; 250) {
-    NodeAssignmentExpr@[234; 249) {
+    NodeAssignExpr@[234; 249) {
       NodeIdent@[234; 235) {
         TokenIdent@[234; 235) "x"
       }
@@ -353,7 +353,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[250; 251) "\n"
   NodeExprStmt@[251; 267) {
-    NodeAssignmentExpr@[251; 266) {
+    NodeAssignExpr@[251; 266) {
       NodeIdent@[251; 252) {
         TokenIdent@[251; 252) "x"
       }
@@ -387,7 +387,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[267; 268) "\n"
   NodeExprStmt@[268; 283) {
-    NodeAssignmentExpr@[268; 282) {
+    NodeAssignExpr@[268; 282) {
       NodeIdent@[268; 269) {
         TokenIdent@[268; 269) "x"
       }
@@ -421,7 +421,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[283; 284) "\n"
   NodeExprStmt@[284; 299) {
-    NodeAssignmentExpr@[284; 298) {
+    NodeAssignExpr@[284; 298) {
       NodeIdent@[284; 285) {
         TokenIdent@[284; 285) "x"
       }
@@ -455,7 +455,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[299; 300) "\n"
   NodeExprStmt@[300; 315) {
-    NodeAssignmentExpr@[300; 314) {
+    NodeAssignExpr@[300; 314) {
       NodeIdent@[300; 301) {
         TokenIdent@[300; 301) "x"
       }
@@ -489,7 +489,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[315; 316) "\n"
   NodeExprStmt@[316; 331) {
-    NodeAssignmentExpr@[316; 330) {
+    NodeAssignExpr@[316; 330) {
       NodeIdent@[316; 317) {
         TokenIdent@[316; 317) "x"
       }
@@ -523,7 +523,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[331; 332) "\n"
   NodeExprStmt@[332; 347) {
-    NodeAssignmentExpr@[332; 346) {
+    NodeAssignExpr@[332; 346) {
       NodeIdent@[332; 333) {
         TokenIdent@[332; 333) "x"
       }
@@ -557,7 +557,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[347; 348) "\n"
   NodeExprStmt@[348; 363) {
-    NodeAssignmentExpr@[348; 362) {
+    NodeAssignExpr@[348; 362) {
       NodeIdent@[348; 349) {
         TokenIdent@[348; 349) "x"
       }
@@ -591,7 +591,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[363; 364) "\n"
   NodeExprStmt@[364; 380) {
-    NodeAssignmentExpr@[364; 379) {
+    NodeAssignExpr@[364; 379) {
       NodeIdent@[364; 365) {
         TokenIdent@[364; 365) "x"
       }
@@ -625,7 +625,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[380; 381) "\n"
   NodeExprStmt@[381; 397) {
-    NodeAssignmentExpr@[381; 396) {
+    NodeAssignExpr@[381; 396) {
       NodeIdent@[381; 382) {
         TokenIdent@[381; 382) "x"
       }
@@ -659,7 +659,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[397; 398) "\n"
   NodeExprStmt@[398; 413) {
-    NodeAssignmentExpr@[398; 412) {
+    NodeAssignExpr@[398; 412) {
       NodeIdent@[398; 399) {
         TokenIdent@[398; 399) "x"
       }
@@ -693,7 +693,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[413; 414) "\n"
   NodeExprStmt@[414; 429) {
-    NodeAssignmentExpr@[414; 428) {
+    NodeAssignExpr@[414; 428) {
       NodeIdent@[414; 415) {
         TokenIdent@[414; 415) "x"
       }
@@ -727,7 +727,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[429; 430) "\n"
   NodeExprStmt@[430; 446) {
-    NodeAssignmentExpr@[430; 445) {
+    NodeAssignExpr@[430; 445) {
       NodeIdent@[430; 431) {
         TokenIdent@[430; 431) "x"
       }
@@ -761,7 +761,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[446; 447) "\n"
   NodeExprStmt@[447; 463) {
-    NodeAssignmentExpr@[447; 462) {
+    NodeAssignExpr@[447; 462) {
       NodeIdent@[447; 448) {
         TokenIdent@[447; 448) "x"
       }
@@ -795,7 +795,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[463; 464) "\n"
   NodeExprStmt@[464; 479) {
-    NodeAssignmentExpr@[464; 478) {
+    NodeAssignExpr@[464; 478) {
       NodeIdent@[464; 465) {
         TokenIdent@[464; 465) "x"
       }
@@ -829,7 +829,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[479; 480) "\n"
   NodeExprStmt@[480; 495) {
-    NodeAssignmentExpr@[480; 494) {
+    NodeAssignExpr@[480; 494) {
       NodeIdent@[480; 481) {
         TokenIdent@[480; 481) "x"
       }
@@ -863,7 +863,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[495; 496) "\n"
   NodeExprStmt@[496; 511) {
-    NodeAssignmentExpr@[496; 510) {
+    NodeAssignExpr@[496; 510) {
       NodeIdent@[496; 497) {
         TokenIdent@[496; 497) "x"
       }
@@ -897,7 +897,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[511; 512) "\n"
   NodeExprStmt@[512; 527) {
-    NodeAssignmentExpr@[512; 526) {
+    NodeAssignExpr@[512; 526) {
       NodeIdent@[512; 513) {
         TokenIdent@[512; 513) "x"
       }
@@ -931,7 +931,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[527; 528) "\n"
   NodeExprStmt@[528; 546) {
-    NodeAssignmentExpr@[528; 545) {
+    NodeAssignExpr@[528; 545) {
       NodeIdent@[528; 529) {
         TokenIdent@[528; 529) "x"
       }
@@ -961,7 +961,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[546; 547) "\n"
   NodeExprStmt@[547; 565) {
-    NodeAssignmentExpr@[547; 564) {
+    NodeAssignExpr@[547; 564) {
       NodeIdent@[547; 548) {
         TokenIdent@[547; 548) "x"
       }
@@ -991,7 +991,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[565; 566) "\n"
   NodeExprStmt@[566; 578) {
-    NodeAssignmentExpr@[566; 577) {
+    NodeAssignExpr@[566; 577) {
       NodeIdent@[566; 567) {
         TokenIdent@[566; 567) "x"
       }
@@ -1020,7 +1020,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[578; 579) "\n"
   NodeExprStmt@[579; 591) {
-    NodeAssignmentExpr@[579; 590) {
+    NodeAssignExpr@[579; 590) {
       NodeIdent@[579; 580) {
         TokenIdent@[579; 580) "x"
       }
@@ -1049,7 +1049,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[591; 592) "\n"
   NodeExprStmt@[592; 605) {
-    NodeAssignmentExpr@[592; 604) {
+    NodeAssignExpr@[592; 604) {
       NodeIdent@[592; 593) {
         TokenIdent@[592; 593) "x"
       }
@@ -1078,7 +1078,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[605; 606) "\n"
   NodeExprStmt@[606; 619) {
-    NodeAssignmentExpr@[606; 618) {
+    NodeAssignExpr@[606; 618) {
       NodeIdent@[606; 607) {
         TokenIdent@[606; 607) "x"
       }
@@ -1107,7 +1107,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[619; 620) "\n"
   NodeExprStmt@[620; 633) {
-    NodeAssignmentExpr@[620; 632) {
+    NodeAssignExpr@[620; 632) {
       NodeIdent@[620; 621) {
         TokenIdent@[620; 621) "x"
       }
@@ -1136,7 +1136,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[633; 634) "\n"
   NodeExprStmt@[634; 647) {
-    NodeAssignmentExpr@[634; 646) {
+    NodeAssignExpr@[634; 646) {
       NodeIdent@[634; 635) {
         TokenIdent@[634; 635) "x"
       }
@@ -1165,7 +1165,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[647; 648) "\n"
   NodeExprStmt@[648; 663) {
-    NodeAssignmentExpr@[648; 662) {
+    NodeAssignExpr@[648; 662) {
       NodeIdent@[648; 649) {
         TokenIdent@[648; 649) "x"
       }
@@ -1197,7 +1197,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[663; 664) "\n"
   NodeExprStmt@[664; 679) {
-    NodeAssignmentExpr@[664; 678) {
+    NodeAssignExpr@[664; 678) {
       NodeIdent@[664; 665) {
         TokenIdent@[664; 665) "x"
       }
@@ -1229,7 +1229,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[679; 680) "\n"
   NodeExprStmt@[680; 698) {
-    NodeAssignmentExpr@[680; 697) {
+    NodeAssignExpr@[680; 697) {
       NodeIdent@[680; 681) {
         TokenIdent@[680; 681) "x"
       }
@@ -1262,7 +1262,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[698; 699) "\n"
   NodeExprStmt@[699; 717) {
-    NodeAssignmentExpr@[699; 716) {
+    NodeAssignExpr@[699; 716) {
       NodeIdent@[699; 700) {
         TokenIdent@[699; 700) "x"
       }
@@ -1295,7 +1295,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[717; 718) "\n"
   NodeExprStmt@[718; 731) {
-    NodeAssignmentExpr@[718; 730) {
+    NodeAssignExpr@[718; 730) {
       NodeIdent@[718; 719) {
         TokenIdent@[718; 719) "x"
       }
@@ -1325,7 +1325,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[731; 732) "\n"
   NodeExprStmt@[732; 745) {
-    NodeAssignmentExpr@[732; 744) {
+    NodeAssignExpr@[732; 744) {
       NodeIdent@[732; 733) {
         TokenIdent@[732; 733) "x"
       }
@@ -1355,7 +1355,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[745; 746) "\n"
   NodeExprStmt@[746; 757) {
-    NodeAssignmentExpr@[746; 756) {
+    NodeAssignExpr@[746; 756) {
       NodeIdent@[746; 747) {
         TokenIdent@[746; 747) "x"
       }
@@ -1381,7 +1381,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[757; 758) "\n"
   NodeExprStmt@[758; 769) {
-    NodeAssignmentExpr@[758; 768) {
+    NodeAssignExpr@[758; 768) {
       NodeIdent@[758; 759) {
         TokenIdent@[758; 759) "x"
       }
@@ -1407,7 +1407,7 @@ NodeScript@[0; 787) {
   }
   TokenMultilineWhitespace@[769; 771) "\n\n"
   NodeExprStmt@[771; 786) {
-    NodeAssignmentExpr@[771; 785) {
+    NodeAssignExpr@[771; 785) {
       NodeIdent@[771; 772) {
         TokenIdent@[771; 772) "x"
       }

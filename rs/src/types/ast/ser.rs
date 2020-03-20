@@ -103,6 +103,7 @@ impl<Ast: Syntax> Serialize for SerializeExpr<'_, Ast> {
       ExprCast::Assign(e) => SerializeAssignExpr::<Ast>(&*e).serialize(serializer),
       ExprCast::Bin(e) => SerializeBinExpr::<Ast>(&*e).serialize(serializer),
       ExprCast::Error(e) => SerializeErrorExpr::<Ast>(&*e).serialize(serializer),
+      ExprCast::Seq(e) => SerializeSeqExpr::<Ast>(&*e).serialize(serializer),
       _ => unimplemented!(),
     }
   }
@@ -115,6 +116,7 @@ impl<Ast: Syntax> Serialize for SerializeAssignExpr<'_, Ast> {
     use serde::ser::SerializeStruct;
     let mut struct_serializer = serializer.serialize_struct("AssignExpr", 1)?;
     struct_serializer.serialize_field("type", "AssignExpr")?;
+    struct_serializer.serialize_field("value", &SerializeExpr::<Ast>(&*self.0.value()))?;
     struct_serializer.end()
   }
 }
@@ -138,5 +140,39 @@ impl<Ast: Syntax> Serialize for SerializeErrorExpr<'_, Ast> {
     let mut struct_serializer = serializer.serialize_struct("ErrorExpr", 1)?;
     struct_serializer.serialize_field("type", "ErrorExpr")?;
     struct_serializer.end()
+  }
+}
+
+pub struct SerializeSeqExpr<'a, Ast: Syntax>(pub &'a Ast::SeqExpr);
+
+impl<Ast: Syntax> Serialize for SerializeSeqExpr<'_, Ast> {
+  fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
+    use serde::ser::SerializeStruct;
+    let mut struct_serializer = serializer.serialize_struct("SeqExpr", 2)?;
+    struct_serializer.serialize_field("type", "SeqExpr")?;
+    struct_serializer.serialize_field("exprs", &SerializeSeqExprExprs::<Ast>(self.0))?;
+    struct_serializer.end()
+  }
+}
+
+struct SerializeSeqExprExprs<'a, Ast: Syntax>(pub &'a Ast::SeqExpr);
+
+impl<'a, Ast: Syntax> Serialize for SerializeSeqExprExprs<'a, Ast> {
+  fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
+    use serde::ser::SerializeSeq;
+    let exprs = self.0.exprs();
+    let len = match exprs.size_hint() {
+      (min_len, Some(max_len)) if min_len == max_len => Some(min_len),
+      _ => None,
+    };
+    let mut seq_serializer = serializer.serialize_seq(len)?;
+    for expr in exprs {
+      let expr: &Ast::Expr = match expr {
+        MaybeOwned::Owned(ref s) => s,
+        MaybeOwned::Borrowed(s) => &*s,
+      };
+      seq_serializer.serialize_element(&SerializeExpr::<Ast>(expr))?;
+    }
+    seq_serializer.end()
   }
 }

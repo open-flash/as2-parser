@@ -115,7 +115,7 @@ pub enum ExprCast<'a, S: Syntax> {
 
 pub trait AssignExpr<S: Syntax> {
   fn target(&self) -> &S::Pat;
-  fn value(&self) -> &S::Expr;
+  fn value(&self) -> MaybeOwned<S::Expr>;
 }
 
 pub trait BinExpr<S: Syntax> {
@@ -173,13 +173,13 @@ pub trait ErrorExpr<S: Syntax> {}
 /// Corresponds to two or more expressions separated by commas.
 pub trait SeqExpr<S: Syntax> {
   #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a S::Expr> + 'a>;
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = MaybeOwned<'a, S::Expr>> + 'a>;
 
   #[cfg(feature = "gat")]
-  type Iter<'a>: ExactSizeIterator<Item = &'a S::Expr>;
+  type Exprs<'a>: Iterator<Item = MaybeOwned<'a, S::Expr>>;
 
   #[cfg(feature = "gat")]
-  fn exprs(&self) -> Self::Iter<'_>;
+  fn exprs(&self) -> Self::Exprs<'_>;
 }
 
 pub trait StrLit {

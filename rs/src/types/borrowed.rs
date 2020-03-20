@@ -147,8 +147,8 @@ impl<'a> traits::AssignExpr<BorrowedSyntax<'a>> for AssignExpr<'a> {
     self.target
   }
 
-  fn value(&self) -> &Expr<'a> {
-    self.value
+  fn value(&self) -> traits::MaybeOwned<Expr<'a>> {
+    traits::MaybeOwned::Borrowed(self.value)
   }
 }
 
@@ -185,16 +185,18 @@ pub struct SeqExpr<'a> {
 
 impl<'s> traits::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
   #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Expr<'s>> + 'a> {
-    Box::new(self.exprs.iter())
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr<'s>>> + 'a> {
+    Box::new(self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e)))
   }
 
+  #[allow(clippy::type_complexity)]
   #[cfg(feature = "gat")]
-  type Iter<'a> = core::slice::Iter<'a, Expr<'a>>;
+  type Exprs<'a> =
+  core::iter::Map<core::slice::Iter<'a, Expr<'a>>, for<'r> fn(&'r Expr<'a>) -> traits::MaybeOwned<'r, Expr<'a>>>;
 
   #[cfg(feature = "gat")]
-  fn exprs(&self) -> Self::Iter<'_> {
-    self.exprs.iter()
+  fn exprs(&self) -> Self::Exprs<'_> {
+    self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e))
   }
 }
 

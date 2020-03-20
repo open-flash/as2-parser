@@ -471,7 +471,7 @@ impl<'text> Parser<'text> {
   }
 
   fn end_assignment_expr(&mut self, cp: rowan::Checkpoint, end: TokenSet) {
-    self.builder.start_node_at(cp, SyntaxKind::NodeAssignmentExpr.into());
+    self.builder.start_node_at(cp, SyntaxKind::NodeAssignExpr.into());
 
     debug_assert!(matches!(self.lexer.peek_kind_over_trivia(), Some(SyntaxKind::TokenEq)));
     self.eat_trivia();

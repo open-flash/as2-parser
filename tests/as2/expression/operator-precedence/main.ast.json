@@ -15,253 +15,692 @@
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "AssignExpr",
+              "value": {
+                "type": "ErrorExpr"
+              }
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "AssignExpr",
+              "value": {
+                "type": "ErrorExpr"
+              }
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "BinExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "BinExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "BinExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "BinExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "BinExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "BinExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "BinExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "BinExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "BinExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "BinExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
       }
     },
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "AssignExpr",
+        "value": {
+          "type": "ErrorExpr"
+        }
       }
     }
   ]

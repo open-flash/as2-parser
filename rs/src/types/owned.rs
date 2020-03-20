@@ -157,16 +157,17 @@ pub struct SeqExpr {
 
 impl traits::SeqExpr<OwnedSyntax> for SeqExpr {
   #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Expr> + 'a> {
-    Box::new(self.exprs.iter())
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr>> + 'a> {
+    Box::new(self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e)))
   }
 
+  #[allow(clippy::type_complexity)]
   #[cfg(feature = "gat")]
-  type Iter<'a> = core::slice::Iter<'a, Expr>;
+  type Exprs<'a> = core::iter::Map<core::slice::Iter<'a, Expr>, for<'r> fn(&'r Expr) -> traits::MaybeOwned<'r, Expr>>;
 
   #[cfg(feature = "gat")]
-  fn exprs(&self) -> Self::Iter<'_> {
-    self.exprs.iter()
+  fn exprs(&self) -> Self::Exprs<'_> {
+    self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e))
   }
 }
 
@@ -182,8 +183,8 @@ impl traits::AssignExpr<OwnedSyntax> for AssignExpr {
     &self.target
   }
 
-  fn value(&self) -> &Expr {
-    &self.value
+  fn value(&self) -> traits::MaybeOwned<Expr> {
+    traits::MaybeOwned::Borrowed(&self.value)
   }
 }
 
