@@ -3,7 +3,10 @@
     {
       "type": "ExprStmt",
       "expr": {
-        "type": "ErrorExpr"
+        "type": "CallExpr",
+        "callee": {
+          "type": "IdentExpr"
+        }
       }
     }
   ]

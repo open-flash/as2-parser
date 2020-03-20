@@ -19,7 +19,9 @@ impl<'a> traits::Syntax for BorrowedSyntax<'a> {
   type Expr = Expr<'a>;
   type AssignExpr = AssignExpr<'a>;
   type BinExpr = BinExpr<'a>;
+  type CallExpr = CallExpr<'a>;
   type ErrorExpr = ErrorExpr<'a>;
+  type IdentExpr = IdentExpr<'a>;
   type LogicalExpr = LogicalExpr<'a>;
   type SeqExpr = SeqExpr<'a>;
   type StrLit = StrLit<'a>;
@@ -177,6 +179,21 @@ impl<'a> traits::BinExpr for BinExpr<'a> {
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct CallExpr<'a> {
+  pub loc: (),
+  pub callee: &'a Expr<'a>,
+  pub args: &'a [Expr<'a>],
+}
+
+impl<'a> traits::CallExpr for CallExpr<'a> {
+  type Ast = BorrowedSyntax<'a>;
+
+  fn callee(&self) -> traits::MaybeOwned<Expr<'a>> {
+    traits::MaybeOwned::Borrowed(self.callee)
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct ErrorExpr<'a> {
   pub loc: (),
   pub phantom: PhantomData<&'a ()>,
@@ -184,6 +201,18 @@ pub struct ErrorExpr<'a> {
 
 impl<'a> traits::ErrorExpr for ErrorExpr<'a> {
   type Ast = BorrowedSyntax<'a>;
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct IdentExpr<'a> {
+  pub loc: (),
+  pub name: &'a str,
+}
+
+impl traits::IdentExpr for IdentExpr<'_> {
+  fn name(&self) -> Cow<str> {
+    Cow::Borrowed(self.name)
+  }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]

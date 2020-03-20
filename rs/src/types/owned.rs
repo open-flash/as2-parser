@@ -28,7 +28,9 @@ impl traits::Syntax for OwnedSyntax {
   type Expr = Expr;
   type AssignExpr = AssignExpr;
   type BinExpr = BinExpr;
+  type CallExpr = CallExpr;
   type ErrorExpr = ErrorExpr;
+  type IdentExpr = IdentExpr;
   type LogicalExpr = LogicalExpr;
   type SeqExpr = SeqExpr;
   type StrLit = StrLit;
@@ -214,12 +216,39 @@ impl traits::BinExpr for BinExpr {
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
+pub struct CallExpr {
+  pub loc: (),
+  pub callee: Box<Expr>,
+  pub arguments: Vec<Expr>,
+}
+
+impl traits::CallExpr for CallExpr {
+  type Ast = OwnedSyntax;
+
+  fn callee(&self) -> traits::MaybeOwned<Expr> {
+    traits::MaybeOwned::Borrowed(&self.callee)
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
 pub struct ErrorExpr {
   pub loc: (),
 }
 
 impl traits::ErrorExpr for ErrorExpr {
   type Ast = OwnedSyntax;
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
+pub struct IdentExpr {
+  pub loc: (),
+  pub name: String,
+}
+
+impl traits::IdentExpr for IdentExpr {
+  fn name(&self) -> Cow<str> {
+    Cow::Borrowed(&self.name)
+  }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]

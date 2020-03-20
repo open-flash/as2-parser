@@ -1,6 +1,6 @@
 NodeScript@[0; 24) {
   NodeExprStmt@[0; 23) {
-    NodeCall@[0; 22) {
+    NodeCallExpr@[0; 22) {
       NodeIdent@[0; 5) {
         TokenIdent@[0; 5) "trace"
       }

@@ -249,7 +249,7 @@ pub enum SyntaxKind {
   /// ```
   NodeComputedMemberExpr,
 
-  NodeCall,
+  NodeCallExpr,
 
   // Composite nodes
   /// Break statement
@@ -349,8 +349,8 @@ impl SyntaxKind {
   pub fn is_expr(self) -> bool {
     use SyntaxKind::*;
     match self {
-      NodeAssignExpr | NodeInfixExpr | NodeBoolLit | NodeCall | NodeNumLit | NodeParenExpr | NodePostfixExpr
-      | NodePrefixExpr | NodeSeqExpr | NodeStrLit => true,
+      NodeAssignExpr | NodeIdent | NodeInfixExpr | NodeBoolLit | NodeCallExpr | NodeNumLit | NodeParenExpr
+      | NodePostfixExpr | NodePrefixExpr | NodeSeqExpr | NodeStrLit => true,
       _ => false,
     }
   }
@@ -435,7 +435,9 @@ impl traits::Syntax for ConcreteSyntax {
   type Expr = Expr;
   type AssignExpr = AssignExpr;
   type BinExpr = BinExpr;
+  type CallExpr = CallExpr;
   type ErrorExpr = ErrorExpr;
+  type IdentExpr = IdentExpr;
   type LogicalExpr = LogicalExpr;
   type SeqExpr = SeqExpr;
   type StrLit = StrLit;
@@ -642,6 +644,12 @@ impl traits::Expr for Expr {
       SyntaxKind::NodeAssignExpr => traits::ExprCast::Assign(traits::MaybeOwned::Owned(AssignExpr {
         syntax: self.syntax.clone(),
       })),
+      SyntaxKind::NodeCallExpr => traits::ExprCast::Call(traits::MaybeOwned::Owned(CallExpr {
+        syntax: self.syntax.clone(),
+      })),
+      SyntaxKind::NodeIdent => traits::ExprCast::Ident(traits::MaybeOwned::Owned(IdentExpr {
+        syntax: self.syntax.clone(),
+      })),
       SyntaxKind::NodeInfixExpr => {
         let op_kind = find_infix_op(&mut self.syntax.children_with_tokens()).kind();
         match op_kind {
@@ -740,6 +748,24 @@ impl traits::BinExpr for BinExpr {
   }
 }
 
+/// Represents a call expression backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct CallExpr {
+  syntax: SyntaxNode,
+}
+
+impl traits::CallExpr for CallExpr {
+  type Ast = ConcreteSyntax;
+
+  fn callee(&self) -> traits::MaybeOwned<Expr> {
+    let callee_node = self.syntax.first_child().unwrap();
+    match Expr::try_from(callee_node) {
+      Ok(e) => traits::MaybeOwned::Owned(e),
+      Err(()) => unimplemented!(),
+    }
+  }
+}
+
 /// Represents an error in expression position.
 #[derive(Debug, Eq, PartialEq, Clone, Hash)]
 pub struct ErrorExpr {
@@ -748,6 +774,18 @@ pub struct ErrorExpr {
 
 impl traits::ErrorExpr for ErrorExpr {
   type Ast = ConcreteSyntax;
+}
+
+/// Represents a call expression backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct IdentExpr {
+  syntax: SyntaxNode,
+}
+
+impl traits::IdentExpr for IdentExpr {
+  fn name(&self) -> Cow<str> {
+    unimplemented!()
+  }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Hash)]

@@ -19,7 +19,9 @@ pub trait Syntax: Sized {
   type Expr: Expr<Ast = Self>;
   type AssignExpr: AssignExpr<Ast = Self>;
   type BinExpr: BinExpr<Ast = Self>;
+  type CallExpr: CallExpr<Ast = Self>;
   type ErrorExpr: ErrorExpr<Ast = Self>;
+  type IdentExpr: IdentExpr;
   type LogicalExpr: LogicalExpr<Ast = Self>;
   type SeqExpr: SeqExpr<Ast = Self>;
   type StrLit: StrLit;
@@ -112,6 +114,8 @@ pub trait Expr {
 pub enum ExprCast<'a, S: Syntax> {
   Assign(MaybeOwned<'a, S::AssignExpr>),
   Bin(MaybeOwned<'a, S::BinExpr>),
+  Call(MaybeOwned<'a, S::CallExpr>),
+  Ident(MaybeOwned<'a, S::IdentExpr>),
   Error(MaybeOwned<'a, S::ErrorExpr>),
   Logical(MaybeOwned<'a, S::LogicalExpr>),
   Seq(MaybeOwned<'a, S::SeqExpr>),
@@ -175,8 +179,18 @@ pub enum BinOp {
   UnsignedRightShift,
 }
 
+pub trait CallExpr {
+  type Ast: Syntax;
+
+  fn callee(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
+}
+
 pub trait ErrorExpr {
   type Ast: Syntax;
+}
+
+pub trait IdentExpr {
+  fn name(&self) -> Cow<str>;
 }
 
 pub trait LogicalExpr {

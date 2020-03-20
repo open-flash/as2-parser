@@ -799,6 +799,9 @@
           "exprs": [
             {
               "type": "ErrorExpr"
+            },
+            {
+              "type": "IdentExpr"
             }
           ]
         }
@@ -811,6 +814,9 @@
         "value": {
           "type": "SeqExpr",
           "exprs": [
+            {
+              "type": "IdentExpr"
+            },
             {
               "type": "ErrorExpr"
             }

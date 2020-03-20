@@ -580,7 +580,7 @@ impl<'text> Parser<'text> {
   }
 
   fn end_call(&mut self, cp: rowan::Checkpoint) {
-    self.builder.start_node_at(cp, SyntaxKind::NodeCall.into());
+    self.builder.start_node_at(cp, SyntaxKind::NodeCallExpr.into());
     debug_assert!(matches!(
       self.lexer.peek_kind_over_trivia(),
       Some(SyntaxKind::TokenOpenParen)

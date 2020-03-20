@@ -102,7 +102,9 @@ impl<Ast: Syntax> Serialize for SerializeExpr<'_, Ast> {
     match self.0.cast() {
       ExprCast::Assign(e) => SerializeAssignExpr::<Ast>(&*e).serialize(serializer),
       ExprCast::Bin(e) => SerializeBinExpr(&*e).serialize(serializer),
+      ExprCast::Call(e) => SerializeCallExpr(&*e).serialize(serializer),
       ExprCast::Error(e) => SerializeErrorExpr::<Ast>(&*e).serialize(serializer),
+      ExprCast::Ident(e) => SerializeIdentExpr(&*e).serialize(serializer),
       ExprCast::Logical(e) => SerializeLogicalExpr::<Ast>(&*e).serialize(serializer),
       ExprCast::Seq(e) => SerializeSeqExpr::<Ast>(&*e).serialize(serializer),
       _ => unimplemented!(),
@@ -135,6 +137,18 @@ impl<T: BinExpr> Serialize for SerializeBinExpr<'_, T> {
   }
 }
 
+pub struct SerializeCallExpr<'a, T: CallExpr>(pub &'a T);
+
+impl<T: CallExpr> Serialize for SerializeCallExpr<'_, T> {
+  fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
+    use serde::ser::SerializeStruct;
+    let mut struct_serializer = serializer.serialize_struct("CallExpr", 2)?;
+    struct_serializer.serialize_field("type", "CallExpr")?;
+    struct_serializer.serialize_field("callee", &SerializeExpr::<T::Ast>(&*self.0.callee()))?;
+    struct_serializer.end()
+  }
+}
+
 pub struct SerializeErrorExpr<'a, Ast: Syntax>(pub &'a Ast::ErrorExpr);
 
 impl<Ast: Syntax> Serialize for SerializeErrorExpr<'_, Ast> {
@@ -142,6 +156,17 @@ impl<Ast: Syntax> Serialize for SerializeErrorExpr<'_, Ast> {
     use serde::ser::SerializeStruct;
     let mut struct_serializer = serializer.serialize_struct("ErrorExpr", 1)?;
     struct_serializer.serialize_field("type", "ErrorExpr")?;
+    struct_serializer.end()
+  }
+}
+
+pub struct SerializeIdentExpr<'a, T: IdentExpr>(pub &'a T);
+
+impl<T: IdentExpr> Serialize for SerializeIdentExpr<'_, T> {
+  fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
+    use serde::ser::SerializeStruct;
+    let mut struct_serializer = serializer.serialize_struct("IdentExpr", 1)?;
+    struct_serializer.serialize_field("type", "IdentExpr")?;
     struct_serializer.end()
   }
 }
