@@ -111,7 +111,14 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "BinExpr"
+              "type": "LogicalExpr",
+              "left": "&&",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             }
           ]
         }
@@ -125,7 +132,14 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "BinExpr"
+              "type": "LogicalExpr",
+              "left": "&&",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             },
             {
               "type": "ErrorExpr"
@@ -145,7 +159,14 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "BinExpr"
+              "type": "LogicalExpr",
+              "left": "||",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             }
           ]
         }
@@ -159,7 +180,14 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "BinExpr"
+              "type": "LogicalExpr",
+              "left": "||",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             },
             {
               "type": "ErrorExpr"
@@ -179,7 +207,13 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             }
           ]
         }
@@ -193,7 +227,13 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             },
             {
               "type": "ErrorExpr"
@@ -213,7 +253,13 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             }
           ]
         }
@@ -227,7 +273,13 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             },
             {
               "type": "ErrorExpr"
@@ -247,7 +299,13 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             }
           ]
         }
@@ -261,7 +319,13 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             },
             {
               "type": "ErrorExpr"
@@ -281,7 +345,13 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             }
           ]
         }
@@ -295,7 +365,13 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             },
             {
               "type": "ErrorExpr"
@@ -315,7 +391,13 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             }
           ]
         }
@@ -329,7 +411,13 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             },
             {
               "type": "ErrorExpr"
@@ -349,7 +437,13 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             }
           ]
         }
@@ -363,7 +457,13 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             },
             {
               "type": "ErrorExpr"
@@ -383,7 +483,13 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             }
           ]
         }
@@ -397,7 +503,13 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             },
             {
               "type": "ErrorExpr"
@@ -417,7 +529,13 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             }
           ]
         }
@@ -431,7 +549,13 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "BinExpr"
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
             },
             {
               "type": "ErrorExpr"

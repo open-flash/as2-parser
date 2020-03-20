@@ -32,5 +32,3 @@ test-generator = "^0.3.0"
 [features]
 # Use Generic Associated Types
 gat = []
-# Enable `const_if_match` rust feature, for const token sets
-const_if_match = []

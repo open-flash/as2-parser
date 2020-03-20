@@ -1,6 +1,6 @@
 use crate::types::ast::traits;
 use crate::types::ast::traits::{ExprCast, PatCast, StmtCast, Syntax};
-use rowan::SyntaxNodeChildren;
+use rowan::{SyntaxElementChildren, SyntaxNodeChildren};
 use std::borrow::Cow;
 use std::convert::TryFrom;
 use std::ops::Range;
@@ -224,7 +224,7 @@ pub enum SyntaxKind {
   NodeCondExpr,
 
   /// Binary expression
-  NodeBinExpr,
+  NodeInfixExpr,
 
   /// Prefix expression
   NodePrefixExpr,
@@ -349,16 +349,8 @@ impl SyntaxKind {
   pub fn is_expr(self) -> bool {
     use SyntaxKind::*;
     match self {
-      NodeAssignExpr
-      | NodeBinExpr
-      | NodeBoolLit
-      | NodeCall
-      | NodeNumLit
-      | NodeParenExpr
-      | NodePostfixExpr
-      | NodePrefixExpr
-      | NodeSeqExpr
-      | NodeStrLit => true,
+      NodeAssignExpr | NodeInfixExpr | NodeBoolLit | NodeCall | NodeNumLit | NodeParenExpr | NodePostfixExpr
+      | NodePrefixExpr | NodeSeqExpr | NodeStrLit => true,
       _ => false,
     }
   }
@@ -369,6 +361,27 @@ impl SyntaxKind {
       TokenEq => true,
       _ => false,
     }
+  }
+
+  pub fn is_logical_op(self) -> bool {
+    use SyntaxKind::*;
+    match self {
+      TokenPipePipe | TokenAmpAmp => true,
+      _ => false,
+    }
+  }
+
+  pub fn is_bin_op(self) -> bool {
+    use SyntaxKind::*;
+    match self {
+      TokenAmp | TokenCaret | TokenEqEq | TokenEqEqEq | TokenLt | TokenLtLt | TokenMinus | TokenPipe | TokenPlus
+      | TokenSlash | TokenStar => true,
+      _ => false,
+    }
+  }
+
+  pub fn is_infix_op(self) -> bool {
+    self.is_assign_op() || self.is_bin_op() || self.is_logical_op()
   }
 }
 
@@ -423,6 +436,7 @@ impl traits::Syntax for ConcreteSyntax {
   type AssignExpr = AssignExpr;
   type BinExpr = BinExpr;
   type ErrorExpr = ErrorExpr;
+  type LogicalExpr = LogicalExpr;
   type SeqExpr = SeqExpr;
   type StrLit = StrLit;
 
@@ -462,7 +476,7 @@ impl TryFrom<SyntaxNode> for Script {
 
 impl traits::Script<ConcreteSyntax> for Script {
   #[cfg(not(feature = "gat"))]
-  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Stmt>> + 'a> {
+  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Stmt>> + 'a> {
     Box::new(ScriptStmts {
       inner: self.syntax.children(),
     })
@@ -603,15 +617,41 @@ fn trim_paren(mut node: SyntaxNode) -> SyntaxNode {
   }
 }
 
+fn find_infix_op(symbols: &mut SyntaxElementChildren<As2Lang>) -> SyntaxToken {
+  let mut found_left: bool = false;
+  for symbol in symbols {
+    match symbol {
+      rowan::NodeOrToken::Token(t) => {
+        if found_left && t.kind().is_infix_op() {
+          return t;
+        }
+      }
+      rowan::NodeOrToken::Node(_) => {
+        found_left = true;
+      }
+    }
+  }
+  panic!("NoInfixOp");
+}
+
 impl traits::Expr<ConcreteSyntax> for Expr {
   fn cast(&self) -> ExprCast<ConcreteSyntax> {
     match trim_paren(self.syntax.clone()).kind() {
       SyntaxKind::NodeAssignExpr => traits::ExprCast::Assign(traits::MaybeOwned::Owned(AssignExpr {
         syntax: self.syntax.clone(),
       })),
-      SyntaxKind::NodeBinExpr => traits::ExprCast::Bin(traits::MaybeOwned::Owned(BinExpr {
-        syntax: self.syntax.clone(),
-      })),
+      SyntaxKind::NodeInfixExpr => {
+        let op_kind = find_infix_op(&mut self.syntax.children_with_tokens()).kind();
+        match op_kind {
+          k if k.is_logical_op() => traits::ExprCast::Logical(traits::MaybeOwned::Owned(LogicalExpr {
+            syntax: self.syntax.clone(),
+          })),
+          k if k.is_bin_op() => traits::ExprCast::Bin(traits::MaybeOwned::Owned(BinExpr {
+            syntax: self.syntax.clone(),
+          })),
+          _ => unreachable!(),
+        }
+      }
       SyntaxKind::NodeSeqExpr => traits::ExprCast::Seq(traits::MaybeOwned::Owned(SeqExpr {
         syntax: self.syntax.clone(),
       })),
@@ -675,12 +715,22 @@ pub struct BinExpr {
 }
 
 impl traits::BinExpr<ConcreteSyntax> for BinExpr {
-  fn left(&self) -> &<ConcreteSyntax as Syntax>::Expr {
-    unimplemented!()
+  fn left(&self) -> traits::MaybeOwned<Expr> {
+    let left_node = self.syntax.first_child().unwrap();
+    match Expr::try_from(left_node) {
+      Ok(e) => traits::MaybeOwned::Owned(e),
+      Err(()) => unimplemented!(),
+    }
   }
 
-  fn right(&self) -> &<ConcreteSyntax as Syntax>::Expr {
-    unimplemented!()
+  fn right(&self) -> traits::MaybeOwned<Expr> {
+    let mut nodes = self.syntax.children();
+    nodes.next().unwrap();
+    let right_node = nodes.next().unwrap();
+    match Expr::try_from(right_node) {
+      Ok(e) => traits::MaybeOwned::Owned(e),
+      Err(()) => unimplemented!(),
+    }
   }
 }
 
@@ -692,6 +742,40 @@ pub struct ErrorExpr {
 
 impl traits::ErrorExpr<ConcreteSyntax> for ErrorExpr {}
 
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct LogicalExpr {
+  syntax: SyntaxNode,
+}
+
+impl<'a> traits::LogicalExpr<ConcreteSyntax> for LogicalExpr {
+  fn op(&self) -> traits::LogicalOp {
+    let op_kind = find_infix_op(&mut self.syntax.children_with_tokens()).kind();
+    match op_kind {
+      SyntaxKind::TokenAmpAmp => traits::LogicalOp::Or,
+      SyntaxKind::TokenPipePipe => traits::LogicalOp::And,
+      _ => unreachable!(),
+    }
+  }
+
+  fn left(&self) -> traits::MaybeOwned<Expr> {
+    let left_node = self.syntax.first_child().unwrap();
+    match Expr::try_from(left_node) {
+      Ok(e) => traits::MaybeOwned::Owned(e),
+      Err(()) => unimplemented!(),
+    }
+  }
+
+  fn right(&self) -> traits::MaybeOwned<Expr> {
+    let mut nodes = self.syntax.children();
+    nodes.next().unwrap();
+    let right_node = nodes.next().unwrap();
+    match Expr::try_from(right_node) {
+      Ok(e) => traits::MaybeOwned::Owned(e),
+      Err(()) => unimplemented!(),
+    }
+  }
+}
+
 /// Represents a sequence expression backed by a concrete syntax node.
 #[derive(Debug, Eq, PartialEq, Clone, Hash)]
 pub struct SeqExpr {
@@ -700,9 +784,9 @@ pub struct SeqExpr {
 
 impl traits::SeqExpr<ConcreteSyntax> for SeqExpr {
   #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Expr>> + 'a> {
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr>> + 'a> {
     Box::new(ExprIter {
-      inner: self.syntax.children(),
+      inner: trim_paren(self.syntax.clone()).children(),
     })
   }
 
@@ -868,8 +952,8 @@ enum QuoteKind {
 }
 
 fn unescape_string_content<F>(str_content: &str, quotes: QuoteKind, callback: &mut F)
-  where
-    F: FnMut(Range<usize>, Result<char, UnescapeError>),
+where
+  F: FnMut(Range<usize>, Result<char, UnescapeError>),
 {
   let content_len: usize = str_content.len();
   let mut chars = str_content.chars();

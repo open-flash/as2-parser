@@ -510,7 +510,7 @@ impl<'text> Parser<'text> {
   }
 
   fn end_bin_expr(&mut self, cp: rowan::Checkpoint, end: TokenSet) {
-    self.builder.start_node_at(cp, SyntaxKind::NodeBinExpr.into());
+    self.builder.start_node_at(cp, SyntaxKind::NodeInfixExpr.into());
 
     let bp: InfixPrecedence = match self.lexer.peek_kind_over_trivia() {
       Some(kind) if InfixPrecedence::try_from(kind).is_ok() => InfixPrecedence::try_from(kind).unwrap(),

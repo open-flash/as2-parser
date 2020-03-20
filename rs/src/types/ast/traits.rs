@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 
 /// A poor man's never type represented as an empty type so it works on stable Rust.
@@ -19,6 +20,7 @@ pub trait Syntax: Sized {
   type AssignExpr: AssignExpr<Self>;
   type BinExpr: BinExpr<Self>;
   type ErrorExpr: ErrorExpr<Self>;
+  type LogicalExpr: LogicalExpr<Self>;
   type SeqExpr: SeqExpr<Self>;
   type StrLit: StrLit;
 
@@ -109,6 +111,7 @@ pub enum ExprCast<'a, S: Syntax> {
   Assign(MaybeOwned<'a, S::AssignExpr>),
   Bin(MaybeOwned<'a, S::BinExpr>),
   Error(MaybeOwned<'a, S::ErrorExpr>),
+  Logical(MaybeOwned<'a, S::LogicalExpr>),
   Seq(MaybeOwned<'a, S::SeqExpr>),
   StrLit(MaybeOwned<'a, S::StrLit>),
 }
@@ -119,8 +122,8 @@ pub trait AssignExpr<S: Syntax> {
 }
 
 pub trait BinExpr<S: Syntax> {
-  fn left(&self) -> &S::Expr;
-  fn right(&self) -> &S::Expr;
+  fn left(&self) -> MaybeOwned<S::Expr>;
+  fn right(&self) -> MaybeOwned<S::Expr>;
 }
 
 /// Represents all the binary operators.
@@ -167,6 +170,22 @@ pub enum BinOp {
 }
 
 pub trait ErrorExpr<S: Syntax> {}
+
+pub trait LogicalExpr<S: Syntax> {
+  fn op(&self) -> LogicalOp;
+  fn left(&self) -> MaybeOwned<S::Expr>;
+  fn right(&self) -> MaybeOwned<S::Expr>;
+}
+
+#[derive(Copy, Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash, Serialize, Deserialize)]
+pub enum LogicalOp {
+  #[serde(rename = "&&")]
+  /// Binary operator `&&`
+  And,
+  #[serde(rename = "||")]
+  /// Logical operator `||`
+  Or,
+}
 
 /// Sequence expression
 ///

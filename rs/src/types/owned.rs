@@ -29,6 +29,7 @@ impl traits::Syntax for OwnedSyntax {
   type AssignExpr = AssignExpr;
   type BinExpr = BinExpr;
   type ErrorExpr = ErrorExpr;
+  type LogicalExpr = LogicalExpr;
   type SeqExpr = SeqExpr;
   type StrLit = StrLit;
 
@@ -196,12 +197,12 @@ pub struct BinExpr {
 }
 
 impl traits::BinExpr<OwnedSyntax> for BinExpr {
-  fn left(&self) -> &Expr {
-    &self.left
+  fn left(&self) -> traits::MaybeOwned<Expr> {
+    traits::MaybeOwned::Borrowed(&self.left)
   }
 
-  fn right(&self) -> &Expr {
-    &self.right
+  fn right(&self) -> traits::MaybeOwned<Expr> {
+    traits::MaybeOwned::Borrowed(&self.right)
   }
 }
 
@@ -211,6 +212,28 @@ pub struct ErrorExpr {
 }
 
 impl traits::ErrorExpr<OwnedSyntax> for ErrorExpr {}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
+pub struct LogicalExpr {
+  pub loc: (),
+  pub op: traits::LogicalOp,
+  pub left: Box<Expr>,
+  pub right: Box<Expr>,
+}
+
+impl<'a> traits::LogicalExpr<OwnedSyntax> for LogicalExpr {
+  fn op(&self) -> traits::LogicalOp {
+    self.op
+  }
+
+  fn left(&self) -> traits::MaybeOwned<Expr> {
+    traits::MaybeOwned::Borrowed(&self.left)
+  }
+
+  fn right(&self) -> traits::MaybeOwned<Expr> {
+    traits::MaybeOwned::Borrowed(&self.right)
+  }
+}
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
 pub struct StrLit {
@@ -305,7 +328,7 @@ mod seq_expr_tests {
       ],
     };
 
-    assert_eq!(left.exprs().len(), 2);
+    assert_eq!(left.exprs().size_hint(), (2, Some(2)));
     assert_eq!(left, right);
   }
 }

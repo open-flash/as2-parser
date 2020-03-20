@@ -20,6 +20,7 @@ impl<'a> traits::Syntax for BorrowedSyntax<'a> {
   type AssignExpr = AssignExpr<'a>;
   type BinExpr = BinExpr<'a>;
   type ErrorExpr = ErrorExpr<'a>;
+  type LogicalExpr = LogicalExpr<'a>;
   type SeqExpr = SeqExpr<'a>;
   type StrLit = StrLit<'a>;
 
@@ -160,12 +161,12 @@ pub struct BinExpr<'a> {
 }
 
 impl<'a> traits::BinExpr<BorrowedSyntax<'a>> for BinExpr<'a> {
-  fn left(&self) -> &Expr<'a> {
-    self.left
+  fn left(&self) -> traits::MaybeOwned<Expr<'a>> {
+    traits::MaybeOwned::Borrowed(self.left)
   }
 
-  fn right(&self) -> &Expr<'a> {
-    self.right
+  fn right(&self) -> traits::MaybeOwned<Expr<'a>> {
+    traits::MaybeOwned::Borrowed(self.right)
   }
 }
 
@@ -176,6 +177,28 @@ pub struct ErrorExpr<'a> {
 }
 
 impl<'a> traits::ErrorExpr<BorrowedSyntax<'a>> for ErrorExpr<'a> {}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct LogicalExpr<'a> {
+  pub loc: (),
+  pub op: traits::LogicalOp,
+  pub left: &'a Expr<'a>,
+  pub right: &'a Expr<'a>,
+}
+
+impl<'a> traits::LogicalExpr<BorrowedSyntax<'a>> for LogicalExpr<'a> {
+  fn op(&self) -> traits::LogicalOp {
+    self.op
+  }
+
+  fn left(&self) -> traits::MaybeOwned<Expr<'a>> {
+    traits::MaybeOwned::Borrowed(self.left)
+  }
+
+  fn right(&self) -> traits::MaybeOwned<Expr<'a>> {
+    traits::MaybeOwned::Borrowed(self.right)
+  }
+}
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct SeqExpr<'a> {
@@ -192,7 +215,7 @@ impl<'s> traits::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
   #[allow(clippy::type_complexity)]
   #[cfg(feature = "gat")]
   type Exprs<'a> =
-  core::iter::Map<core::slice::Iter<'a, Expr<'a>>, for<'r> fn(&'r Expr<'a>) -> traits::MaybeOwned<'r, Expr<'a>>>;
+    core::iter::Map<core::slice::Iter<'a, Expr<'a>>, for<'r> fn(&'r Expr<'a>) -> traits::MaybeOwned<'r, Expr<'a>>>;
 
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Exprs<'_> {
@@ -281,7 +304,7 @@ mod seq_expr_tests {
       exprs: &right_seq,
     };
 
-    assert_eq!(left.exprs().len(), 2);
+    assert_eq!(left.exprs().size_hint(), (2, Some(2)));
     assert_eq!(left, right);
   }
 }
