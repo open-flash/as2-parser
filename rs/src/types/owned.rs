@@ -23,10 +23,12 @@ impl traits::Syntax for OwnedSyntax {
   type ExprStmt = ExprStmt;
   type ErrorStmt = ErrorStmt;
   type TraceStmt = TraceStmt;
+  type VarDecl = VarDecl;
 
   type Expr = Expr;
   type AssignExpr = AssignExpr;
   type BinExpr = BinExpr;
+  type ErrorExpr = ErrorExpr;
   type SeqExpr = SeqExpr;
   type StrLit = StrLit;
 
@@ -84,14 +86,28 @@ impl traits::Stmt<OwnedSyntax> for Stmt {
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
+pub struct BreakStmt {
+  pub loc: (),
+}
+
+impl traits::BreakStmt<OwnedSyntax> for BreakStmt {}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
+pub struct ErrorStmt {
+  pub loc: (),
+}
+
+impl traits::ErrorStmt<OwnedSyntax> for ErrorStmt {}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
 pub struct ExprStmt {
   pub loc: (),
   pub expr: Box<Expr>,
 }
 
 impl traits::ExprStmt<OwnedSyntax> for ExprStmt {
-  fn expr(&self) -> &Expr {
-    &self.expr
+  fn expr(&self) -> traits::MaybeOwned<Expr> {
+    traits::MaybeOwned::Borrowed(&self.expr)
   }
 }
 
@@ -108,33 +124,27 @@ impl traits::TraceStmt<OwnedSyntax> for TraceStmt {
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
-pub struct BreakStmt {
+pub struct VarDecl {
   pub loc: (),
 }
 
-impl traits::BreakStmt<OwnedSyntax> for BreakStmt {}
-
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
-pub struct ErrorStmt {
-  pub loc: (),
-}
-
-impl traits::ErrorStmt<OwnedSyntax> for ErrorStmt {}
+impl traits::VarDecl<OwnedSyntax> for VarDecl {}
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
 pub enum Expr {
+  Assign(AssignExpr),
+  Bin(BinExpr),
+  Error(ErrorExpr),
   Seq(SeqExpr),
-  // Assign(AssignExpr),
   StrLit(StrLit),
-  SyntaxError,
 }
 
 impl traits::Expr<OwnedSyntax> for Expr {
   fn cast(&self) -> traits::ExprCast<OwnedSyntax> {
     match self {
-      Expr::Seq(ref e) => traits::ExprCast::Seq(e),
-      Expr::StrLit(ref e) => traits::ExprCast::StrLit(e),
-      Expr::SyntaxError => traits::ExprCast::Error,
+      Expr::Seq(ref e) => traits::ExprCast::Seq(traits::MaybeOwned::Borrowed(e)),
+      Expr::StrLit(ref e) => traits::ExprCast::StrLit(traits::MaybeOwned::Borrowed(e)),
+      _ => unimplemented!(),
     }
   }
 }
@@ -160,7 +170,7 @@ impl traits::SeqExpr<OwnedSyntax> for SeqExpr {
   }
 }
 
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
 pub struct AssignExpr {
   pub loc: (),
   pub target: Box<Pat>,
@@ -177,7 +187,7 @@ impl traits::AssignExpr<OwnedSyntax> for AssignExpr {
   }
 }
 
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
 pub struct BinExpr {
   pub loc: (),
   pub left: Box<Expr>,
@@ -193,6 +203,13 @@ impl traits::BinExpr<OwnedSyntax> for BinExpr {
     &self.right
   }
 }
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
+pub struct ErrorExpr {
+  pub loc: (),
+}
+
+impl traits::ErrorExpr<OwnedSyntax> for ErrorExpr {}
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
 pub struct StrLit {

@@ -1,130 +1,268 @@
 {
   "body": [
     {
-      "type": "ExprStmt"
+      "type": "VarDecl"
     },
     {
-      "type": "ExprStmt"
+      "type": "VarDecl"
     },
     {
-      "type": "ExprStmt"
+      "type": "VarDecl"
     },
     {
-      "type": "ExprStmt"
+      "type": "VarDecl"
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     },
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     }
   ]
 }

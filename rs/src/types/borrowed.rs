@@ -14,11 +14,13 @@ impl<'a> traits::Syntax for BorrowedSyntax<'a> {
   type ErrorStmt = ErrorStmt<'a>;
   type ExprStmt = ExprStmt<'a>;
   type TraceStmt = TraceStmt<'a>;
+  type VarDecl = VarDecl<'a>;
 
   type Expr = Expr<'a>;
-  type SeqExpr = SeqExpr<'a>;
   type AssignExpr = AssignExpr<'a>;
   type BinExpr = BinExpr<'a>;
+  type ErrorExpr = ErrorExpr<'a>;
+  type SeqExpr = SeqExpr<'a>;
   type StrLit = StrLit<'a>;
 
   type Pat = Pat<'a>;
@@ -67,30 +69,6 @@ impl<'a> traits::Stmt<BorrowedSyntax<'a>> for Stmt<'a> {
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
-pub struct TraceStmt<'a> {
-  pub loc: (),
-  pub value: &'a Expr<'a>,
-}
-
-impl<'a> traits::TraceStmt<BorrowedSyntax<'a>> for TraceStmt<'a> {
-  fn value(&self) -> &Expr<'a> {
-    self.value
-  }
-}
-
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
-pub struct ExprStmt<'a> {
-  pub loc: (),
-  pub expr: &'a Expr<'a>,
-}
-
-impl<'a> traits::ExprStmt<BorrowedSyntax<'a>> for ExprStmt<'a> {
-  fn expr(&self) -> &Expr<'a> {
-    self.expr
-  }
-}
-
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct BreakStmt<'a> {
   pub loc: (),
   pub phantom: PhantomData<&'a ()>,
@@ -107,38 +85,53 @@ pub struct ErrorStmt<'a> {
 impl<'a> traits::ErrorStmt<BorrowedSyntax<'a>> for ErrorStmt<'a> {}
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct ExprStmt<'a> {
+  pub loc: (),
+  pub expr: &'a Expr<'a>,
+}
+
+impl<'a> traits::ExprStmt<BorrowedSyntax<'a>> for ExprStmt<'a> {
+  fn expr(&self) -> traits::MaybeOwned<Expr<'a>> {
+    traits::MaybeOwned::Borrowed(self.expr)
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct TraceStmt<'a> {
+  pub loc: (),
+  pub value: &'a Expr<'a>,
+}
+
+impl<'a> traits::TraceStmt<BorrowedSyntax<'a>> for TraceStmt<'a> {
+  fn value(&self) -> &Expr<'a> {
+    self.value
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct VarDecl<'a> {
+  pub loc: (),
+  pub phantom: PhantomData<&'a ()>,
+}
+
+impl<'a> traits::VarDecl<BorrowedSyntax<'a>> for VarDecl<'a> {}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub enum Expr<'a> {
+  Assign(AssignExpr<'a>),
+  Bin(BinExpr<'a>),
+  Error(ErrorExpr<'a>),
+  Seq(SeqExpr<'a>),
   StrLit(StrLit<'a>),
-  Error,
 }
 
 impl<'a> traits::Expr<BorrowedSyntax<'a>> for Expr<'a> {
   fn cast<'b>(&'b self) -> traits::ExprCast<'b, BorrowedSyntax<'a>> {
     match self {
-      Expr::StrLit(ref e) => traits::ExprCast::StrLit(e),
-      Expr::Error => traits::ExprCast::Error,
+      Expr::Error(ref e) => traits::ExprCast::Error(traits::MaybeOwned::Borrowed(e)),
+      Expr::StrLit(ref e) => traits::ExprCast::StrLit(traits::MaybeOwned::Borrowed(e)),
+      _ => unimplemented!(),
     }
-  }
-}
-
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
-pub struct SeqExpr<'a> {
-  pub loc: (),
-  pub exprs: &'a [Expr<'a>],
-}
-
-impl<'s> traits::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
-  #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Expr<'s>> + 'a> {
-    Box::new(self.exprs.iter())
-  }
-
-  #[cfg(feature = "gat")]
-  type Iter<'a> = core::slice::Iter<'a, Expr<'a>>;
-
-  #[cfg(feature = "gat")]
-  fn exprs(&self) -> Self::Iter<'_> {
-    self.exprs.iter()
   }
 }
 
@@ -173,6 +166,35 @@ impl<'a> traits::BinExpr<BorrowedSyntax<'a>> for BinExpr<'a> {
 
   fn right(&self) -> &Expr<'a> {
     self.right
+  }
+}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct ErrorExpr<'a> {
+  pub loc: (),
+  pub phantom: PhantomData<&'a ()>,
+}
+
+impl<'a> traits::ErrorExpr<BorrowedSyntax<'a>> for ErrorExpr<'a> {}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct SeqExpr<'a> {
+  pub loc: (),
+  pub exprs: &'a [Expr<'a>],
+}
+
+impl<'s> traits::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
+  #[cfg(not(feature = "gat"))]
+  fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a Expr<'s>> + 'a> {
+    Box::new(self.exprs.iter())
+  }
+
+  #[cfg(feature = "gat")]
+  type Iter<'a> = core::slice::Iter<'a, Expr<'a>>;
+
+  #[cfg(feature = "gat")]
+  fn exprs(&self) -> Self::Iter<'_> {
+    self.exprs.iter()
   }
 }
 

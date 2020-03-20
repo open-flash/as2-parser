@@ -13,10 +13,12 @@ pub trait Syntax: Sized {
   type ErrorStmt: ErrorStmt<Self>;
   type ExprStmt: ExprStmt<Self>;
   type TraceStmt: TraceStmt<Self>;
+  type VarDecl: VarDecl<Self>;
 
   type Expr: Expr<Self>;
   type AssignExpr: AssignExpr<Self>;
   type BinExpr: BinExpr<Self>;
+  type ErrorExpr: ErrorExpr<Self>;
   type SeqExpr: SeqExpr<Self>;
   type StrLit: StrLit;
 
@@ -75,23 +77,26 @@ pub trait Stmt<S: Syntax> {
 
 /// Represents the result of downcasting an expression.
 pub enum StmtCast<'a, S: Syntax> {
+  Break(MaybeOwned<'a, S::BreakStmt>),
+  Error(MaybeOwned<'a, S::ErrorStmt>),
   Trace(MaybeOwned<'a, S::TraceStmt>),
   Expr(MaybeOwned<'a, S::ExprStmt>),
-  Error(MaybeOwned<'a, S::ErrorStmt>),
-  Break(MaybeOwned<'a, S::BreakStmt>),
+  VarDecl(MaybeOwned<'a, S::VarDecl>),
+}
+
+pub trait BreakStmt<S: Syntax> {}
+
+pub trait ErrorStmt<S: Syntax> {}
+
+pub trait ExprStmt<S: Syntax> {
+  fn expr(&self) -> MaybeOwned<S::Expr>;
 }
 
 pub trait TraceStmt<S: Syntax> {
   fn value(&self) -> &S::Expr;
 }
 
-pub trait ExprStmt<S: Syntax> {
-  fn expr(&self) -> &S::Expr;
-}
-
-pub trait BreakStmt<S: Syntax> {}
-
-pub trait ErrorStmt<S: Syntax> {}
+pub trait VarDecl<S: Syntax> {}
 
 /// Trait representing any ActionScript expression
 pub trait Expr<S: Syntax> {
@@ -101,23 +106,11 @@ pub trait Expr<S: Syntax> {
 
 /// Represents the result of downcasting an expression.
 pub enum ExprCast<'a, S: Syntax> {
-  Seq(&'a S::SeqExpr),
-  StrLit(&'a S::StrLit),
-  Error,
-}
-
-/// Sequence expression
-///
-/// Corresponds to two or more expressions separated by commas.
-pub trait SeqExpr<S: Syntax> {
-  #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a S::Expr> + 'a>;
-
-  #[cfg(feature = "gat")]
-  type Iter<'a>: ExactSizeIterator<Item = &'a S::Expr>;
-
-  #[cfg(feature = "gat")]
-  fn exprs(&self) -> Self::Iter<'_>;
+  Assign(MaybeOwned<'a, S::AssignExpr>),
+  Bin(MaybeOwned<'a, S::BinExpr>),
+  Error(MaybeOwned<'a, S::ErrorExpr>),
+  Seq(MaybeOwned<'a, S::SeqExpr>),
+  StrLit(MaybeOwned<'a, S::StrLit>),
 }
 
 pub trait AssignExpr<S: Syntax> {
@@ -171,6 +164,22 @@ pub enum BinOp {
   StrictEquals,
   /// Binary operator `>>>`
   UnsignedRightShift,
+}
+
+pub trait ErrorExpr<S: Syntax> {}
+
+/// Sequence expression
+///
+/// Corresponds to two or more expressions separated by commas.
+pub trait SeqExpr<S: Syntax> {
+  #[cfg(not(feature = "gat"))]
+  fn exprs<'a>(&'a self) -> Box<dyn ExactSizeIterator<Item = &'a S::Expr> + 'a>;
+
+  #[cfg(feature = "gat")]
+  type Iter<'a>: ExactSizeIterator<Item = &'a S::Expr>;
+
+  #[cfg(feature = "gat")]
+  fn exprs(&self) -> Self::Iter<'_>;
 }
 
 pub trait StrLit {

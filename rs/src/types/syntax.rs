@@ -337,6 +337,22 @@ impl SyntaxKind {
       _ => false,
     }
   }
+
+  pub fn is_stmt(self) -> bool {
+    use SyntaxKind::*;
+    match self {
+      NodeExprStmt | NodeVarDecl => true,
+      _ => false,
+    }
+  }
+
+  pub fn is_expr(self) -> bool {
+    use SyntaxKind::*;
+    match self {
+      NodeAssignmentExpr | NodeCall | NodeBinExpr => true,
+      _ => false,
+    }
+  }
 }
 
 /// Enum representing the ActionScript 2 language supported by OpenFlash
@@ -384,10 +400,12 @@ impl traits::Syntax for ConcreteSyntax {
   type ExprStmt = ExprStmt;
   type ErrorStmt = ErrorStmt;
   type TraceStmt = TraceStmt;
+  type VarDecl = VarDecl;
 
   type Expr = Expr;
   type AssignExpr = AssignExpr;
   type BinExpr = BinExpr;
+  type ErrorExpr = ErrorExpr;
   type SeqExpr = SeqExpr;
   type StrLit = StrLit;
 
@@ -475,9 +493,10 @@ impl TryFrom<SyntaxNode> for Stmt {
   type Error = ();
 
   fn try_from(syntax: SyntaxNode) -> Result<Self, Self::Error> {
-    match syntax.kind() {
-      SyntaxKind::NodeExprStmt => Ok(Self { syntax }),
-      _ => Err(()),
+    if syntax.kind().is_stmt() {
+      Ok(Self { syntax })
+    } else {
+      Err(())
     }
   }
 }
@@ -486,6 +505,9 @@ impl traits::Stmt<ConcreteSyntax> for Stmt {
   fn cast(&self) -> StmtCast<ConcreteSyntax> {
     match self.syntax.kind() {
       SyntaxKind::NodeExprStmt => traits::StmtCast::Expr(traits::MaybeOwned::Owned(ExprStmt {
+        syntax: self.syntax.clone(),
+      })),
+      SyntaxKind::NodeVarDecl => traits::StmtCast::VarDecl(traits::MaybeOwned::Owned(VarDecl {
         syntax: self.syntax.clone(),
       })),
       _ => traits::StmtCast::Error(traits::MaybeOwned::Owned(ErrorStmt {
@@ -510,8 +532,14 @@ pub struct ExprStmt {
 }
 
 impl traits::ExprStmt<ConcreteSyntax> for ExprStmt {
-  fn expr(&self) -> &<ConcreteSyntax as Syntax>::Expr {
-    unimplemented!()
+  fn expr(&self) -> traits::MaybeOwned<Expr> {
+    for child in self.syntax.children() {
+      match Expr::try_from(child) {
+        Ok(e) => return traits::MaybeOwned::Owned(e),
+        Err(()) => {}
+      }
+    }
+    panic!("InvalidExpressionNode");
   }
 }
 
@@ -535,6 +563,14 @@ impl traits::TraceStmt<ConcreteSyntax> for TraceStmt {
   }
 }
 
+/// Represents a break statement backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct VarDecl {
+  syntax: SyntaxNode,
+}
+
+impl traits::VarDecl<ConcreteSyntax> for VarDecl {}
+
 /// Represents an expression backed by a concrete syntax node.
 #[derive(Debug, Eq, PartialEq, Clone, Hash)]
 pub struct Expr {
@@ -543,7 +579,26 @@ pub struct Expr {
 
 impl traits::Expr<ConcreteSyntax> for Expr {
   fn cast(&self) -> ExprCast<ConcreteSyntax> {
-    unimplemented!()
+    match self.syntax.kind() {
+      SyntaxKind::NodeBinExpr => traits::ExprCast::Bin(traits::MaybeOwned::Owned(BinExpr {
+        syntax: self.syntax.clone(),
+      })),
+      _ => traits::ExprCast::Error(traits::MaybeOwned::Owned(ErrorExpr {
+        syntax: self.syntax.clone(),
+      })),
+    }
+  }
+}
+
+impl TryFrom<SyntaxNode> for Expr {
+  type Error = ();
+
+  fn try_from(syntax: SyntaxNode) -> Result<Self, Self::Error> {
+    if syntax.kind().is_expr() {
+      Ok(Self { syntax })
+    } else {
+      Err(())
+    }
   }
 }
 
@@ -578,6 +633,14 @@ impl traits::BinExpr<ConcreteSyntax> for BinExpr {
     unimplemented!()
   }
 }
+
+/// Represents an error in expression position.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct ErrorExpr {
+  syntax: SyntaxNode,
+}
+
+impl traits::ErrorExpr<ConcreteSyntax> for ErrorExpr {}
 
 /// Represents a sequence expression backed by a concrete syntax node.
 #[derive(Debug, Eq, PartialEq, Clone, Hash)]

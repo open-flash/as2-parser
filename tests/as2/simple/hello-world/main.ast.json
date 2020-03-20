@@ -1,7 +1,10 @@
 {
   "body": [
     {
-      "type": "ExprStmt"
+      "type": "ExprStmt",
+      "expr": {
+        "type": "ErrorExpr"
+      }
     }
   ]
 }
