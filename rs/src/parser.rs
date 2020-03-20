@@ -84,6 +84,11 @@ impl<'text> PeekableLexer<'text> {
     self.peek_over_trivia().map(|token| token.kind)
   }
 
+  /// Peeks the kind of the next token
+  pub(crate) fn peek_kind(&self) -> Option<SyntaxKind> {
+    self.peek().map(|token| token.kind)
+  }
+
   /// Peeks the next non-trivia token
   ///
   /// # Precondition
@@ -185,19 +190,24 @@ impl<'text> Parser<'text> {
   }
 
   fn stmt(&mut self) {
-    self.builder.start_node(SyntaxKind::NodeStatement.into());
     let first = match self.lexer.peek() {
-      None => return,
+      None => panic!("UnexpectedEnd"),
       Some(token) => token,
     };
     match first.kind {
       SyntaxKind::TokenVar => self.var_decl(),
       kind if EXPR_START.contains(Some(kind)) => {
-        self.expr(token_set!(SyntaxKind::TokenSemicolon));
+        self.expr_stmt();
         // Labelled statement or expression
       }
       kind => unimplemented!("{:?}", kind),
     }
+  }
+
+  fn expr_stmt(&mut self) {
+    self.builder.start_node(SyntaxKind::NodeExprStmt.into());
+    debug_assert!(EXPR_START.contains(self.lexer.peek_kind()));
+    self.expr(token_set!(SyntaxKind::TokenSemicolon));
     debug_assert!(matches!(
       self.lexer.peek_kind_over_trivia(),
       Some(SyntaxKind::TokenSemicolon)
@@ -231,6 +241,7 @@ impl<'text> Parser<'text> {
     self.eat_trivia();
     self.expr(token_set!(None, SyntaxKind::TokenSemicolon));
     self.eat_trivia();
+    self.bump();
 
     self.builder.finish_node();
   }

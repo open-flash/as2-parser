@@ -9,6 +9,8 @@ pub trait Syntax: Sized {
 
   type Stmt: Stmt<Self>;
   type BreakStmt: BreakStmt<Self>;
+  /// Represents invalid statement
+  type ErrorStmt: ErrorStmt<Self>;
   type ExprStmt: ExprStmt<Self>;
   type TraceStmt: TraceStmt<Self>;
 
@@ -75,8 +77,8 @@ pub trait Stmt<S: Syntax> {
 pub enum StmtCast<'a, S: Syntax> {
   Trace(MaybeOwned<'a, S::TraceStmt>),
   Expr(MaybeOwned<'a, S::ExprStmt>),
+  Error(MaybeOwned<'a, S::ErrorStmt>),
   Break(MaybeOwned<'a, S::BreakStmt>),
-  SyntaxError,
 }
 
 pub trait TraceStmt<S: Syntax> {
@@ -88,6 +90,8 @@ pub trait ExprStmt<S: Syntax> {
 }
 
 pub trait BreakStmt<S: Syntax> {}
+
+pub trait ErrorStmt<S: Syntax> {}
 
 /// Trait representing any ActionScript expression
 pub trait Expr<S: Syntax> {

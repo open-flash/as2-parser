@@ -252,14 +252,14 @@ pub enum SyntaxKind {
   NodeCall,
 
   // Composite nodes
-  /// Any statement
-  NodeStatement,
+  /// Break statement
+  NodeBreakStmt,
+
+  /// Expression statement
+  NodeExprStmt,
 
   /// Variable declaration
   NodeVarDecl,
-
-  /// Any expression
-  NodeExpression,
 
   /// Root node
   NodeScript,
@@ -382,6 +382,7 @@ impl traits::Syntax for ConcreteSyntax {
   type Stmt = Stmt;
   type BreakStmt = BreakStmt;
   type ExprStmt = ExprStmt;
+  type ErrorStmt = ErrorStmt;
   type TraceStmt = TraceStmt;
 
   type Expr = Expr;
@@ -475,7 +476,7 @@ impl TryFrom<SyntaxNode> for Stmt {
 
   fn try_from(syntax: SyntaxNode) -> Result<Self, Self::Error> {
     match syntax.kind() {
-      SyntaxKind::NodeStatement => Ok(Self { syntax }),
+      SyntaxKind::NodeExprStmt => Ok(Self { syntax }),
       _ => Err(()),
     }
   }
@@ -483,9 +484,14 @@ impl TryFrom<SyntaxNode> for Stmt {
 
 impl traits::Stmt<ConcreteSyntax> for Stmt {
   fn cast(&self) -> StmtCast<ConcreteSyntax> {
-    traits::StmtCast::Break(traits::MaybeOwned::Owned(BreakStmt {
-      syntax: self.syntax.clone(),
-    }))
+    match self.syntax.kind() {
+      SyntaxKind::NodeExprStmt => traits::StmtCast::Expr(traits::MaybeOwned::Owned(ExprStmt {
+        syntax: self.syntax.clone(),
+      })),
+      _ => traits::StmtCast::Error(traits::MaybeOwned::Owned(ErrorStmt {
+        syntax: self.syntax.clone(),
+      })),
+    }
   }
 }
 
@@ -508,6 +514,14 @@ impl traits::ExprStmt<ConcreteSyntax> for ExprStmt {
     unimplemented!()
   }
 }
+
+/// Represents a break statement backed by a concrete syntax node.
+#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+pub struct ErrorStmt {
+  syntax: SyntaxNode,
+}
+
+impl traits::ErrorStmt<ConcreteSyntax> for ErrorStmt {}
 
 /// Represents an abstract trace statement backed by a concrete syntax node.
 #[derive(Debug, Eq, PartialEq, Clone, Hash)]

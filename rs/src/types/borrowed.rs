@@ -10,9 +10,10 @@ impl<'a> traits::Syntax for BorrowedSyntax<'a> {
   type Script = Script<'a>;
 
   type Stmt = Stmt<'a>;
-  type TraceStmt = TraceStmt<'a>;
-  type ExprStmt = ExprStmt<'a>;
   type BreakStmt = BreakStmt<'a>;
+  type ErrorStmt = ErrorStmt<'a>;
+  type ExprStmt = ExprStmt<'a>;
+  type TraceStmt = TraceStmt<'a>;
 
   type Expr = Expr<'a>;
   type SeqExpr = SeqExpr<'a>;
@@ -51,16 +52,16 @@ impl<'s> traits::Script<BorrowedSyntax<'s>> for Script<'s> {
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub enum Stmt<'a> {
   Trace(TraceStmt<'a>),
+  Error(ErrorStmt<'a>),
   Expr(ExprStmt<'a>),
-  SyntaxError,
 }
 
 impl<'a> traits::Stmt<BorrowedSyntax<'a>> for Stmt<'a> {
   fn cast<'b>(&'b self) -> traits::StmtCast<'b, BorrowedSyntax<'a>> {
     match self {
-      Stmt::Trace(ref e) => traits::StmtCast::Trace(traits::MaybeOwned::Borrowed(e)),
-      Stmt::Expr(ref e) => traits::StmtCast::Expr(traits::MaybeOwned::Borrowed(e)),
-      Stmt::SyntaxError => traits::StmtCast::SyntaxError,
+      Stmt::Trace(ref s) => traits::StmtCast::Trace(traits::MaybeOwned::Borrowed(s)),
+      Stmt::Error(ref s) => traits::StmtCast::Error(traits::MaybeOwned::Borrowed(s)),
+      Stmt::Expr(ref s) => traits::StmtCast::Expr(traits::MaybeOwned::Borrowed(s)),
     }
   }
 }
@@ -96,6 +97,14 @@ pub struct BreakStmt<'a> {
 }
 
 impl<'a> traits::BreakStmt<BorrowedSyntax<'a>> for BreakStmt<'a> {}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+pub struct ErrorStmt<'a> {
+  pub loc: (),
+  pub phantom: PhantomData<&'a ()>,
+}
+
+impl<'a> traits::ErrorStmt<BorrowedSyntax<'a>> for ErrorStmt<'a> {}
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub enum Expr<'a> {

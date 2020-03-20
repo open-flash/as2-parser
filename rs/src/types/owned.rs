@@ -21,6 +21,7 @@ impl traits::Syntax for OwnedSyntax {
   type Stmt = Stmt;
   type BreakStmt = BreakStmt;
   type ExprStmt = ExprStmt;
+  type ErrorStmt = ErrorStmt;
   type TraceStmt = TraceStmt;
 
   type Expr = Expr;
@@ -61,6 +62,7 @@ impl traits::Script<OwnedSyntax> for Script {
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
 pub enum Stmt {
   Break(BreakStmt),
+  Error(ErrorStmt),
   Expr(ExprStmt),
   /// Abstract Trace Statement
   ///
@@ -68,16 +70,15 @@ pub enum Stmt {
   /// @trace("Hello, World!");
   /// ```
   Trace(TraceStmt),
-  SyntaxError,
 }
 
 impl traits::Stmt<OwnedSyntax> for Stmt {
   fn cast(&self) -> traits::StmtCast<OwnedSyntax> {
     match self {
-      Stmt::Break(ref e) => traits::StmtCast::Break(traits::MaybeOwned::Borrowed(e)),
-      Stmt::Expr(ref e) => traits::StmtCast::Expr(traits::MaybeOwned::Borrowed(e)),
-      Stmt::Trace(ref e) => traits::StmtCast::Trace(traits::MaybeOwned::Borrowed(e)),
-      Stmt::SyntaxError => traits::StmtCast::SyntaxError,
+      Stmt::Break(ref s) => traits::StmtCast::Break(traits::MaybeOwned::Borrowed(s)),
+      Stmt::Error(ref s) => traits::StmtCast::Error(traits::MaybeOwned::Borrowed(s)),
+      Stmt::Expr(ref s) => traits::StmtCast::Expr(traits::MaybeOwned::Borrowed(s)),
+      Stmt::Trace(ref s) => traits::StmtCast::Trace(traits::MaybeOwned::Borrowed(s)),
     }
   }
 }
@@ -112,6 +113,13 @@ pub struct BreakStmt {
 }
 
 impl traits::BreakStmt<OwnedSyntax> for BreakStmt {}
+
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
+pub struct ErrorStmt {
+  pub loc: (),
+}
+
+impl traits::ErrorStmt<OwnedSyntax> for ErrorStmt {}
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
 pub enum Expr {

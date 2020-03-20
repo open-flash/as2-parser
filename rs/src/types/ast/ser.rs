@@ -42,6 +42,8 @@ impl<Ast: Syntax> Serialize for SerializeStmt<'_, Ast> {
   fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
     match self.0.cast() {
       StmtCast::Break(s) => SerializeBreakStmt::<Ast>(&*s).serialize(serializer),
+      StmtCast::Error(s) => SerializeErrorStmt::<Ast>(&*s).serialize(serializer),
+      StmtCast::Expr(s) => SerializeExprStmt::<Ast>(&*s).serialize(serializer),
       _ => unimplemented!(),
     }
   }
@@ -54,6 +56,28 @@ impl<Ast: Syntax> Serialize for SerializeBreakStmt<'_, Ast> {
     use serde::ser::SerializeStruct;
     let mut struct_serializer = serializer.serialize_struct("BreakStmt", 1)?;
     struct_serializer.serialize_field("type", "BreakStmt")?;
+    struct_serializer.end()
+  }
+}
+
+pub struct SerializeErrorStmt<'a, Ast: Syntax>(pub &'a Ast::ErrorStmt);
+
+impl<Ast: Syntax> Serialize for SerializeErrorStmt<'_, Ast> {
+  fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
+    use serde::ser::SerializeStruct;
+    let mut struct_serializer = serializer.serialize_struct("ErrorStmt", 1)?;
+    struct_serializer.serialize_field("type", "ErrorStmt")?;
+    struct_serializer.end()
+  }
+}
+
+pub struct SerializeExprStmt<'a, Ast: Syntax>(pub &'a Ast::ExprStmt);
+
+impl<Ast: Syntax> Serialize for SerializeExprStmt<'_, Ast> {
+  fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
+    use serde::ser::SerializeStruct;
+    let mut struct_serializer = serializer.serialize_struct("ExprStmt", 1)?;
+    struct_serializer.serialize_field("type", "ExprStmt")?;
     struct_serializer.end()
   }
 }
