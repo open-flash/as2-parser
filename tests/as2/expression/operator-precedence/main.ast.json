@@ -112,7 +112,7 @@
             },
             {
               "type": "LogicalExpr",
-              "left": "&&",
+              "op": "&&",
               "left": {
                 "type": "ErrorExpr"
               },
@@ -133,7 +133,7 @@
           "exprs": [
             {
               "type": "LogicalExpr",
-              "left": "&&",
+              "op": "&&",
               "left": {
                 "type": "ErrorExpr"
               },
@@ -160,7 +160,7 @@
             },
             {
               "type": "LogicalExpr",
-              "left": "||",
+              "op": "||",
               "left": {
                 "type": "ErrorExpr"
               },
@@ -181,7 +181,7 @@
           "exprs": [
             {
               "type": "LogicalExpr",
-              "left": "||",
+              "op": "||",
               "left": {
                 "type": "ErrorExpr"
               },

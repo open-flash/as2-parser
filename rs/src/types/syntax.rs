@@ -634,7 +634,9 @@ fn find_infix_op(symbols: &mut SyntaxElementChildren<As2Lang>) -> SyntaxToken {
   panic!("NoInfixOp");
 }
 
-impl traits::Expr<ConcreteSyntax> for Expr {
+impl traits::Expr for Expr {
+  type Ast = ConcreteSyntax;
+
   fn cast(&self) -> ExprCast<ConcreteSyntax> {
     match trim_paren(self.syntax.clone()).kind() {
       SyntaxKind::NodeAssignExpr => traits::ExprCast::Assign(traits::MaybeOwned::Owned(AssignExpr {
@@ -680,7 +682,9 @@ pub struct AssignExpr {
   syntax: SyntaxNode,
 }
 
-impl traits::AssignExpr<ConcreteSyntax> for AssignExpr {
+impl traits::AssignExpr for AssignExpr {
+  type Ast = ConcreteSyntax;
+
   fn target(&self) -> &<ConcreteSyntax as Syntax>::Pat {
     unimplemented!()
   }
@@ -714,7 +718,9 @@ pub struct BinExpr {
   syntax: SyntaxNode,
 }
 
-impl traits::BinExpr<ConcreteSyntax> for BinExpr {
+impl traits::BinExpr for BinExpr {
+  type Ast = ConcreteSyntax;
+
   fn left(&self) -> traits::MaybeOwned<Expr> {
     let left_node = self.syntax.first_child().unwrap();
     match Expr::try_from(left_node) {
@@ -740,14 +746,18 @@ pub struct ErrorExpr {
   syntax: SyntaxNode,
 }
 
-impl traits::ErrorExpr<ConcreteSyntax> for ErrorExpr {}
+impl traits::ErrorExpr for ErrorExpr {
+  type Ast = ConcreteSyntax;
+}
 
 #[derive(Debug, Eq, PartialEq, Clone, Hash)]
 pub struct LogicalExpr {
   syntax: SyntaxNode,
 }
 
-impl<'a> traits::LogicalExpr<ConcreteSyntax> for LogicalExpr {
+impl<'a> traits::LogicalExpr for LogicalExpr {
+  type Ast = ConcreteSyntax;
+
   fn op(&self) -> traits::LogicalOp {
     let op_kind = find_infix_op(&mut self.syntax.children_with_tokens()).kind();
     match op_kind {
@@ -782,7 +792,9 @@ pub struct SeqExpr {
   syntax: SyntaxNode,
 }
 
-impl traits::SeqExpr<ConcreteSyntax> for SeqExpr {
+impl traits::SeqExpr for SeqExpr {
+  type Ast = ConcreteSyntax;
+
   #[cfg(not(feature = "gat"))]
   fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr>> + 'a> {
     Box::new(ExprIter {
@@ -825,7 +837,9 @@ pub struct Pat {
   syntax: SyntaxNode,
 }
 
-impl traits::Pat<ConcreteSyntax> for Pat {
+impl traits::Pat for Pat {
+  type Ast = ConcreteSyntax;
+
   fn cast(&self) -> PatCast<ConcreteSyntax> {
     unimplemented!()
   }
@@ -837,7 +851,9 @@ pub struct MemberPat {
   syntax: SyntaxNode,
 }
 
-impl traits::MemberPat<ConcreteSyntax> for MemberPat {
+impl traits::MemberPat for MemberPat {
+  type Ast = ConcreteSyntax;
+
   fn base(&self) -> &<ConcreteSyntax as Syntax>::Expr {
     unimplemented!()
   }

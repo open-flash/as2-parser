@@ -16,16 +16,16 @@ pub trait Syntax: Sized {
   type TraceStmt: TraceStmt<Self>;
   type VarDecl: VarDecl<Self>;
 
-  type Expr: Expr<Self>;
-  type AssignExpr: AssignExpr<Self>;
-  type BinExpr: BinExpr<Self>;
-  type ErrorExpr: ErrorExpr<Self>;
-  type LogicalExpr: LogicalExpr<Self>;
-  type SeqExpr: SeqExpr<Self>;
+  type Expr: Expr<Ast = Self>;
+  type AssignExpr: AssignExpr<Ast = Self>;
+  type BinExpr: BinExpr<Ast = Self>;
+  type ErrorExpr: ErrorExpr<Ast = Self>;
+  type LogicalExpr: LogicalExpr<Ast = Self>;
+  type SeqExpr: SeqExpr<Ast = Self>;
   type StrLit: StrLit;
 
-  type Pat: Pat<Self>;
-  type MemberPat: MemberPat<Self>;
+  type Pat: Pat<Ast = Self>;
+  type MemberPat: MemberPat<Ast = Self>;
   type IdentPat: IdentPat;
 }
 
@@ -101,9 +101,11 @@ pub trait TraceStmt<S: Syntax> {
 pub trait VarDecl<S: Syntax> {}
 
 /// Trait representing any ActionScript expression
-pub trait Expr<S: Syntax> {
+pub trait Expr {
+  type Ast: Syntax;
+
   /// Downcast the expression to its concrete type.
-  fn cast(&self) -> ExprCast<S>;
+  fn cast(&self) -> ExprCast<Self::Ast>;
 }
 
 /// Represents the result of downcasting an expression.
@@ -116,14 +118,18 @@ pub enum ExprCast<'a, S: Syntax> {
   StrLit(MaybeOwned<'a, S::StrLit>),
 }
 
-pub trait AssignExpr<S: Syntax> {
-  fn target(&self) -> &S::Pat;
-  fn value(&self) -> MaybeOwned<S::Expr>;
+pub trait AssignExpr {
+  type Ast: Syntax;
+
+  fn target(&self) -> &<Self::Ast as Syntax>::Pat;
+  fn value(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
 }
 
-pub trait BinExpr<S: Syntax> {
-  fn left(&self) -> MaybeOwned<S::Expr>;
-  fn right(&self) -> MaybeOwned<S::Expr>;
+pub trait BinExpr {
+  type Ast: Syntax;
+
+  fn left(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
+  fn right(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
 }
 
 /// Represents all the binary operators.
@@ -169,12 +175,15 @@ pub enum BinOp {
   UnsignedRightShift,
 }
 
-pub trait ErrorExpr<S: Syntax> {}
+pub trait ErrorExpr {
+  type Ast: Syntax;
+}
 
-pub trait LogicalExpr<S: Syntax> {
+pub trait LogicalExpr {
+  type Ast: Syntax;
   fn op(&self) -> LogicalOp;
-  fn left(&self) -> MaybeOwned<S::Expr>;
-  fn right(&self) -> MaybeOwned<S::Expr>;
+  fn left(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
+  fn right(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
 }
 
 #[derive(Copy, Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash, Serialize, Deserialize)]
@@ -190,12 +199,14 @@ pub enum LogicalOp {
 /// Sequence expression
 ///
 /// Corresponds to two or more expressions separated by commas.
-pub trait SeqExpr<S: Syntax> {
+pub trait SeqExpr {
+  type Ast: Syntax;
+
   #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = MaybeOwned<'a, S::Expr>> + 'a>;
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = MaybeOwned<'a, <Self::Ast as Syntax>::Expr>> + 'a>;
 
   #[cfg(feature = "gat")]
-  type Exprs<'a>: Iterator<Item = MaybeOwned<'a, S::Expr>>;
+  type Exprs<'a>: Iterator<Item = MaybeOwned<'a, <Self::Ast as Syntax>::Expr>>;
 
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Exprs<'_>;
@@ -206,9 +217,11 @@ pub trait StrLit {
 }
 
 /// Trait representing any ActionScript pattern (assignment left-hand side)
-pub trait Pat<S: Syntax> {
+pub trait Pat {
+  type Ast: Syntax;
+
   /// Downcast the pattern to its concrete type.
-  fn cast(&self) -> PatCast<S>;
+  fn cast(&self) -> PatCast<Self::Ast>;
 }
 
 /// Represents the result of downcasting a pattern.
@@ -218,9 +231,11 @@ pub enum PatCast<'a, S: Syntax> {
   SyntaxError,
 }
 
-pub trait MemberPat<S: Syntax> {
-  fn base(&self) -> &S::Expr;
-  fn key(&self) -> &S::Expr;
+pub trait MemberPat {
+  type Ast: Syntax;
+
+  fn base(&self) -> &<Self::Ast as Syntax>::Expr;
+  fn key(&self) -> &<Self::Ast as Syntax>::Expr;
 }
 
 pub trait IdentPat {

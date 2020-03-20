@@ -101,7 +101,7 @@ impl<Ast: Syntax> Serialize for SerializeExpr<'_, Ast> {
   fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
     match self.0.cast() {
       ExprCast::Assign(e) => SerializeAssignExpr::<Ast>(&*e).serialize(serializer),
-      ExprCast::Bin(e) => SerializeBinExpr::<Ast>(&*e).serialize(serializer),
+      ExprCast::Bin(e) => SerializeBinExpr(&*e).serialize(serializer),
       ExprCast::Error(e) => SerializeErrorExpr::<Ast>(&*e).serialize(serializer),
       ExprCast::Logical(e) => SerializeLogicalExpr::<Ast>(&*e).serialize(serializer),
       ExprCast::Seq(e) => SerializeSeqExpr::<Ast>(&*e).serialize(serializer),
@@ -122,15 +122,15 @@ impl<Ast: Syntax> Serialize for SerializeAssignExpr<'_, Ast> {
   }
 }
 
-pub struct SerializeBinExpr<'a, Ast: Syntax>(pub &'a Ast::BinExpr);
+pub struct SerializeBinExpr<'a, T: BinExpr>(pub &'a T);
 
-impl<Ast: Syntax> Serialize for SerializeBinExpr<'_, Ast> {
+impl<T: BinExpr> Serialize for SerializeBinExpr<'_, T> {
   fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
     use serde::ser::SerializeStruct;
     let mut struct_serializer = serializer.serialize_struct("BinExpr", 3)?;
     struct_serializer.serialize_field("type", "BinExpr")?;
-    struct_serializer.serialize_field("left", &SerializeExpr::<Ast>(&*self.0.left()))?;
-    struct_serializer.serialize_field("right", &SerializeExpr::<Ast>(&*self.0.right()))?;
+    struct_serializer.serialize_field("left", &SerializeExpr::<T::Ast>(&*self.0.left()))?;
+    struct_serializer.serialize_field("right", &SerializeExpr::<T::Ast>(&*self.0.right()))?;
     struct_serializer.end()
   }
 }
@@ -153,7 +153,7 @@ impl<Ast: Syntax> Serialize for SerializeLogicalExpr<'_, Ast> {
     use serde::ser::SerializeStruct;
     let mut struct_serializer = serializer.serialize_struct("LogicalExpr", 4)?;
     struct_serializer.serialize_field("type", "LogicalExpr")?;
-    struct_serializer.serialize_field("left", &self.0.op())?;
+    struct_serializer.serialize_field("op", &self.0.op())?;
     struct_serializer.serialize_field("left", &SerializeExpr::<Ast>(&*self.0.left()))?;
     struct_serializer.serialize_field("right", &SerializeExpr::<Ast>(&*self.0.right()))?;
     struct_serializer.end()

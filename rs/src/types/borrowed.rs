@@ -126,7 +126,9 @@ pub enum Expr<'a> {
   StrLit(StrLit<'a>),
 }
 
-impl<'a> traits::Expr<BorrowedSyntax<'a>> for Expr<'a> {
+impl<'a> traits::Expr for Expr<'a> {
+  type Ast = BorrowedSyntax<'a>;
+
   fn cast<'b>(&'b self) -> traits::ExprCast<'b, BorrowedSyntax<'a>> {
     match self {
       Expr::Error(ref e) => traits::ExprCast::Error(traits::MaybeOwned::Borrowed(e)),
@@ -143,7 +145,9 @@ pub struct AssignExpr<'a> {
   pub value: &'a Expr<'a>,
 }
 
-impl<'a> traits::AssignExpr<BorrowedSyntax<'a>> for AssignExpr<'a> {
+impl<'a> traits::AssignExpr for AssignExpr<'a> {
+  type Ast = BorrowedSyntax<'a>;
+
   fn target(&self) -> &Pat<'a> {
     self.target
   }
@@ -160,7 +164,9 @@ pub struct BinExpr<'a> {
   pub right: &'a Expr<'a>,
 }
 
-impl<'a> traits::BinExpr<BorrowedSyntax<'a>> for BinExpr<'a> {
+impl<'a> traits::BinExpr for BinExpr<'a> {
+  type Ast = BorrowedSyntax<'a>;
+
   fn left(&self) -> traits::MaybeOwned<Expr<'a>> {
     traits::MaybeOwned::Borrowed(self.left)
   }
@@ -176,7 +182,9 @@ pub struct ErrorExpr<'a> {
   pub phantom: PhantomData<&'a ()>,
 }
 
-impl<'a> traits::ErrorExpr<BorrowedSyntax<'a>> for ErrorExpr<'a> {}
+impl<'a> traits::ErrorExpr for ErrorExpr<'a> {
+  type Ast = BorrowedSyntax<'a>;
+}
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct LogicalExpr<'a> {
@@ -186,7 +194,8 @@ pub struct LogicalExpr<'a> {
   pub right: &'a Expr<'a>,
 }
 
-impl<'a> traits::LogicalExpr<BorrowedSyntax<'a>> for LogicalExpr<'a> {
+impl<'a> traits::LogicalExpr for LogicalExpr<'a> {
+  type Ast = BorrowedSyntax<'a>;
   fn op(&self) -> traits::LogicalOp {
     self.op
   }
@@ -206,7 +215,9 @@ pub struct SeqExpr<'a> {
   pub exprs: &'a [Expr<'a>],
 }
 
-impl<'s> traits::SeqExpr<BorrowedSyntax<'s>> for SeqExpr<'s> {
+impl<'s> traits::SeqExpr for SeqExpr<'s> {
+  type Ast = BorrowedSyntax<'s>;
+
   #[cfg(not(feature = "gat"))]
   fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr<'s>>> + 'a> {
     Box::new(self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e)))
@@ -242,7 +253,9 @@ pub enum Pat<'a> {
   SyntaxError,
 }
 
-impl<'a> traits::Pat<BorrowedSyntax<'a>> for Pat<'a> {
+impl<'a> traits::Pat for Pat<'a> {
+  type Ast = BorrowedSyntax<'a>;
+
   fn cast<'b>(&'b self) -> traits::PatCast<'b, BorrowedSyntax<'a>> {
     match self {
       Pat::Member(ref e) => traits::PatCast::Member(e),
@@ -259,7 +272,9 @@ pub struct MemberPat<'a> {
   pub key: &'a Expr<'a>,
 }
 
-impl<'a> traits::MemberPat<BorrowedSyntax<'a>> for MemberPat<'a> {
+impl<'a> traits::MemberPat for MemberPat<'a> {
+  type Ast = BorrowedSyntax<'a>;
+
   fn base(&self) -> &Expr<'a> {
     self.base
   }

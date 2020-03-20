@@ -140,7 +140,9 @@ pub enum Expr {
   StrLit(StrLit),
 }
 
-impl traits::Expr<OwnedSyntax> for Expr {
+impl traits::Expr for Expr {
+  type Ast = OwnedSyntax;
+
   fn cast(&self) -> traits::ExprCast<OwnedSyntax> {
     match self {
       Expr::Seq(ref e) => traits::ExprCast::Seq(traits::MaybeOwned::Borrowed(e)),
@@ -156,7 +158,9 @@ pub struct SeqExpr {
   pub exprs: Vec<Expr>,
 }
 
-impl traits::SeqExpr<OwnedSyntax> for SeqExpr {
+impl traits::SeqExpr for SeqExpr {
+  type Ast = OwnedSyntax;
+
   #[cfg(not(feature = "gat"))]
   fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr>> + 'a> {
     Box::new(self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e)))
@@ -179,7 +183,8 @@ pub struct AssignExpr {
   pub value: Box<Expr>,
 }
 
-impl traits::AssignExpr<OwnedSyntax> for AssignExpr {
+impl traits::AssignExpr for AssignExpr {
+  type Ast = OwnedSyntax;
   fn target(&self) -> &Pat {
     &self.target
   }
@@ -196,7 +201,9 @@ pub struct BinExpr {
   pub right: Box<Expr>,
 }
 
-impl traits::BinExpr<OwnedSyntax> for BinExpr {
+impl traits::BinExpr for BinExpr {
+  type Ast = OwnedSyntax;
+
   fn left(&self) -> traits::MaybeOwned<Expr> {
     traits::MaybeOwned::Borrowed(&self.left)
   }
@@ -211,7 +218,9 @@ pub struct ErrorExpr {
   pub loc: (),
 }
 
-impl traits::ErrorExpr<OwnedSyntax> for ErrorExpr {}
+impl traits::ErrorExpr for ErrorExpr {
+  type Ast = OwnedSyntax;
+}
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
 pub struct LogicalExpr {
@@ -221,7 +230,9 @@ pub struct LogicalExpr {
   pub right: Box<Expr>,
 }
 
-impl<'a> traits::LogicalExpr<OwnedSyntax> for LogicalExpr {
+impl<'a> traits::LogicalExpr for LogicalExpr {
+  type Ast = OwnedSyntax;
+
   fn op(&self) -> traits::LogicalOp {
     self.op
   }
@@ -254,7 +265,9 @@ pub enum Pat {
   SyntaxError,
 }
 
-impl traits::Pat<OwnedSyntax> for Pat {
+impl traits::Pat for Pat {
+  type Ast = OwnedSyntax;
+
   fn cast(&self) -> traits::PatCast<OwnedSyntax> {
     match self {
       Pat::MemberPat(ref e) => traits::PatCast::Member(e),
@@ -271,7 +284,9 @@ pub struct MemberPat {
   pub key: Box<Expr>,
 }
 
-impl traits::MemberPat<OwnedSyntax> for MemberPat {
+impl traits::MemberPat for MemberPat {
+  type Ast = OwnedSyntax;
+
   fn base(&self) -> &Expr {
     &self.base
   }
