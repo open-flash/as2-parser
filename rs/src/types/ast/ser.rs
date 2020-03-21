@@ -179,8 +179,8 @@ impl<Ast: Syntax> Serialize for SerializeLogicalExpr<'_, Ast> {
     let mut struct_serializer = serializer.serialize_struct("LogicalExpr", 4)?;
     struct_serializer.serialize_field("type", "LogicalExpr")?;
     struct_serializer.serialize_field("op", &self.0.op())?;
-    struct_serializer.serialize_field("left", &SerializeExpr::<Ast>(&*self.0.left()))?;
-    struct_serializer.serialize_field("right", &SerializeExpr::<Ast>(&*self.0.right()))?;
+    struct_serializer.serialize_field("left", &SerializeExpr::<Ast>(&self.0.left()))?;
+    struct_serializer.serialize_field("right", &SerializeExpr::<Ast>(&self.0.right()))?;
     struct_serializer.end()
   }
 }

@@ -2,9 +2,10 @@ use crate::types::ast::traits;
 use std::borrow::Cow;
 use std::marker::PhantomData;
 
-pub struct BorrowedSyntax<'a> {
-  _phantom: PhantomData<&'a traits::Empty>,
-}
+/// A poor man's never type represented as an empty type so it works on stable Rust.
+enum Empty {}
+
+pub struct BorrowedSyntax<'a>(PhantomData<&'a Empty>);
 
 impl<'a> traits::Syntax for BorrowedSyntax<'a> {
   type Script = Script<'a>;
@@ -26,6 +27,9 @@ impl<'a> traits::Syntax for BorrowedSyntax<'a> {
   type SeqExpr = SeqExpr<'a>;
   type StrLit = StrLit<'a>;
 
+  #[cfg(feature = "gat")]
+  type ExprRef<'r> = &'r Expr<'r>;
+
   type Pat = Pat<'a>;
   type MemberPat = MemberPat<'a>;
   type IdentPat = IdentPat<'a>;
@@ -39,14 +43,14 @@ pub struct Script<'a> {
 
 impl<'s> traits::Script<BorrowedSyntax<'s>> for Script<'s> {
   #[cfg(not(feature = "gat"))]
-  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Stmt<'s>>> + 'a> {
+  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Stmt<'s>>> + 'a> {
     Box::new(self.stmts.iter().map(|stmt| traits::MaybeOwned::Borrowed(stmt)))
   }
 
   #[allow(clippy::type_complexity)]
   #[cfg(feature = "gat")]
   type Stmts<'a> =
-    core::iter::Map<core::slice::Iter<'a, Stmt<'a>>, for<'r> fn(&'r Stmt<'a>) -> traits::MaybeOwned<'r, Stmt<'a>>>;
+  core::iter::Map<core::slice::Iter<'a, Stmt<'a>>, for<'r> fn(&'r Stmt<'a>) -> traits::MaybeOwned<'r, Stmt<'a>>>;
 
   #[cfg(feature = "gat")]
   fn stmts(&self) -> Self::Stmts<'_> {
@@ -147,6 +151,12 @@ pub struct AssignExpr<'a> {
   pub value: &'a Expr<'a>,
 }
 
+impl<'a> AssignExpr<'a> {
+  fn _value(&self) -> &Expr<'a> {
+    self.value
+  }
+}
+
 impl<'a> traits::AssignExpr for AssignExpr<'a> {
   type Ast = BorrowedSyntax<'a>;
 
@@ -154,28 +164,35 @@ impl<'a> traits::AssignExpr for AssignExpr<'a> {
     self.target
   }
 
-  fn value(&self) -> traits::MaybeOwned<Expr<'a>> {
-    traits::MaybeOwned::Borrowed(self.value)
-  }
+  maybe_gat_accessor!(value, _value, ref Expr<'_>, ref Expr<'a>);
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
 pub struct BinExpr<'a> {
   pub loc: (),
+  pub op: traits::BinOp,
   pub left: &'a Expr<'a>,
   pub right: &'a Expr<'a>,
+}
+
+impl<'a> BinExpr<'a> {
+  fn _left(&self) -> &Expr<'a> {
+    self.left
+  }
+  fn _right(&self) -> &Expr<'a> {
+    self.right
+  }
 }
 
 impl<'a> traits::BinExpr for BinExpr<'a> {
   type Ast = BorrowedSyntax<'a>;
 
-  fn left(&self) -> traits::MaybeOwned<Expr<'a>> {
-    traits::MaybeOwned::Borrowed(self.left)
+  fn op(&self) -> traits::BinOp {
+    self.op
   }
 
-  fn right(&self) -> traits::MaybeOwned<Expr<'a>> {
-    traits::MaybeOwned::Borrowed(self.right)
-  }
+  maybe_gat_accessor!(left, _left, ref Expr<'_>, ref Expr<'a>);
+  maybe_gat_accessor!(right, _right, ref Expr<'_>, ref Expr<'a>);
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
@@ -185,12 +202,16 @@ pub struct CallExpr<'a> {
   pub args: &'a [Expr<'a>],
 }
 
+impl<'a> CallExpr<'a> {
+  fn _callee(&self) -> &Expr<'a> {
+    self.callee
+  }
+}
+
 impl<'a> traits::CallExpr for CallExpr<'a> {
   type Ast = BorrowedSyntax<'a>;
 
-  fn callee(&self) -> traits::MaybeOwned<Expr<'a>> {
-    traits::MaybeOwned::Borrowed(self.callee)
-  }
+  maybe_gat_accessor!(callee, _callee, ref Expr<'_>, ref Expr<'a>);
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
@@ -223,19 +244,24 @@ pub struct LogicalExpr<'a> {
   pub right: &'a Expr<'a>,
 }
 
+impl<'a> LogicalExpr<'a> {
+  fn _left(&self) -> &Expr<'a> {
+    self.left
+  }
+  fn _right(&self) -> &Expr<'a> {
+    self.right
+  }
+}
+
 impl<'a> traits::LogicalExpr for LogicalExpr<'a> {
   type Ast = BorrowedSyntax<'a>;
+
   fn op(&self) -> traits::LogicalOp {
     self.op
   }
 
-  fn left(&self) -> traits::MaybeOwned<Expr<'a>> {
-    traits::MaybeOwned::Borrowed(self.left)
-  }
-
-  fn right(&self) -> traits::MaybeOwned<Expr<'a>> {
-    traits::MaybeOwned::Borrowed(self.right)
-  }
+  maybe_gat_accessor!(left, _left, ref Expr<'_>, ref Expr<'a>);
+  maybe_gat_accessor!(right, _right, ref Expr<'_>, ref Expr<'a>);
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
@@ -248,14 +274,14 @@ impl<'s> traits::SeqExpr for SeqExpr<'s> {
   type Ast = BorrowedSyntax<'s>;
 
   #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr<'s>>> + 'a> {
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Expr<'s>>> + 'a> {
     Box::new(self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e)))
   }
 
   #[allow(clippy::type_complexity)]
   #[cfg(feature = "gat")]
   type Exprs<'a> =
-    core::iter::Map<core::slice::Iter<'a, Expr<'a>>, for<'r> fn(&'r Expr<'a>) -> traits::MaybeOwned<'r, Expr<'a>>>;
+  core::iter::Map<core::slice::Iter<'a, Expr<'a>>, for<'r> fn(&'r Expr<'a>) -> traits::MaybeOwned<'r, Expr<'a>>>;
 
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Exprs<'_> {

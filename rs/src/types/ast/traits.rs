@@ -1,9 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 
-/// A poor man's never type represented as an empty type so it works on stable Rust.
-pub enum Empty {}
-
 /// Describes all the elements of a syntax.
 pub trait Syntax: Sized {
   type Script: Script<Self>;
@@ -25,6 +22,9 @@ pub trait Syntax: Sized {
   type LogicalExpr: LogicalExpr<Ast = Self>;
   type SeqExpr: SeqExpr<Ast = Self>;
   type StrLit: StrLit;
+
+  #[cfg(feature = "gat")]
+  type ExprRef<'a>: core::ops::Deref<Target = Self::Expr>;
 
   type Pat: Pat<Ast = Self>;
   type MemberPat: MemberPat<Ast = Self>;
@@ -126,63 +126,98 @@ pub trait AssignExpr {
   type Ast: Syntax;
 
   fn target(&self) -> &<Self::Ast as Syntax>::Pat;
-  fn value(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
+
+  #[cfg(feature = "gat")]
+  fn value(&self) -> <Self::Ast as Syntax>::ExprRef<'_>;
+  #[cfg(not(feature = "gat"))]
+  fn value<'a>(&'a self) -> Box<dyn core::ops::Deref<Target = <Self::Ast as Syntax>::Expr> + 'a>;
 }
 
 pub trait BinExpr {
   type Ast: Syntax;
 
-  fn left(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
-  fn right(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
+  fn op(&self) -> BinOp;
+
+  #[cfg(feature = "gat")]
+  fn left(&self) -> <Self::Ast as Syntax>::ExprRef<'_>;
+  #[cfg(not(feature = "gat"))]
+  fn left<'a>(&'a self) -> Box<dyn core::ops::Deref<Target = <Self::Ast as Syntax>::Expr> + 'a>;
+
+  #[cfg(feature = "gat")]
+  fn right(&self) -> <Self::Ast as Syntax>::ExprRef<'_>;
+  #[cfg(not(feature = "gat"))]
+  fn right<'a>(&'a self) -> Box<dyn core::ops::Deref<Target = <Self::Ast as Syntax>::Expr> + 'a>;
 }
 
 /// Represents all the binary operators.
-#[derive(Copy, Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash)]
+#[derive(Copy, Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash, Serialize, Deserialize)]
 pub enum BinOp {
   /// Binary operator `+`
+  #[serde(rename = "+")]
   Add,
   /// Binary operator `&`
+  #[serde(rename = "&")]
   BitAnd,
   /// Binary operator `|`
+  #[serde(rename = "|")]
   BitOr,
   /// Binary operator `^`
+  #[serde(rename = "^")]
   BitXor,
   /// Binary operator `/`
+  #[serde(rename = "/")]
   Divide,
   /// Binary operator `==`
+  #[serde(rename = "==")]
   Equals,
   /// Binary operator `>`
+  #[serde(rename = ">")]
   Greater,
   /// Binary operator `instanceof`
+  #[serde(rename = "instanceof")]
   InstanceOf,
   /// Binary operator `add`
+  #[serde(rename = "add")]
   LegacyAdd,
   /// Binary operator `<<`
+  #[serde(rename = "<<")]
   LeftShift,
   /// Binary operator `<`
+  #[serde(rename = "<")]
   Less,
   /// Binary operator `*`
+  #[serde(rename = "*")]
   Multiply,
   /// Binary operator `!=`
+  #[serde(rename = "!=")]
   NotEquals,
   /// Binary operator `!==`
+  #[serde(rename = "!==")]
   NotStrictEquals,
   /// Binary operator `%`
+  #[serde(rename = "%")]
   Remainder,
   /// Binary operator `>>`
+  #[serde(rename = ">>")]
   SignedRightShift,
   /// Binary operator `-`
+  #[serde(rename = "-")]
   Subtract,
   /// Binary operator `===`
+  #[serde(rename = "===")]
   StrictEquals,
   /// Binary operator `>>>`
+  #[serde(rename = ">>>")]
   UnsignedRightShift,
 }
 
 pub trait CallExpr {
   type Ast: Syntax;
 
-  fn callee(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
+  #[cfg(feature = "gat")]
+  fn callee(&self) -> <Self::Ast as Syntax>::ExprRef<'_>;
+  #[cfg(not(feature = "gat"))]
+  fn callee<'a>(&'a self) -> Box<dyn core::ops::Deref<Target = <Self::Ast as Syntax>::Expr> + 'a>;
 }
 
 pub trait ErrorExpr {
@@ -195,18 +230,27 @@ pub trait IdentExpr {
 
 pub trait LogicalExpr {
   type Ast: Syntax;
+
   fn op(&self) -> LogicalOp;
-  fn left(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
-  fn right(&self) -> MaybeOwned<<Self::Ast as Syntax>::Expr>;
+
+  #[cfg(feature = "gat")]
+  fn left(&self) -> <Self::Ast as Syntax>::ExprRef<'_>;
+  #[cfg(not(feature = "gat"))]
+  fn left<'a>(&'a self) -> Box<dyn core::ops::Deref<Target = <Self::Ast as Syntax>::Expr> + 'a>;
+
+  #[cfg(feature = "gat")]
+  fn right(&self) -> <Self::Ast as Syntax>::ExprRef<'_>;
+  #[cfg(not(feature = "gat"))]
+  fn right<'a>(&'a self) -> Box<dyn core::ops::Deref<Target = <Self::Ast as Syntax>::Expr> + 'a>;
 }
 
 #[derive(Copy, Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash, Serialize, Deserialize)]
 pub enum LogicalOp {
-  #[serde(rename = "&&")]
   /// Binary operator `&&`
+  #[serde(rename = "&&")]
   And,
-  #[serde(rename = "||")]
   /// Logical operator `||`
+  #[serde(rename = "||")]
   Or,
 }
 

@@ -3,7 +3,7 @@ use crate::types::ast::traits::{ExprCast, PatCast, StmtCast, Syntax};
 use rowan::{SyntaxElementChildren, SyntaxNodeChildren};
 use std::borrow::Cow;
 use std::convert::TryFrom;
-use std::ops::Range;
+use std::ops::{Range, Deref};
 use std::str::Chars;
 use variant_count::VariantCount;
 
@@ -442,6 +442,9 @@ impl traits::Syntax for ConcreteSyntax {
   type SeqExpr = SeqExpr;
   type StrLit = StrLit;
 
+  #[cfg(feature = "gat")]
+  type ExprRef<'r> = Expr;
+
   type Pat = Pat;
   type MemberPat = MemberPat;
   type IdentPat = IdentPat;
@@ -478,7 +481,7 @@ impl TryFrom<SyntaxNode> for Script {
 
 impl traits::Script<ConcreteSyntax> for Script {
   #[cfg(not(feature = "gat"))]
-  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Stmt>> + 'a> {
+  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Stmt>> + 'a> {
     Box::new(ScriptStmts {
       inner: self.syntax.children(),
     })
@@ -607,6 +610,14 @@ pub struct Expr {
   syntax: SyntaxNode,
 }
 
+impl Deref for Expr {
+  type Target = Expr;
+
+  fn deref(&self) -> &Expr {
+    &self
+  }
+}
+
 /// Find the first non-paren expression (including self)
 fn trim_paren(mut node: SyntaxNode) -> SyntaxNode {
   loop {
@@ -690,14 +701,8 @@ pub struct AssignExpr {
   syntax: SyntaxNode,
 }
 
-impl traits::AssignExpr for AssignExpr {
-  type Ast = ConcreteSyntax;
-
-  fn target(&self) -> &<ConcreteSyntax as Syntax>::Pat {
-    unimplemented!()
-  }
-
-  fn value(&self) -> traits::MaybeOwned<Expr> {
+impl AssignExpr {
+  fn _value(&self) -> Expr {
     let mut found_assign_op: bool = false;
     for symbol in self.syntax.children_with_tokens() {
       match symbol {
@@ -709,7 +714,7 @@ impl traits::AssignExpr for AssignExpr {
         rowan::NodeOrToken::Node(node) => {
           if found_assign_op {
             match Expr::try_from(node) {
-              Ok(e) => return traits::MaybeOwned::Owned(e),
+              Ok(e) => return e,
               Err(()) => {}
             }
           }
@@ -720,32 +725,56 @@ impl traits::AssignExpr for AssignExpr {
   }
 }
 
+impl traits::AssignExpr for AssignExpr {
+  type Ast = ConcreteSyntax;
+
+  fn target(&self) -> &<ConcreteSyntax as Syntax>::Pat {
+    unimplemented!()
+  }
+
+  maybe_gat_accessor!(value, _value, Expr, Expr);
+}
+
 /// Represents a binary expression backed by a concrete syntax node.
 #[derive(Debug, Eq, PartialEq, Clone, Hash)]
 pub struct BinExpr {
   syntax: SyntaxNode,
 }
 
-impl traits::BinExpr for BinExpr {
-  type Ast = ConcreteSyntax;
-
-  fn left(&self) -> traits::MaybeOwned<Expr> {
+impl BinExpr {
+  fn _left(&self) -> Expr {
     let left_node = self.syntax.first_child().unwrap();
     match Expr::try_from(left_node) {
-      Ok(e) => traits::MaybeOwned::Owned(e),
+      Ok(e) => e,
       Err(()) => unimplemented!(),
     }
   }
 
-  fn right(&self) -> traits::MaybeOwned<Expr> {
+  fn _right(&self) -> Expr {
     let mut nodes = self.syntax.children();
     nodes.next().unwrap();
     let right_node = nodes.next().unwrap();
     match Expr::try_from(right_node) {
-      Ok(e) => traits::MaybeOwned::Owned(e),
+      Ok(e) => e,
       Err(()) => unimplemented!(),
     }
   }
+}
+
+impl traits::BinExpr for BinExpr {
+  type Ast = ConcreteSyntax;
+
+  fn op(&self) -> traits::BinOp {
+    let op_kind = find_infix_op(&mut self.syntax.children_with_tokens()).kind();
+    match op_kind {
+      SyntaxKind::TokenPlus => traits::BinOp::Add,
+      SyntaxKind::TokenAmp => traits::BinOp::BitAnd,
+      _ => unimplemented!(),
+    }
+  }
+
+  maybe_gat_accessor!(left, _left, Expr, Expr);
+  maybe_gat_accessor!(right, _right, Expr, Expr);
 }
 
 /// Represents a call expression backed by a concrete syntax node.
@@ -754,16 +783,20 @@ pub struct CallExpr {
   syntax: SyntaxNode,
 }
 
-impl traits::CallExpr for CallExpr {
-  type Ast = ConcreteSyntax;
-
-  fn callee(&self) -> traits::MaybeOwned<Expr> {
+impl CallExpr {
+  fn _callee(&self) -> Expr {
     let callee_node = self.syntax.first_child().unwrap();
     match Expr::try_from(callee_node) {
-      Ok(e) => traits::MaybeOwned::Owned(e),
+      Ok(e) => return e,
       Err(()) => unimplemented!(),
     }
   }
+}
+
+impl traits::CallExpr for CallExpr {
+  type Ast = ConcreteSyntax;
+
+  maybe_gat_accessor!(callee, _callee, Expr, Expr);
 }
 
 /// Represents an error in expression position.
@@ -793,7 +826,27 @@ pub struct LogicalExpr {
   syntax: SyntaxNode,
 }
 
-impl<'a> traits::LogicalExpr for LogicalExpr {
+impl LogicalExpr {
+  fn _left(&self) -> Expr {
+    let left_node = self.syntax.first_child().unwrap();
+    match Expr::try_from(left_node) {
+      Ok(e) => e,
+      Err(()) => unimplemented!(),
+    }
+  }
+
+  fn _right(&self) -> Expr {
+    let mut nodes = self.syntax.children();
+    nodes.next().unwrap();
+    let right_node = nodes.next().unwrap();
+    match Expr::try_from(right_node) {
+      Ok(e) => e,
+      Err(()) => unimplemented!(),
+    }
+  }
+}
+
+impl traits::LogicalExpr for LogicalExpr {
   type Ast = ConcreteSyntax;
 
   fn op(&self) -> traits::LogicalOp {
@@ -805,23 +858,8 @@ impl<'a> traits::LogicalExpr for LogicalExpr {
     }
   }
 
-  fn left(&self) -> traits::MaybeOwned<Expr> {
-    let left_node = self.syntax.first_child().unwrap();
-    match Expr::try_from(left_node) {
-      Ok(e) => traits::MaybeOwned::Owned(e),
-      Err(()) => unimplemented!(),
-    }
-  }
-
-  fn right(&self) -> traits::MaybeOwned<Expr> {
-    let mut nodes = self.syntax.children();
-    nodes.next().unwrap();
-    let right_node = nodes.next().unwrap();
-    match Expr::try_from(right_node) {
-      Ok(e) => traits::MaybeOwned::Owned(e),
-      Err(()) => unimplemented!(),
-    }
-  }
+  maybe_gat_accessor!(left, _left, Expr, Expr);
+  maybe_gat_accessor!(right, _right, Expr, Expr);
 }
 
 /// Represents a sequence expression backed by a concrete syntax node.
@@ -834,7 +872,7 @@ impl traits::SeqExpr for SeqExpr {
   type Ast = ConcreteSyntax;
 
   #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr>> + 'a> {
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Expr>> + 'a> {
     Box::new(ExprIter {
       inner: trim_paren(self.syntax.clone()).children(),
     })
@@ -1006,8 +1044,8 @@ enum QuoteKind {
 }
 
 fn unescape_string_content<F>(str_content: &str, quotes: QuoteKind, callback: &mut F)
-where
-  F: FnMut(Range<usize>, Result<char, UnescapeError>),
+  where
+    F: FnMut(Range<usize>, Result<char, UnescapeError>),
 {
   let content_len: usize = str_content.len();
   let mut chars = str_content.chars();

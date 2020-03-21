@@ -2,6 +2,9 @@
 #![cfg_attr(feature = "const_if_match", allow(incomplete_features), feature(const_if_match))]
 
 #[macro_use]
+mod macros;
+
+#[macro_use]
 mod token_set;
 
 pub mod lexer;
