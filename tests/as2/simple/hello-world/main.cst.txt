@@ -4,11 +4,13 @@ NodeScript@[0; 24) {
       NodeIdent@[0; 5) {
         TokenIdent@[0; 5) "trace"
       }
-      TokenOpenParen@[5; 6) "("
-      NodeStrLit@[6; 21) {
-        TokenStrLit@[6; 21) "\"Hello, World!\""
+      NodeArgs@[5; 22) {
+        TokenOpenParen@[5; 6) "("
+        NodeStrLit@[6; 21) {
+          TokenStrLit@[6; 21) "\"Hello, World!\""
+        }
+        TokenCloseParen@[21; 22) ")"
       }
-      TokenCloseParen@[21; 22) ")"
     }
     TokenSemicolon@[22; 23) ";"
   }

@@ -213,7 +213,7 @@ impl traits::BinExpr for BinExpr {
 pub struct CallExpr {
   pub loc: (),
   pub callee: Box<Expr>,
-  pub arguments: Vec<Expr>,
+  pub args: Vec<Expr>,
 }
 
 impl CallExpr {
@@ -224,8 +224,21 @@ impl CallExpr {
 
 impl traits::CallExpr for CallExpr {
   type Ast = OwnedSyntax;
+  #[allow(clippy::type_complexity)]
+  #[cfg(feature = "gat")]
+  type ExprIter<'a> =
+    core::iter::Map<core::slice::Iter<'a, Expr>, for<'r> fn(&'r Expr) -> traits::MaybeOwned<'r, Expr>>;
 
   maybe_gat_accessor!(callee, _callee, ref Expr, ref Expr);
+
+  #[cfg(feature = "gat")]
+  fn args(&self) -> Self::ExprIter<'_> {
+    self.args.iter().map(|e| traits::MaybeOwned::Borrowed(e))
+  }
+  #[cfg(not(feature = "gat"))]
+  fn args<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr>> + 'a> {
+    Box::new(self.args.iter().map(|e| traits::MaybeOwned::Borrowed(e)))
+  }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Deserialize)]
@@ -286,12 +299,6 @@ pub struct SeqExpr {
 
 impl traits::SeqExpr for SeqExpr {
   type Ast = OwnedSyntax;
-
-  #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr>> + 'a> {
-    Box::new(self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e)))
-  }
-
   #[allow(clippy::type_complexity)]
   #[cfg(feature = "gat")]
   type Exprs<'a> = core::iter::Map<core::slice::Iter<'a, Expr>, for<'r> fn(&'r Expr) -> traits::MaybeOwned<'r, Expr>>;
@@ -299,6 +306,11 @@ impl traits::SeqExpr for SeqExpr {
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Exprs<'_> {
     self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e))
+  }
+
+  #[cfg(not(feature = "gat"))]
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr>> + 'a> {
+    Box::new(self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e)))
   }
 }
 

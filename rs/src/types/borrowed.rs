@@ -43,14 +43,14 @@ pub struct Script<'a> {
 
 impl<'s> traits::Script<BorrowedSyntax<'s>> for Script<'s> {
   #[cfg(not(feature = "gat"))]
-  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Stmt<'s>>> + 'a> {
+  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Stmt<'s>>> + 'a> {
     Box::new(self.stmts.iter().map(|stmt| traits::MaybeOwned::Borrowed(stmt)))
   }
 
   #[allow(clippy::type_complexity)]
   #[cfg(feature = "gat")]
   type Stmts<'a> =
-  core::iter::Map<core::slice::Iter<'a, Stmt<'a>>, for<'r> fn(&'r Stmt<'a>) -> traits::MaybeOwned<'r, Stmt<'a>>>;
+    core::iter::Map<core::slice::Iter<'a, Stmt<'a>>, for<'r> fn(&'r Stmt<'a>) -> traits::MaybeOwned<'r, Stmt<'a>>>;
 
   #[cfg(feature = "gat")]
   fn stmts(&self) -> Self::Stmts<'_> {
@@ -211,7 +211,22 @@ impl<'a> CallExpr<'a> {
 impl<'a> traits::CallExpr for CallExpr<'a> {
   type Ast = BorrowedSyntax<'a>;
 
+  #[allow(clippy::type_complexity)]
+  #[cfg(feature = "gat")]
+  type ExprIter<'b> =
+    core::iter::Map<core::slice::Iter<'b, Expr<'b>>, for<'r> fn(&'r Expr<'b>) -> traits::MaybeOwned<'r, Expr<'b>>>;
+
   maybe_gat_accessor!(callee, _callee, ref Expr<'_>, ref Expr<'a>);
+
+  #[cfg(feature = "gat")]
+  fn args(&self) -> Self::ExprIter<'_> {
+    self.args.iter().map(|e| traits::MaybeOwned::Borrowed(e))
+  }
+
+  #[cfg(not(feature = "gat"))]
+  fn args<'r>(&'r self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'r, Expr<'a>>> + 'r> {
+    Box::new(self.args.iter().map(|e| traits::MaybeOwned::Borrowed(e)))
+  }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
@@ -273,19 +288,19 @@ pub struct SeqExpr<'a> {
 impl<'s> traits::SeqExpr for SeqExpr<'s> {
   type Ast = BorrowedSyntax<'s>;
 
-  #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Expr<'s>>> + 'a> {
-    Box::new(self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e)))
-  }
-
   #[allow(clippy::type_complexity)]
   #[cfg(feature = "gat")]
   type Exprs<'a> =
-  core::iter::Map<core::slice::Iter<'a, Expr<'a>>, for<'r> fn(&'r Expr<'a>) -> traits::MaybeOwned<'r, Expr<'a>>>;
+    core::iter::Map<core::slice::Iter<'a, Expr<'a>>, for<'r> fn(&'r Expr<'a>) -> traits::MaybeOwned<'r, Expr<'a>>>;
 
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Exprs<'_> {
     self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e))
+  }
+
+  #[cfg(not(feature = "gat"))]
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr<'s>>> + 'a> {
+    Box::new(self.exprs.iter().map(|e| traits::MaybeOwned::Borrowed(e)))
   }
 }
 

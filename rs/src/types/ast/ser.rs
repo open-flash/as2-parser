@@ -107,7 +107,7 @@ impl<Ast: Syntax> Serialize for SerializeExpr<'_, Ast> {
       ExprCast::Ident(e) => SerializeIdentExpr(&*e).serialize(serializer),
       ExprCast::Logical(e) => SerializeLogicalExpr::<Ast>(&*e).serialize(serializer),
       ExprCast::Seq(e) => SerializeSeqExpr::<Ast>(&*e).serialize(serializer),
-      _ => unimplemented!(),
+      ExprCast::StrLit(e) => SerializeStrLit(&*e).serialize(serializer),
     }
   }
 }
@@ -142,10 +142,29 @@ pub struct SerializeCallExpr<'a, T: CallExpr>(pub &'a T);
 impl<T: CallExpr> Serialize for SerializeCallExpr<'_, T> {
   fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
     use serde::ser::SerializeStruct;
-    let mut struct_serializer = serializer.serialize_struct("CallExpr", 2)?;
+    let mut struct_serializer = serializer.serialize_struct("CallExpr", 3)?;
     struct_serializer.serialize_field("type", "CallExpr")?;
     struct_serializer.serialize_field("callee", &SerializeExpr::<T::Ast>(&*self.0.callee()))?;
+    struct_serializer.serialize_field("args", &SerializeCallArgs(&*self.0))?;
     struct_serializer.end()
+  }
+}
+
+pub struct SerializeCallArgs<'a, T: CallExpr>(pub &'a T);
+
+impl<T: CallExpr> Serialize for SerializeCallArgs<'_, T> {
+  fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
+    use serde::ser::SerializeSeq;
+    let args = self.0.args();
+    let len = match args.size_hint() {
+      (min_len, Some(max_len)) if min_len == max_len => Some(min_len),
+      _ => None,
+    };
+    let mut seq_serializer = serializer.serialize_seq(len)?;
+    for arg in args {
+      seq_serializer.serialize_element(&SerializeExpr::<T::Ast>(&*arg))?;
+    }
+    seq_serializer.end()
   }
 }
 
@@ -216,5 +235,17 @@ impl<'a, Ast: Syntax> Serialize for SerializeSeqExprExprs<'a, Ast> {
       seq_serializer.serialize_element(&SerializeExpr::<Ast>(expr))?;
     }
     seq_serializer.end()
+  }
+}
+
+pub struct SerializeStrLit<'a, T: StrLit>(pub &'a T);
+
+impl<T: StrLit> Serialize for SerializeStrLit<'_, T> {
+  fn serialize<Ser: Serializer>(&self, serializer: Ser) -> Result<Ser::Ok, Ser::Error> {
+    use serde::ser::SerializeStruct;
+    let mut struct_serializer = serializer.serialize_struct("StrLit", 2)?;
+    struct_serializer.serialize_field("type", "StrLit")?;
+    struct_serializer.serialize_field("value", &self.0.value())?;
+    struct_serializer.end()
   }
 }

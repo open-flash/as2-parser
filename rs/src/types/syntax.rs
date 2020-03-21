@@ -3,7 +3,7 @@ use crate::types::ast::traits::{ExprCast, PatCast, StmtCast, Syntax};
 use rowan::{SyntaxElementChildren, SyntaxNodeChildren};
 use std::borrow::Cow;
 use std::convert::TryFrom;
-use std::ops::{Range, Deref};
+use std::ops::{Deref, Range};
 use std::str::Chars;
 use variant_count::VariantCount;
 
@@ -249,7 +249,11 @@ pub enum SyntaxKind {
   /// ```
   NodeComputedMemberExpr,
 
+  /// Function call
   NodeCallExpr,
+
+  /// Function call arguments, or constructor arguments
+  NodeArgs,
 
   // Composite nodes
   /// Break statement
@@ -481,7 +485,7 @@ impl TryFrom<SyntaxNode> for Script {
 
 impl traits::Script<ConcreteSyntax> for Script {
   #[cfg(not(feature = "gat"))]
-  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Stmt>> + 'a> {
+  fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Stmt>> + 'a> {
     Box::new(ScriptStmts {
       inner: self.syntax.children(),
     })
@@ -676,6 +680,9 @@ impl traits::Expr for Expr {
       SyntaxKind::NodeSeqExpr => traits::ExprCast::Seq(traits::MaybeOwned::Owned(SeqExpr {
         syntax: self.syntax.clone(),
       })),
+      SyntaxKind::NodeStrLit => traits::ExprCast::StrLit(traits::MaybeOwned::Owned(StrLit {
+        syntax: self.syntax.clone(),
+      })),
       _ => traits::ExprCast::Error(traits::MaybeOwned::Owned(ErrorExpr {
         syntax: self.syntax.clone(),
       })),
@@ -787,16 +794,37 @@ impl CallExpr {
   fn _callee(&self) -> Expr {
     let callee_node = self.syntax.first_child().unwrap();
     match Expr::try_from(callee_node) {
-      Ok(e) => return e,
+      Ok(e) => e,
       Err(()) => unimplemented!(),
     }
+  }
+
+  fn _args(&self) -> ExprIter {
+    let call_expr = trim_paren(self.syntax.clone());
+    let mut nodes = call_expr.children();
+    nodes.next().unwrap(); // Skip callee
+    let args: SyntaxNode = nodes.next().unwrap();
+
+    ExprIter { inner: args.children() }
   }
 }
 
 impl traits::CallExpr for CallExpr {
   type Ast = ConcreteSyntax;
+  #[cfg(feature = "gat")]
+  type ExprIter<'a> = ExprIter;
 
   maybe_gat_accessor!(callee, _callee, Expr, Expr);
+
+  #[cfg(not(feature = "gat"))]
+  fn args<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr>> + 'a> {
+    Box::new(self._args())
+  }
+
+  #[cfg(feature = "gat")]
+  fn args(&self) -> Self::ExprIter<'_> {
+    self._args()
+  }
 }
 
 /// Represents an error in expression position.
@@ -870,16 +898,15 @@ pub struct SeqExpr {
 
 impl traits::SeqExpr for SeqExpr {
   type Ast = ConcreteSyntax;
+  #[cfg(feature = "gat")]
+  type Exprs<'a> = ExprIter;
 
   #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item=traits::MaybeOwned<'a, Expr>> + 'a> {
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr>> + 'a> {
     Box::new(ExprIter {
       inner: trim_paren(self.syntax.clone()).children(),
     })
   }
-
-  #[cfg(feature = "gat")]
-  type Exprs<'a> = ExprIter;
 
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Exprs<'_> {
@@ -1044,8 +1071,8 @@ enum QuoteKind {
 }
 
 fn unescape_string_content<F>(str_content: &str, quotes: QuoteKind, callback: &mut F)
-  where
-    F: FnMut(Range<usize>, Result<char, UnescapeError>),
+where
+  F: FnMut(Range<usize>, Result<char, UnescapeError>),
 {
   let content_len: usize = str_content.len();
   let mut chars = str_content.chars();
@@ -1102,6 +1129,6 @@ mod tests {
 
   #[test]
   fn test_syntax_kind_variant_count() {
-    assert_eq!(SyntaxKind::VARIANT_COUNT, 74);
+    assert_eq!(SyntaxKind::VARIANT_COUNT, 75);
   }
 }

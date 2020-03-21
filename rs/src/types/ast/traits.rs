@@ -213,11 +213,18 @@ pub enum BinOp {
 
 pub trait CallExpr {
   type Ast: Syntax;
+  #[cfg(feature = "gat")]
+  type ExprIter<'a>: Iterator<Item = MaybeOwned<'a, <Self::Ast as Syntax>::Expr>>;
 
   #[cfg(feature = "gat")]
   fn callee(&self) -> <Self::Ast as Syntax>::ExprRef<'_>;
   #[cfg(not(feature = "gat"))]
   fn callee<'a>(&'a self) -> Box<dyn core::ops::Deref<Target = <Self::Ast as Syntax>::Expr> + 'a>;
+
+  #[cfg(feature = "gat")]
+  fn args(&self) -> Self::ExprIter<'_>;
+  #[cfg(not(feature = "gat"))]
+  fn args<'a>(&'a self) -> Box<dyn Iterator<Item = MaybeOwned<'a, <Self::Ast as Syntax>::Expr>> + 'a>;
 }
 
 pub trait ErrorExpr {
@@ -260,14 +267,13 @@ pub enum LogicalOp {
 pub trait SeqExpr {
   type Ast: Syntax;
 
-  #[cfg(not(feature = "gat"))]
-  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = MaybeOwned<'a, <Self::Ast as Syntax>::Expr>> + 'a>;
-
   #[cfg(feature = "gat")]
   type Exprs<'a>: Iterator<Item = MaybeOwned<'a, <Self::Ast as Syntax>::Expr>>;
 
   #[cfg(feature = "gat")]
   fn exprs(&self) -> Self::Exprs<'_>;
+  #[cfg(not(feature = "gat"))]
+  fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = MaybeOwned<'a, <Self::Ast as Syntax>::Expr>> + 'a>;
 }
 
 pub trait StrLit {

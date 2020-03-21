@@ -305,7 +305,7 @@ impl<'text> Parser<'text> {
             break;
           }
         }
-        SyntaxKind::TokenOpenParen => self.end_call(cp),
+        SyntaxKind::TokenOpenParen => self.end_call_expr(cp),
         kind => unimplemented!("Unexpected expression operator: {:?}", kind),
       }
     }
@@ -579,8 +579,14 @@ impl<'text> Parser<'text> {
     self.builder.finish_node();
   }
 
-  fn end_call(&mut self, cp: rowan::Checkpoint) {
+  fn end_call_expr(&mut self, cp: rowan::Checkpoint) {
     self.builder.start_node_at(cp, SyntaxKind::NodeCallExpr.into());
+    self.args();
+    self.builder.finish_node();
+  }
+
+  fn args(&mut self) {
+    self.builder.start_node(SyntaxKind::NodeArgs.into());
     debug_assert!(matches!(
       self.lexer.peek_kind_over_trivia(),
       Some(SyntaxKind::TokenOpenParen)
