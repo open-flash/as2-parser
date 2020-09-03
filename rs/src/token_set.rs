@@ -3,29 +3,6 @@ use crate::types::syntax::SyntaxKind;
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct TokenSet(u64);
 
-/// Defines a function that is const if `const_if_match` is enabled, otherwise non-const.
-/// This is not a reusable macro: its tailored only for `TokenSet`
-macro_rules! maybe_const {
-  (pub fn $fn_name:ident($self_kw:ident, $arg_name:ident : $arg_type:ty) -> $ret_type:ty $body:block ) => {
-    // pub fn $fn_name($self_kw, $arg_name : $arg_type) -> $ret_type $body
-
-    #[cfg(not(feature = "const_if_match"))]
-    pub fn $fn_name($self_kw, $arg_name : $arg_type) -> $ret_type $body
-
-    #[cfg(feature = "const_if_match")]
-    pub const fn $fn_name($self_kw, $arg_name : $arg_type) -> $ret_type $body
-  };
-  (fn $fn_name:ident($arg_name:ident : $arg_type:ty) -> $ret_type:ty $body:block ) => {
-    // pub fn $fn_name($self_kw, $arg_name : $arg_type) -> $ret_type $body
-
-    #[cfg(not(feature = "const_if_match"))]
-    fn $fn_name($arg_name : $arg_type) -> $ret_type $body
-
-    #[cfg(feature = "const_if_match")]
-    const fn $fn_name($arg_name : $arg_type) -> $ret_type $body
-  };
-}
-
 impl TokenSet {
   pub const EMPTY: TokenSet = TokenSet(0);
 
@@ -37,23 +14,19 @@ impl TokenSet {
     Self(self.0 | TokenSet::token_to_bit(kind))
   }
 
-  // maybe_const! {
-  //   pub fn insert(self, kind: Option<SyntaxKind>) -> Self {
-  //     match kind {
-  //       Some(kind) => self.insert_token(kind),
-  //       None => self.insert_end(),
-  //     }
+  // pub const fn insert(self, kind: Option<SyntaxKind>) -> Self {
+  //   match kind {
+  //     Some(kind) => self.insert_token(kind),
+  //     None => self.insert_end(),
   //   }
   // }
 
-  maybe_const! {
-    pub fn contains(self, kind: Option<SyntaxKind>) -> bool {
-      let bit = match kind {
-        Some(kind) => TokenSet::token_to_bit(kind),
-        None => TokenSet::end_to_bit(),
-      };
-      self.0 & bit != 0
-    }
+  pub const fn contains(self, kind: Option<SyntaxKind>) -> bool {
+    let bit = match kind {
+      Some(kind) => TokenSet::token_to_bit(kind),
+      None => TokenSet::end_to_bit(),
+    };
+    self.0 & bit != 0
   }
 
   const fn end_to_bit() -> u64 {

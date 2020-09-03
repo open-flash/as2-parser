@@ -1,1442 +1,1442 @@
-NodeScript@[0; 787) {
-  NodeVarDecl@[0; 10) {
-    TokenVar@[0; 3) "var"
-    TokenUnilineWhitespace@[3; 4) " "
-    NodeIdent@[4; 5) {
-      TokenIdent@[4; 5) "x"
+NodeScript@0..787 {
+  NodeVarDecl@0..10 {
+    TokenVar@0..3 "var"
+    TokenUnilineWhitespace@3..4 " "
+    NodeIdent@4..5 {
+      TokenIdent@4..5 "x"
     }
-    TokenUnilineWhitespace@[5; 6) " "
-    TokenEq@[6; 7) "="
-    TokenUnilineWhitespace@[7; 8) " "
-    NodeNumLit@[8; 9) {
-      TokenNumLit@[8; 9) "1"
+    TokenUnilineWhitespace@5..6 " "
+    TokenEq@6..7 "="
+    TokenUnilineWhitespace@7..8 " "
+    NodeNumLit@8..9 {
+      TokenNumLit@8..9 "1"
     }
-    TokenSemicolon@[9; 10) ";"
+    TokenSemicolon@9..10 ";"
   }
-  TokenMultilineWhitespace@[10; 11) "\n"
-  NodeVarDecl@[11; 21) {
-    TokenVar@[11; 14) "var"
-    TokenUnilineWhitespace@[14; 15) " "
-    NodeIdent@[15; 16) {
-      TokenIdent@[15; 16) "y"
+  TokenMultilineWhitespace@10..11 "\n"
+  NodeVarDecl@11..21 {
+    TokenVar@11..14 "var"
+    TokenUnilineWhitespace@14..15 " "
+    NodeIdent@15..16 {
+      TokenIdent@15..16 "y"
     }
-    TokenUnilineWhitespace@[16; 17) " "
-    TokenEq@[17; 18) "="
-    TokenUnilineWhitespace@[18; 19) " "
-    NodeNumLit@[19; 20) {
-      TokenNumLit@[19; 20) "1"
+    TokenUnilineWhitespace@16..17 " "
+    TokenEq@17..18 "="
+    TokenUnilineWhitespace@18..19 " "
+    NodeNumLit@19..20 {
+      TokenNumLit@19..20 "1"
     }
-    TokenSemicolon@[20; 21) ";"
+    TokenSemicolon@20..21 ";"
   }
-  TokenMultilineWhitespace@[21; 22) "\n"
-  NodeVarDecl@[22; 35) {
-    TokenVar@[22; 25) "var"
-    TokenUnilineWhitespace@[25; 26) " "
-    NodeIdent@[26; 27) {
-      TokenIdent@[26; 27) "z"
+  TokenMultilineWhitespace@21..22 "\n"
+  NodeVarDecl@22..35 {
+    TokenVar@22..25 "var"
+    TokenUnilineWhitespace@25..26 " "
+    NodeIdent@26..27 {
+      TokenIdent@26..27 "z"
     }
-    TokenUnilineWhitespace@[27; 28) " "
-    TokenEq@[28; 29) "="
-    TokenUnilineWhitespace@[29; 30) " "
-    NodeBoolLit@[30; 34) {
-      TokenTrue@[30; 34) "true"
+    TokenUnilineWhitespace@27..28 " "
+    TokenEq@28..29 "="
+    TokenUnilineWhitespace@29..30 " "
+    NodeBoolLit@30..34 {
+      TokenTrue@30..34 "true"
     }
-    TokenSemicolon@[34; 35) ";"
+    TokenSemicolon@34..35 ";"
   }
-  TokenMultilineWhitespace@[35; 36) "\n"
-  NodeVarDecl@[36; 57) {
-    TokenVar@[36; 39) "var"
-    TokenUnilineWhitespace@[39; 40) " "
-    NodeIdent@[40; 41) {
-      TokenIdent@[40; 41) "o"
+  TokenMultilineWhitespace@35..36 "\n"
+  NodeVarDecl@36..57 {
+    TokenVar@36..39 "var"
+    TokenUnilineWhitespace@39..40 " "
+    NodeIdent@40..41 {
+      TokenIdent@40..41 "o"
     }
-    TokenUnilineWhitespace@[41; 42) " "
-    TokenEq@[42; 43) "="
-    TokenUnilineWhitespace@[43; 44) " "
-    NodeObjectLit@[44; 56) {
-      TokenOpenBrace@[44; 45) "{"
-      NodeObjectLitProp@[45; 55) {
-        NodeIdent@[45; 48) {
-          TokenIdent@[45; 48) "foo"
+    TokenUnilineWhitespace@41..42 " "
+    TokenEq@42..43 "="
+    TokenUnilineWhitespace@43..44 " "
+    NodeObjectLit@44..56 {
+      TokenOpenBrace@44..45 "{"
+      NodeObjectLitProp@45..55 {
+        NodeIdent@45..48 {
+          TokenIdent@45..48 "foo"
         }
-        TokenColon@[48; 49) ":"
-        TokenUnilineWhitespace@[49; 50) " "
-        NodeStrLit@[50; 55) {
-          TokenStrLit@[50; 55) "\"bar\""
+        TokenColon@48..49 ":"
+        TokenUnilineWhitespace@49..50 " "
+        NodeStrLit@50..55 {
+          TokenStrLit@50..55 "\"bar\""
         }
       }
-      TokenCloseBrace@[55; 56) "}"
+      TokenCloseBrace@55..56 "}"
     }
-    TokenSemicolon@[56; 57) ";"
+    TokenSemicolon@56..57 ";"
   }
-  TokenMultilineWhitespace@[57; 59) "\n\n"
-  NodeExprStmt@[59; 73) {
-    NodeAssignExpr@[59; 72) {
-      NodeIdent@[59; 60) {
-        TokenIdent@[59; 60) "x"
+  TokenMultilineWhitespace@57..59 "\n\n"
+  NodeExprStmt@59..73 {
+    NodeAssignExpr@59..72 {
+      NodeIdent@59..60 {
+        TokenIdent@59..60 "x"
       }
-      TokenUnilineWhitespace@[60; 61) " "
-      TokenEq@[61; 62) "="
-      TokenUnilineWhitespace@[62; 63) " "
-      NodeParenExpr@[63; 72) {
-        TokenOpenParen@[63; 64) "("
-        NodeSeqExpr@[64; 71) {
-          NodeNumLit@[64; 65) {
-            TokenNumLit@[64; 65) "1"
+      TokenUnilineWhitespace@60..61 " "
+      TokenEq@61..62 "="
+      TokenUnilineWhitespace@62..63 " "
+      NodeParenExpr@63..72 {
+        TokenOpenParen@63..64 "("
+        NodeSeqExpr@64..71 {
+          NodeNumLit@64..65 {
+            TokenNumLit@64..65 "1"
           }
-          TokenComa@[65; 66) ","
-          TokenUnilineWhitespace@[66; 67) " "
-          NodeNumLit@[67; 68) {
-            TokenNumLit@[67; 68) "2"
+          TokenComa@65..66 ","
+          TokenUnilineWhitespace@66..67 " "
+          NodeNumLit@67..68 {
+            TokenNumLit@67..68 "2"
           }
-          TokenComa@[68; 69) ","
-          TokenUnilineWhitespace@[69; 70) " "
-          NodeNumLit@[70; 71) {
-            TokenNumLit@[70; 71) "3"
-          }
-        }
-        TokenCloseParen@[71; 72) ")"
-      }
-    }
-    TokenSemicolon@[72; 73) ";"
-  }
-  TokenMultilineWhitespace@[73; 74) "\n"
-  NodeExprStmt@[74; 89) {
-    NodeAssignExpr@[74; 88) {
-      NodeIdent@[74; 75) {
-        TokenIdent@[74; 75) "x"
-      }
-      TokenUnilineWhitespace@[75; 76) " "
-      TokenEq@[76; 77) "="
-      TokenUnilineWhitespace@[77; 78) " "
-      NodeParenExpr@[78; 88) {
-        TokenOpenParen@[78; 79) "("
-        NodeSeqExpr@[79; 87) {
-          NodeNumLit@[79; 80) {
-            TokenNumLit@[79; 80) "1"
-          }
-          TokenComa@[80; 81) ","
-          TokenUnilineWhitespace@[81; 82) " "
-          NodeAssignExpr@[82; 87) {
-            NodeIdent@[82; 83) {
-              TokenIdent@[82; 83) "y"
-            }
-            TokenUnilineWhitespace@[83; 84) " "
-            TokenEq@[84; 85) "="
-            TokenUnilineWhitespace@[85; 86) " "
-            NodeNumLit@[86; 87) {
-              TokenNumLit@[86; 87) "3"
-            }
+          TokenComa@68..69 ","
+          TokenUnilineWhitespace@69..70 " "
+          NodeNumLit@70..71 {
+            TokenNumLit@70..71 "3"
           }
         }
-        TokenCloseParen@[87; 88) ")"
+        TokenCloseParen@71..72 ")"
       }
     }
-    TokenSemicolon@[88; 89) ";"
+    TokenSemicolon@72..73 ";"
   }
-  TokenMultilineWhitespace@[89; 90) "\n"
-  NodeExprStmt@[90; 105) {
-    NodeAssignExpr@[90; 104) {
-      NodeIdent@[90; 91) {
-        TokenIdent@[90; 91) "x"
+  TokenMultilineWhitespace@73..74 "\n"
+  NodeExprStmt@74..89 {
+    NodeAssignExpr@74..88 {
+      NodeIdent@74..75 {
+        TokenIdent@74..75 "x"
       }
-      TokenUnilineWhitespace@[91; 92) " "
-      TokenEq@[92; 93) "="
-      TokenUnilineWhitespace@[93; 94) " "
-      NodeParenExpr@[94; 104) {
-        TokenOpenParen@[94; 95) "("
-        NodeSeqExpr@[95; 103) {
-          NodeAssignExpr@[95; 100) {
-            NodeIdent@[95; 96) {
-              TokenIdent@[95; 96) "y"
-            }
-            TokenUnilineWhitespace@[96; 97) " "
-            TokenEq@[97; 98) "="
-            TokenUnilineWhitespace@[98; 99) " "
-            NodeNumLit@[99; 100) {
-              TokenNumLit@[99; 100) "2"
-            }
+      TokenUnilineWhitespace@75..76 " "
+      TokenEq@76..77 "="
+      TokenUnilineWhitespace@77..78 " "
+      NodeParenExpr@78..88 {
+        TokenOpenParen@78..79 "("
+        NodeSeqExpr@79..87 {
+          NodeNumLit@79..80 {
+            TokenNumLit@79..80 "1"
           }
-          TokenComa@[100; 101) ","
-          TokenUnilineWhitespace@[101; 102) " "
-          NodeNumLit@[102; 103) {
-            TokenNumLit@[102; 103) "3"
-          }
-        }
-        TokenCloseParen@[103; 104) ")"
-      }
-    }
-    TokenSemicolon@[104; 105) ";"
-  }
-  TokenMultilineWhitespace@[105; 106) "\n"
-  NodeExprStmt@[106; 125) {
-    NodeAssignExpr@[106; 124) {
-      NodeIdent@[106; 107) {
-        TokenIdent@[106; 107) "x"
-      }
-      TokenUnilineWhitespace@[107; 108) " "
-      TokenEq@[108; 109) "="
-      TokenUnilineWhitespace@[109; 110) " "
-      NodeParenExpr@[110; 124) {
-        TokenOpenParen@[110; 111) "("
-        NodeSeqExpr@[111; 123) {
-          NodeNumLit@[111; 112) {
-            TokenNumLit@[111; 112) "1"
-          }
-          TokenComa@[112; 113) ","
-          TokenUnilineWhitespace@[113; 114) " "
-          NodeCondExpr@[114; 123) {
-            NodeNumLit@[114; 115) {
-              TokenNumLit@[114; 115) "2"
+          TokenComa@80..81 ","
+          TokenUnilineWhitespace@81..82 " "
+          NodeAssignExpr@82..87 {
+            NodeIdent@82..83 {
+              TokenIdent@82..83 "y"
             }
-            TokenUnilineWhitespace@[115; 116) " "
-            TokenQuestion@[116; 117) "?"
-            TokenUnilineWhitespace@[117; 118) " "
-            NodeNumLit@[118; 119) {
-              TokenNumLit@[118; 119) "3"
-            }
-            TokenUnilineWhitespace@[119; 120) " "
-            TokenColon@[120; 121) ":"
-            TokenUnilineWhitespace@[121; 122) " "
-            NodeNumLit@[122; 123) {
-              TokenNumLit@[122; 123) "4"
+            TokenUnilineWhitespace@83..84 " "
+            TokenEq@84..85 "="
+            TokenUnilineWhitespace@85..86 " "
+            NodeNumLit@86..87 {
+              TokenNumLit@86..87 "3"
             }
           }
         }
-        TokenCloseParen@[123; 124) ")"
+        TokenCloseParen@87..88 ")"
       }
     }
-    TokenSemicolon@[124; 125) ";"
+    TokenSemicolon@88..89 ";"
   }
-  TokenMultilineWhitespace@[125; 126) "\n"
-  TokenTrailingComment@[126; 180) "// x = (1 ? 2, 3 : 4); // TODO: test that this errors\n"
-  NodeExprStmt@[180; 199) {
-    NodeAssignExpr@[180; 198) {
-      NodeIdent@[180; 181) {
-        TokenIdent@[180; 181) "x"
+  TokenMultilineWhitespace@89..90 "\n"
+  NodeExprStmt@90..105 {
+    NodeAssignExpr@90..104 {
+      NodeIdent@90..91 {
+        TokenIdent@90..91 "x"
       }
-      TokenUnilineWhitespace@[181; 182) " "
-      TokenEq@[182; 183) "="
-      TokenUnilineWhitespace@[183; 184) " "
-      NodeParenExpr@[184; 198) {
-        TokenOpenParen@[184; 185) "("
-        NodeSeqExpr@[185; 197) {
-          NodeCondExpr@[185; 194) {
-            NodeNumLit@[185; 186) {
-              TokenNumLit@[185; 186) "1"
+      TokenUnilineWhitespace@91..92 " "
+      TokenEq@92..93 "="
+      TokenUnilineWhitespace@93..94 " "
+      NodeParenExpr@94..104 {
+        TokenOpenParen@94..95 "("
+        NodeSeqExpr@95..103 {
+          NodeAssignExpr@95..100 {
+            NodeIdent@95..96 {
+              TokenIdent@95..96 "y"
             }
-            TokenUnilineWhitespace@[186; 187) " "
-            TokenQuestion@[187; 188) "?"
-            TokenUnilineWhitespace@[188; 189) " "
-            NodeNumLit@[189; 190) {
-              TokenNumLit@[189; 190) "2"
-            }
-            TokenUnilineWhitespace@[190; 191) " "
-            TokenColon@[191; 192) ":"
-            TokenUnilineWhitespace@[192; 193) " "
-            NodeNumLit@[193; 194) {
-              TokenNumLit@[193; 194) "3"
+            TokenUnilineWhitespace@96..97 " "
+            TokenEq@97..98 "="
+            TokenUnilineWhitespace@98..99 " "
+            NodeNumLit@99..100 {
+              TokenNumLit@99..100 "2"
             }
           }
-          TokenComa@[194; 195) ","
-          TokenUnilineWhitespace@[195; 196) " "
-          NodeNumLit@[196; 197) {
-            TokenNumLit@[196; 197) "4"
+          TokenComa@100..101 ","
+          TokenUnilineWhitespace@101..102 " "
+          NodeNumLit@102..103 {
+            TokenNumLit@102..103 "3"
           }
         }
-        TokenCloseParen@[197; 198) ")"
+        TokenCloseParen@103..104 ")"
       }
     }
-    TokenSemicolon@[198; 199) ";"
+    TokenSemicolon@104..105 ";"
   }
-  TokenMultilineWhitespace@[199; 200) "\n"
-  NodeExprStmt@[200; 216) {
-    NodeAssignExpr@[200; 215) {
-      NodeIdent@[200; 201) {
-        TokenIdent@[200; 201) "x"
+  TokenMultilineWhitespace@105..106 "\n"
+  NodeExprStmt@106..125 {
+    NodeAssignExpr@106..124 {
+      NodeIdent@106..107 {
+        TokenIdent@106..107 "x"
       }
-      TokenUnilineWhitespace@[201; 202) " "
-      TokenEq@[202; 203) "="
-      TokenUnilineWhitespace@[203; 204) " "
-      NodeParenExpr@[204; 215) {
-        TokenOpenParen@[204; 205) "("
-        NodeSeqExpr@[205; 214) {
-          NodeNumLit@[205; 206) {
-            TokenNumLit@[205; 206) "1"
+      TokenUnilineWhitespace@107..108 " "
+      TokenEq@108..109 "="
+      TokenUnilineWhitespace@109..110 " "
+      NodeParenExpr@110..124 {
+        TokenOpenParen@110..111 "("
+        NodeSeqExpr@111..123 {
+          NodeNumLit@111..112 {
+            TokenNumLit@111..112 "1"
           }
-          TokenComa@[206; 207) ","
-          TokenUnilineWhitespace@[207; 208) " "
-          NodeInfixExpr@[208; 214) {
-            NodeNumLit@[208; 209) {
-              TokenNumLit@[208; 209) "2"
+          TokenComa@112..113 ","
+          TokenUnilineWhitespace@113..114 " "
+          NodeCondExpr@114..123 {
+            NodeNumLit@114..115 {
+              TokenNumLit@114..115 "2"
             }
-            TokenUnilineWhitespace@[209; 210) " "
-            TokenPipePipe@[210; 212) "||"
-            TokenUnilineWhitespace@[212; 213) " "
-            NodeNumLit@[213; 214) {
-              TokenNumLit@[213; 214) "3"
+            TokenUnilineWhitespace@115..116 " "
+            TokenQuestion@116..117 "?"
+            TokenUnilineWhitespace@117..118 " "
+            NodeNumLit@118..119 {
+              TokenNumLit@118..119 "3"
             }
-          }
-        }
-        TokenCloseParen@[214; 215) ")"
-      }
-    }
-    TokenSemicolon@[215; 216) ";"
-  }
-  TokenMultilineWhitespace@[216; 217) "\n"
-  NodeExprStmt@[217; 233) {
-    NodeAssignExpr@[217; 232) {
-      NodeIdent@[217; 218) {
-        TokenIdent@[217; 218) "x"
-      }
-      TokenUnilineWhitespace@[218; 219) " "
-      TokenEq@[219; 220) "="
-      TokenUnilineWhitespace@[220; 221) " "
-      NodeParenExpr@[221; 232) {
-        TokenOpenParen@[221; 222) "("
-        NodeSeqExpr@[222; 231) {
-          NodeInfixExpr@[222; 228) {
-            NodeNumLit@[222; 223) {
-              TokenNumLit@[222; 223) "1"
-            }
-            TokenUnilineWhitespace@[223; 224) " "
-            TokenPipePipe@[224; 226) "||"
-            TokenUnilineWhitespace@[226; 227) " "
-            NodeNumLit@[227; 228) {
-              TokenNumLit@[227; 228) "2"
-            }
-          }
-          TokenComa@[228; 229) ","
-          TokenUnilineWhitespace@[229; 230) " "
-          NodeNumLit@[230; 231) {
-            TokenNumLit@[230; 231) "3"
-          }
-        }
-        TokenCloseParen@[231; 232) ")"
-      }
-    }
-    TokenSemicolon@[232; 233) ";"
-  }
-  TokenMultilineWhitespace@[233; 234) "\n"
-  NodeExprStmt@[234; 250) {
-    NodeAssignExpr@[234; 249) {
-      NodeIdent@[234; 235) {
-        TokenIdent@[234; 235) "x"
-      }
-      TokenUnilineWhitespace@[235; 236) " "
-      TokenEq@[236; 237) "="
-      TokenUnilineWhitespace@[237; 238) " "
-      NodeParenExpr@[238; 249) {
-        TokenOpenParen@[238; 239) "("
-        NodeSeqExpr@[239; 248) {
-          NodeNumLit@[239; 240) {
-            TokenNumLit@[239; 240) "1"
-          }
-          TokenComa@[240; 241) ","
-          TokenUnilineWhitespace@[241; 242) " "
-          NodeInfixExpr@[242; 248) {
-            NodeNumLit@[242; 243) {
-              TokenNumLit@[242; 243) "2"
-            }
-            TokenUnilineWhitespace@[243; 244) " "
-            TokenAmpAmp@[244; 246) "&&"
-            TokenUnilineWhitespace@[246; 247) " "
-            NodeNumLit@[247; 248) {
-              TokenNumLit@[247; 248) "3"
+            TokenUnilineWhitespace@119..120 " "
+            TokenColon@120..121 ":"
+            TokenUnilineWhitespace@121..122 " "
+            NodeNumLit@122..123 {
+              TokenNumLit@122..123 "4"
             }
           }
         }
-        TokenCloseParen@[248; 249) ")"
+        TokenCloseParen@123..124 ")"
       }
     }
-    TokenSemicolon@[249; 250) ";"
+    TokenSemicolon@124..125 ";"
   }
-  TokenMultilineWhitespace@[250; 251) "\n"
-  NodeExprStmt@[251; 267) {
-    NodeAssignExpr@[251; 266) {
-      NodeIdent@[251; 252) {
-        TokenIdent@[251; 252) "x"
+  TokenMultilineWhitespace@125..126 "\n"
+  TokenTrailingComment@126..180 "// x = (1 ? 2, 3 : 4); // TODO: test that this errors\n"
+  NodeExprStmt@180..199 {
+    NodeAssignExpr@180..198 {
+      NodeIdent@180..181 {
+        TokenIdent@180..181 "x"
       }
-      TokenUnilineWhitespace@[252; 253) " "
-      TokenEq@[253; 254) "="
-      TokenUnilineWhitespace@[254; 255) " "
-      NodeParenExpr@[255; 266) {
-        TokenOpenParen@[255; 256) "("
-        NodeSeqExpr@[256; 265) {
-          NodeInfixExpr@[256; 262) {
-            NodeNumLit@[256; 257) {
-              TokenNumLit@[256; 257) "1"
+      TokenUnilineWhitespace@181..182 " "
+      TokenEq@182..183 "="
+      TokenUnilineWhitespace@183..184 " "
+      NodeParenExpr@184..198 {
+        TokenOpenParen@184..185 "("
+        NodeSeqExpr@185..197 {
+          NodeCondExpr@185..194 {
+            NodeNumLit@185..186 {
+              TokenNumLit@185..186 "1"
             }
-            TokenUnilineWhitespace@[257; 258) " "
-            TokenAmpAmp@[258; 260) "&&"
-            TokenUnilineWhitespace@[260; 261) " "
-            NodeNumLit@[261; 262) {
-              TokenNumLit@[261; 262) "2"
+            TokenUnilineWhitespace@186..187 " "
+            TokenQuestion@187..188 "?"
+            TokenUnilineWhitespace@188..189 " "
+            NodeNumLit@189..190 {
+              TokenNumLit@189..190 "2"
+            }
+            TokenUnilineWhitespace@190..191 " "
+            TokenColon@191..192 ":"
+            TokenUnilineWhitespace@192..193 " "
+            NodeNumLit@193..194 {
+              TokenNumLit@193..194 "3"
             }
           }
-          TokenComa@[262; 263) ","
-          TokenUnilineWhitespace@[263; 264) " "
-          NodeNumLit@[264; 265) {
-            TokenNumLit@[264; 265) "3"
+          TokenComa@194..195 ","
+          TokenUnilineWhitespace@195..196 " "
+          NodeNumLit@196..197 {
+            TokenNumLit@196..197 "4"
           }
         }
-        TokenCloseParen@[265; 266) ")"
+        TokenCloseParen@197..198 ")"
       }
     }
-    TokenSemicolon@[266; 267) ";"
+    TokenSemicolon@198..199 ";"
   }
-  TokenMultilineWhitespace@[267; 268) "\n"
-  NodeExprStmt@[268; 283) {
-    NodeAssignExpr@[268; 282) {
-      NodeIdent@[268; 269) {
-        TokenIdent@[268; 269) "x"
+  TokenMultilineWhitespace@199..200 "\n"
+  NodeExprStmt@200..216 {
+    NodeAssignExpr@200..215 {
+      NodeIdent@200..201 {
+        TokenIdent@200..201 "x"
       }
-      TokenUnilineWhitespace@[269; 270) " "
-      TokenEq@[270; 271) "="
-      TokenUnilineWhitespace@[271; 272) " "
-      NodeParenExpr@[272; 282) {
-        TokenOpenParen@[272; 273) "("
-        NodeSeqExpr@[273; 281) {
-          NodeNumLit@[273; 274) {
-            TokenNumLit@[273; 274) "1"
+      TokenUnilineWhitespace@201..202 " "
+      TokenEq@202..203 "="
+      TokenUnilineWhitespace@203..204 " "
+      NodeParenExpr@204..215 {
+        TokenOpenParen@204..205 "("
+        NodeSeqExpr@205..214 {
+          NodeNumLit@205..206 {
+            TokenNumLit@205..206 "1"
           }
-          TokenComa@[274; 275) ","
-          TokenUnilineWhitespace@[275; 276) " "
-          NodeInfixExpr@[276; 281) {
-            NodeNumLit@[276; 277) {
-              TokenNumLit@[276; 277) "2"
+          TokenComa@206..207 ","
+          TokenUnilineWhitespace@207..208 " "
+          NodeInfixExpr@208..214 {
+            NodeNumLit@208..209 {
+              TokenNumLit@208..209 "2"
             }
-            TokenUnilineWhitespace@[277; 278) " "
-            TokenPipe@[278; 279) "|"
-            TokenUnilineWhitespace@[279; 280) " "
-            NodeNumLit@[280; 281) {
-              TokenNumLit@[280; 281) "3"
-            }
-          }
-        }
-        TokenCloseParen@[281; 282) ")"
-      }
-    }
-    TokenSemicolon@[282; 283) ";"
-  }
-  TokenMultilineWhitespace@[283; 284) "\n"
-  NodeExprStmt@[284; 299) {
-    NodeAssignExpr@[284; 298) {
-      NodeIdent@[284; 285) {
-        TokenIdent@[284; 285) "x"
-      }
-      TokenUnilineWhitespace@[285; 286) " "
-      TokenEq@[286; 287) "="
-      TokenUnilineWhitespace@[287; 288) " "
-      NodeParenExpr@[288; 298) {
-        TokenOpenParen@[288; 289) "("
-        NodeSeqExpr@[289; 297) {
-          NodeInfixExpr@[289; 294) {
-            NodeNumLit@[289; 290) {
-              TokenNumLit@[289; 290) "1"
-            }
-            TokenUnilineWhitespace@[290; 291) " "
-            TokenPipe@[291; 292) "|"
-            TokenUnilineWhitespace@[292; 293) " "
-            NodeNumLit@[293; 294) {
-              TokenNumLit@[293; 294) "2"
-            }
-          }
-          TokenComa@[294; 295) ","
-          TokenUnilineWhitespace@[295; 296) " "
-          NodeNumLit@[296; 297) {
-            TokenNumLit@[296; 297) "3"
-          }
-        }
-        TokenCloseParen@[297; 298) ")"
-      }
-    }
-    TokenSemicolon@[298; 299) ";"
-  }
-  TokenMultilineWhitespace@[299; 300) "\n"
-  NodeExprStmt@[300; 315) {
-    NodeAssignExpr@[300; 314) {
-      NodeIdent@[300; 301) {
-        TokenIdent@[300; 301) "x"
-      }
-      TokenUnilineWhitespace@[301; 302) " "
-      TokenEq@[302; 303) "="
-      TokenUnilineWhitespace@[303; 304) " "
-      NodeParenExpr@[304; 314) {
-        TokenOpenParen@[304; 305) "("
-        NodeSeqExpr@[305; 313) {
-          NodeNumLit@[305; 306) {
-            TokenNumLit@[305; 306) "1"
-          }
-          TokenComa@[306; 307) ","
-          TokenUnilineWhitespace@[307; 308) " "
-          NodeInfixExpr@[308; 313) {
-            NodeNumLit@[308; 309) {
-              TokenNumLit@[308; 309) "2"
-            }
-            TokenUnilineWhitespace@[309; 310) " "
-            TokenCaret@[310; 311) "^"
-            TokenUnilineWhitespace@[311; 312) " "
-            NodeNumLit@[312; 313) {
-              TokenNumLit@[312; 313) "3"
+            TokenUnilineWhitespace@209..210 " "
+            TokenPipePipe@210..212 "||"
+            TokenUnilineWhitespace@212..213 " "
+            NodeNumLit@213..214 {
+              TokenNumLit@213..214 "3"
             }
           }
         }
-        TokenCloseParen@[313; 314) ")"
+        TokenCloseParen@214..215 ")"
       }
     }
-    TokenSemicolon@[314; 315) ";"
+    TokenSemicolon@215..216 ";"
   }
-  TokenMultilineWhitespace@[315; 316) "\n"
-  NodeExprStmt@[316; 331) {
-    NodeAssignExpr@[316; 330) {
-      NodeIdent@[316; 317) {
-        TokenIdent@[316; 317) "x"
+  TokenMultilineWhitespace@216..217 "\n"
+  NodeExprStmt@217..233 {
+    NodeAssignExpr@217..232 {
+      NodeIdent@217..218 {
+        TokenIdent@217..218 "x"
       }
-      TokenUnilineWhitespace@[317; 318) " "
-      TokenEq@[318; 319) "="
-      TokenUnilineWhitespace@[319; 320) " "
-      NodeParenExpr@[320; 330) {
-        TokenOpenParen@[320; 321) "("
-        NodeSeqExpr@[321; 329) {
-          NodeInfixExpr@[321; 326) {
-            NodeNumLit@[321; 322) {
-              TokenNumLit@[321; 322) "1"
+      TokenUnilineWhitespace@218..219 " "
+      TokenEq@219..220 "="
+      TokenUnilineWhitespace@220..221 " "
+      NodeParenExpr@221..232 {
+        TokenOpenParen@221..222 "("
+        NodeSeqExpr@222..231 {
+          NodeInfixExpr@222..228 {
+            NodeNumLit@222..223 {
+              TokenNumLit@222..223 "1"
             }
-            TokenUnilineWhitespace@[322; 323) " "
-            TokenCaret@[323; 324) "^"
-            TokenUnilineWhitespace@[324; 325) " "
-            NodeNumLit@[325; 326) {
-              TokenNumLit@[325; 326) "2"
+            TokenUnilineWhitespace@223..224 " "
+            TokenPipePipe@224..226 "||"
+            TokenUnilineWhitespace@226..227 " "
+            NodeNumLit@227..228 {
+              TokenNumLit@227..228 "2"
             }
           }
-          TokenComa@[326; 327) ","
-          TokenUnilineWhitespace@[327; 328) " "
-          NodeNumLit@[328; 329) {
-            TokenNumLit@[328; 329) "3"
+          TokenComa@228..229 ","
+          TokenUnilineWhitespace@229..230 " "
+          NodeNumLit@230..231 {
+            TokenNumLit@230..231 "3"
           }
         }
-        TokenCloseParen@[329; 330) ")"
+        TokenCloseParen@231..232 ")"
       }
     }
-    TokenSemicolon@[330; 331) ";"
+    TokenSemicolon@232..233 ";"
   }
-  TokenMultilineWhitespace@[331; 332) "\n"
-  NodeExprStmt@[332; 347) {
-    NodeAssignExpr@[332; 346) {
-      NodeIdent@[332; 333) {
-        TokenIdent@[332; 333) "x"
+  TokenMultilineWhitespace@233..234 "\n"
+  NodeExprStmt@234..250 {
+    NodeAssignExpr@234..249 {
+      NodeIdent@234..235 {
+        TokenIdent@234..235 "x"
       }
-      TokenUnilineWhitespace@[333; 334) " "
-      TokenEq@[334; 335) "="
-      TokenUnilineWhitespace@[335; 336) " "
-      NodeParenExpr@[336; 346) {
-        TokenOpenParen@[336; 337) "("
-        NodeSeqExpr@[337; 345) {
-          NodeNumLit@[337; 338) {
-            TokenNumLit@[337; 338) "1"
+      TokenUnilineWhitespace@235..236 " "
+      TokenEq@236..237 "="
+      TokenUnilineWhitespace@237..238 " "
+      NodeParenExpr@238..249 {
+        TokenOpenParen@238..239 "("
+        NodeSeqExpr@239..248 {
+          NodeNumLit@239..240 {
+            TokenNumLit@239..240 "1"
           }
-          TokenComa@[338; 339) ","
-          TokenUnilineWhitespace@[339; 340) " "
-          NodeInfixExpr@[340; 345) {
-            NodeNumLit@[340; 341) {
-              TokenNumLit@[340; 341) "2"
+          TokenComa@240..241 ","
+          TokenUnilineWhitespace@241..242 " "
+          NodeInfixExpr@242..248 {
+            NodeNumLit@242..243 {
+              TokenNumLit@242..243 "2"
             }
-            TokenUnilineWhitespace@[341; 342) " "
-            TokenAmp@[342; 343) "&"
-            TokenUnilineWhitespace@[343; 344) " "
-            NodeNumLit@[344; 345) {
-              TokenNumLit@[344; 345) "3"
-            }
-          }
-        }
-        TokenCloseParen@[345; 346) ")"
-      }
-    }
-    TokenSemicolon@[346; 347) ";"
-  }
-  TokenMultilineWhitespace@[347; 348) "\n"
-  NodeExprStmt@[348; 363) {
-    NodeAssignExpr@[348; 362) {
-      NodeIdent@[348; 349) {
-        TokenIdent@[348; 349) "x"
-      }
-      TokenUnilineWhitespace@[349; 350) " "
-      TokenEq@[350; 351) "="
-      TokenUnilineWhitespace@[351; 352) " "
-      NodeParenExpr@[352; 362) {
-        TokenOpenParen@[352; 353) "("
-        NodeSeqExpr@[353; 361) {
-          NodeInfixExpr@[353; 358) {
-            NodeNumLit@[353; 354) {
-              TokenNumLit@[353; 354) "1"
-            }
-            TokenUnilineWhitespace@[354; 355) " "
-            TokenAmp@[355; 356) "&"
-            TokenUnilineWhitespace@[356; 357) " "
-            NodeNumLit@[357; 358) {
-              TokenNumLit@[357; 358) "2"
-            }
-          }
-          TokenComa@[358; 359) ","
-          TokenUnilineWhitespace@[359; 360) " "
-          NodeNumLit@[360; 361) {
-            TokenNumLit@[360; 361) "3"
-          }
-        }
-        TokenCloseParen@[361; 362) ")"
-      }
-    }
-    TokenSemicolon@[362; 363) ";"
-  }
-  TokenMultilineWhitespace@[363; 364) "\n"
-  NodeExprStmt@[364; 380) {
-    NodeAssignExpr@[364; 379) {
-      NodeIdent@[364; 365) {
-        TokenIdent@[364; 365) "x"
-      }
-      TokenUnilineWhitespace@[365; 366) " "
-      TokenEq@[366; 367) "="
-      TokenUnilineWhitespace@[367; 368) " "
-      NodeParenExpr@[368; 379) {
-        TokenOpenParen@[368; 369) "("
-        NodeSeqExpr@[369; 378) {
-          NodeNumLit@[369; 370) {
-            TokenNumLit@[369; 370) "1"
-          }
-          TokenComa@[370; 371) ","
-          TokenUnilineWhitespace@[371; 372) " "
-          NodeInfixExpr@[372; 378) {
-            NodeNumLit@[372; 373) {
-              TokenNumLit@[372; 373) "2"
-            }
-            TokenUnilineWhitespace@[373; 374) " "
-            TokenEqEq@[374; 376) "=="
-            TokenUnilineWhitespace@[376; 377) " "
-            NodeNumLit@[377; 378) {
-              TokenNumLit@[377; 378) "3"
+            TokenUnilineWhitespace@243..244 " "
+            TokenAmpAmp@244..246 "&&"
+            TokenUnilineWhitespace@246..247 " "
+            NodeNumLit@247..248 {
+              TokenNumLit@247..248 "3"
             }
           }
         }
-        TokenCloseParen@[378; 379) ")"
+        TokenCloseParen@248..249 ")"
       }
     }
-    TokenSemicolon@[379; 380) ";"
+    TokenSemicolon@249..250 ";"
   }
-  TokenMultilineWhitespace@[380; 381) "\n"
-  NodeExprStmt@[381; 397) {
-    NodeAssignExpr@[381; 396) {
-      NodeIdent@[381; 382) {
-        TokenIdent@[381; 382) "x"
+  TokenMultilineWhitespace@250..251 "\n"
+  NodeExprStmt@251..267 {
+    NodeAssignExpr@251..266 {
+      NodeIdent@251..252 {
+        TokenIdent@251..252 "x"
       }
-      TokenUnilineWhitespace@[382; 383) " "
-      TokenEq@[383; 384) "="
-      TokenUnilineWhitespace@[384; 385) " "
-      NodeParenExpr@[385; 396) {
-        TokenOpenParen@[385; 386) "("
-        NodeSeqExpr@[386; 395) {
-          NodeInfixExpr@[386; 392) {
-            NodeNumLit@[386; 387) {
-              TokenNumLit@[386; 387) "1"
+      TokenUnilineWhitespace@252..253 " "
+      TokenEq@253..254 "="
+      TokenUnilineWhitespace@254..255 " "
+      NodeParenExpr@255..266 {
+        TokenOpenParen@255..256 "("
+        NodeSeqExpr@256..265 {
+          NodeInfixExpr@256..262 {
+            NodeNumLit@256..257 {
+              TokenNumLit@256..257 "1"
             }
-            TokenUnilineWhitespace@[387; 388) " "
-            TokenEqEq@[388; 390) "=="
-            TokenUnilineWhitespace@[390; 391) " "
-            NodeNumLit@[391; 392) {
-              TokenNumLit@[391; 392) "2"
+            TokenUnilineWhitespace@257..258 " "
+            TokenAmpAmp@258..260 "&&"
+            TokenUnilineWhitespace@260..261 " "
+            NodeNumLit@261..262 {
+              TokenNumLit@261..262 "2"
             }
           }
-          TokenComa@[392; 393) ","
-          TokenUnilineWhitespace@[393; 394) " "
-          NodeNumLit@[394; 395) {
-            TokenNumLit@[394; 395) "3"
+          TokenComa@262..263 ","
+          TokenUnilineWhitespace@263..264 " "
+          NodeNumLit@264..265 {
+            TokenNumLit@264..265 "3"
           }
         }
-        TokenCloseParen@[395; 396) ")"
+        TokenCloseParen@265..266 ")"
       }
     }
-    TokenSemicolon@[396; 397) ";"
+    TokenSemicolon@266..267 ";"
   }
-  TokenMultilineWhitespace@[397; 398) "\n"
-  NodeExprStmt@[398; 413) {
-    NodeAssignExpr@[398; 412) {
-      NodeIdent@[398; 399) {
-        TokenIdent@[398; 399) "x"
+  TokenMultilineWhitespace@267..268 "\n"
+  NodeExprStmt@268..283 {
+    NodeAssignExpr@268..282 {
+      NodeIdent@268..269 {
+        TokenIdent@268..269 "x"
       }
-      TokenUnilineWhitespace@[399; 400) " "
-      TokenEq@[400; 401) "="
-      TokenUnilineWhitespace@[401; 402) " "
-      NodeParenExpr@[402; 412) {
-        TokenOpenParen@[402; 403) "("
-        NodeSeqExpr@[403; 411) {
-          NodeNumLit@[403; 404) {
-            TokenNumLit@[403; 404) "1"
+      TokenUnilineWhitespace@269..270 " "
+      TokenEq@270..271 "="
+      TokenUnilineWhitespace@271..272 " "
+      NodeParenExpr@272..282 {
+        TokenOpenParen@272..273 "("
+        NodeSeqExpr@273..281 {
+          NodeNumLit@273..274 {
+            TokenNumLit@273..274 "1"
           }
-          TokenComa@[404; 405) ","
-          TokenUnilineWhitespace@[405; 406) " "
-          NodeInfixExpr@[406; 411) {
-            NodeNumLit@[406; 407) {
-              TokenNumLit@[406; 407) "2"
+          TokenComa@274..275 ","
+          TokenUnilineWhitespace@275..276 " "
+          NodeInfixExpr@276..281 {
+            NodeNumLit@276..277 {
+              TokenNumLit@276..277 "2"
             }
-            TokenUnilineWhitespace@[407; 408) " "
-            TokenLt@[408; 409) "<"
-            TokenUnilineWhitespace@[409; 410) " "
-            NodeNumLit@[410; 411) {
-              TokenNumLit@[410; 411) "3"
-            }
-          }
-        }
-        TokenCloseParen@[411; 412) ")"
-      }
-    }
-    TokenSemicolon@[412; 413) ";"
-  }
-  TokenMultilineWhitespace@[413; 414) "\n"
-  NodeExprStmt@[414; 429) {
-    NodeAssignExpr@[414; 428) {
-      NodeIdent@[414; 415) {
-        TokenIdent@[414; 415) "x"
-      }
-      TokenUnilineWhitespace@[415; 416) " "
-      TokenEq@[416; 417) "="
-      TokenUnilineWhitespace@[417; 418) " "
-      NodeParenExpr@[418; 428) {
-        TokenOpenParen@[418; 419) "("
-        NodeSeqExpr@[419; 427) {
-          NodeInfixExpr@[419; 424) {
-            NodeNumLit@[419; 420) {
-              TokenNumLit@[419; 420) "1"
-            }
-            TokenUnilineWhitespace@[420; 421) " "
-            TokenLt@[421; 422) "<"
-            TokenUnilineWhitespace@[422; 423) " "
-            NodeNumLit@[423; 424) {
-              TokenNumLit@[423; 424) "2"
-            }
-          }
-          TokenComa@[424; 425) ","
-          TokenUnilineWhitespace@[425; 426) " "
-          NodeNumLit@[426; 427) {
-            TokenNumLit@[426; 427) "3"
-          }
-        }
-        TokenCloseParen@[427; 428) ")"
-      }
-    }
-    TokenSemicolon@[428; 429) ";"
-  }
-  TokenMultilineWhitespace@[429; 430) "\n"
-  NodeExprStmt@[430; 446) {
-    NodeAssignExpr@[430; 445) {
-      NodeIdent@[430; 431) {
-        TokenIdent@[430; 431) "x"
-      }
-      TokenUnilineWhitespace@[431; 432) " "
-      TokenEq@[432; 433) "="
-      TokenUnilineWhitespace@[433; 434) " "
-      NodeParenExpr@[434; 445) {
-        TokenOpenParen@[434; 435) "("
-        NodeSeqExpr@[435; 444) {
-          NodeNumLit@[435; 436) {
-            TokenNumLit@[435; 436) "1"
-          }
-          TokenComa@[436; 437) ","
-          TokenUnilineWhitespace@[437; 438) " "
-          NodeInfixExpr@[438; 444) {
-            NodeNumLit@[438; 439) {
-              TokenNumLit@[438; 439) "2"
-            }
-            TokenUnilineWhitespace@[439; 440) " "
-            TokenLtLt@[440; 442) "<<"
-            TokenUnilineWhitespace@[442; 443) " "
-            NodeNumLit@[443; 444) {
-              TokenNumLit@[443; 444) "3"
+            TokenUnilineWhitespace@277..278 " "
+            TokenPipe@278..279 "|"
+            TokenUnilineWhitespace@279..280 " "
+            NodeNumLit@280..281 {
+              TokenNumLit@280..281 "3"
             }
           }
         }
-        TokenCloseParen@[444; 445) ")"
+        TokenCloseParen@281..282 ")"
       }
     }
-    TokenSemicolon@[445; 446) ";"
+    TokenSemicolon@282..283 ";"
   }
-  TokenMultilineWhitespace@[446; 447) "\n"
-  NodeExprStmt@[447; 463) {
-    NodeAssignExpr@[447; 462) {
-      NodeIdent@[447; 448) {
-        TokenIdent@[447; 448) "x"
+  TokenMultilineWhitespace@283..284 "\n"
+  NodeExprStmt@284..299 {
+    NodeAssignExpr@284..298 {
+      NodeIdent@284..285 {
+        TokenIdent@284..285 "x"
       }
-      TokenUnilineWhitespace@[448; 449) " "
-      TokenEq@[449; 450) "="
-      TokenUnilineWhitespace@[450; 451) " "
-      NodeParenExpr@[451; 462) {
-        TokenOpenParen@[451; 452) "("
-        NodeSeqExpr@[452; 461) {
-          NodeInfixExpr@[452; 458) {
-            NodeNumLit@[452; 453) {
-              TokenNumLit@[452; 453) "1"
+      TokenUnilineWhitespace@285..286 " "
+      TokenEq@286..287 "="
+      TokenUnilineWhitespace@287..288 " "
+      NodeParenExpr@288..298 {
+        TokenOpenParen@288..289 "("
+        NodeSeqExpr@289..297 {
+          NodeInfixExpr@289..294 {
+            NodeNumLit@289..290 {
+              TokenNumLit@289..290 "1"
             }
-            TokenUnilineWhitespace@[453; 454) " "
-            TokenLtLt@[454; 456) "<<"
-            TokenUnilineWhitespace@[456; 457) " "
-            NodeNumLit@[457; 458) {
-              TokenNumLit@[457; 458) "2"
+            TokenUnilineWhitespace@290..291 " "
+            TokenPipe@291..292 "|"
+            TokenUnilineWhitespace@292..293 " "
+            NodeNumLit@293..294 {
+              TokenNumLit@293..294 "2"
             }
           }
-          TokenComa@[458; 459) ","
-          TokenUnilineWhitespace@[459; 460) " "
-          NodeNumLit@[460; 461) {
-            TokenNumLit@[460; 461) "3"
+          TokenComa@294..295 ","
+          TokenUnilineWhitespace@295..296 " "
+          NodeNumLit@296..297 {
+            TokenNumLit@296..297 "3"
           }
         }
-        TokenCloseParen@[461; 462) ")"
+        TokenCloseParen@297..298 ")"
       }
     }
-    TokenSemicolon@[462; 463) ";"
+    TokenSemicolon@298..299 ";"
   }
-  TokenMultilineWhitespace@[463; 464) "\n"
-  NodeExprStmt@[464; 479) {
-    NodeAssignExpr@[464; 478) {
-      NodeIdent@[464; 465) {
-        TokenIdent@[464; 465) "x"
+  TokenMultilineWhitespace@299..300 "\n"
+  NodeExprStmt@300..315 {
+    NodeAssignExpr@300..314 {
+      NodeIdent@300..301 {
+        TokenIdent@300..301 "x"
       }
-      TokenUnilineWhitespace@[465; 466) " "
-      TokenEq@[466; 467) "="
-      TokenUnilineWhitespace@[467; 468) " "
-      NodeParenExpr@[468; 478) {
-        TokenOpenParen@[468; 469) "("
-        NodeSeqExpr@[469; 477) {
-          NodeNumLit@[469; 470) {
-            TokenNumLit@[469; 470) "1"
+      TokenUnilineWhitespace@301..302 " "
+      TokenEq@302..303 "="
+      TokenUnilineWhitespace@303..304 " "
+      NodeParenExpr@304..314 {
+        TokenOpenParen@304..305 "("
+        NodeSeqExpr@305..313 {
+          NodeNumLit@305..306 {
+            TokenNumLit@305..306 "1"
           }
-          TokenComa@[470; 471) ","
-          TokenUnilineWhitespace@[471; 472) " "
-          NodeInfixExpr@[472; 477) {
-            NodeNumLit@[472; 473) {
-              TokenNumLit@[472; 473) "2"
+          TokenComa@306..307 ","
+          TokenUnilineWhitespace@307..308 " "
+          NodeInfixExpr@308..313 {
+            NodeNumLit@308..309 {
+              TokenNumLit@308..309 "2"
             }
-            TokenUnilineWhitespace@[473; 474) " "
-            TokenPlus@[474; 475) "+"
-            TokenUnilineWhitespace@[475; 476) " "
-            NodeNumLit@[476; 477) {
-              TokenNumLit@[476; 477) "4"
-            }
-          }
-        }
-        TokenCloseParen@[477; 478) ")"
-      }
-    }
-    TokenSemicolon@[478; 479) ";"
-  }
-  TokenMultilineWhitespace@[479; 480) "\n"
-  NodeExprStmt@[480; 495) {
-    NodeAssignExpr@[480; 494) {
-      NodeIdent@[480; 481) {
-        TokenIdent@[480; 481) "x"
-      }
-      TokenUnilineWhitespace@[481; 482) " "
-      TokenEq@[482; 483) "="
-      TokenUnilineWhitespace@[483; 484) " "
-      NodeParenExpr@[484; 494) {
-        TokenOpenParen@[484; 485) "("
-        NodeSeqExpr@[485; 493) {
-          NodeInfixExpr@[485; 490) {
-            NodeNumLit@[485; 486) {
-              TokenNumLit@[485; 486) "1"
-            }
-            TokenUnilineWhitespace@[486; 487) " "
-            TokenPlus@[487; 488) "+"
-            TokenUnilineWhitespace@[488; 489) " "
-            NodeNumLit@[489; 490) {
-              TokenNumLit@[489; 490) "2"
-            }
-          }
-          TokenComa@[490; 491) ","
-          TokenUnilineWhitespace@[491; 492) " "
-          NodeNumLit@[492; 493) {
-            TokenNumLit@[492; 493) "4"
-          }
-        }
-        TokenCloseParen@[493; 494) ")"
-      }
-    }
-    TokenSemicolon@[494; 495) ";"
-  }
-  TokenMultilineWhitespace@[495; 496) "\n"
-  NodeExprStmt@[496; 511) {
-    NodeAssignExpr@[496; 510) {
-      NodeIdent@[496; 497) {
-        TokenIdent@[496; 497) "x"
-      }
-      TokenUnilineWhitespace@[497; 498) " "
-      TokenEq@[498; 499) "="
-      TokenUnilineWhitespace@[499; 500) " "
-      NodeParenExpr@[500; 510) {
-        TokenOpenParen@[500; 501) "("
-        NodeSeqExpr@[501; 509) {
-          NodeNumLit@[501; 502) {
-            TokenNumLit@[501; 502) "1"
-          }
-          TokenComa@[502; 503) ","
-          TokenUnilineWhitespace@[503; 504) " "
-          NodeInfixExpr@[504; 509) {
-            NodeNumLit@[504; 505) {
-              TokenNumLit@[504; 505) "2"
-            }
-            TokenUnilineWhitespace@[505; 506) " "
-            TokenStar@[506; 507) "*"
-            TokenUnilineWhitespace@[507; 508) " "
-            NodeNumLit@[508; 509) {
-              TokenNumLit@[508; 509) "3"
+            TokenUnilineWhitespace@309..310 " "
+            TokenCaret@310..311 "^"
+            TokenUnilineWhitespace@311..312 " "
+            NodeNumLit@312..313 {
+              TokenNumLit@312..313 "3"
             }
           }
         }
-        TokenCloseParen@[509; 510) ")"
+        TokenCloseParen@313..314 ")"
       }
     }
-    TokenSemicolon@[510; 511) ";"
+    TokenSemicolon@314..315 ";"
   }
-  TokenMultilineWhitespace@[511; 512) "\n"
-  NodeExprStmt@[512; 527) {
-    NodeAssignExpr@[512; 526) {
-      NodeIdent@[512; 513) {
-        TokenIdent@[512; 513) "x"
+  TokenMultilineWhitespace@315..316 "\n"
+  NodeExprStmt@316..331 {
+    NodeAssignExpr@316..330 {
+      NodeIdent@316..317 {
+        TokenIdent@316..317 "x"
       }
-      TokenUnilineWhitespace@[513; 514) " "
-      TokenEq@[514; 515) "="
-      TokenUnilineWhitespace@[515; 516) " "
-      NodeParenExpr@[516; 526) {
-        TokenOpenParen@[516; 517) "("
-        NodeSeqExpr@[517; 525) {
-          NodeInfixExpr@[517; 522) {
-            NodeNumLit@[517; 518) {
-              TokenNumLit@[517; 518) "1"
+      TokenUnilineWhitespace@317..318 " "
+      TokenEq@318..319 "="
+      TokenUnilineWhitespace@319..320 " "
+      NodeParenExpr@320..330 {
+        TokenOpenParen@320..321 "("
+        NodeSeqExpr@321..329 {
+          NodeInfixExpr@321..326 {
+            NodeNumLit@321..322 {
+              TokenNumLit@321..322 "1"
             }
-            TokenUnilineWhitespace@[518; 519) " "
-            TokenStar@[519; 520) "*"
-            TokenUnilineWhitespace@[520; 521) " "
-            NodeNumLit@[521; 522) {
-              TokenNumLit@[521; 522) "2"
+            TokenUnilineWhitespace@322..323 " "
+            TokenCaret@323..324 "^"
+            TokenUnilineWhitespace@324..325 " "
+            NodeNumLit@325..326 {
+              TokenNumLit@325..326 "2"
             }
           }
-          TokenComa@[522; 523) ","
-          TokenUnilineWhitespace@[523; 524) " "
-          NodeNumLit@[524; 525) {
-            TokenNumLit@[524; 525) "3"
+          TokenComa@326..327 ","
+          TokenUnilineWhitespace@327..328 " "
+          NodeNumLit@328..329 {
+            TokenNumLit@328..329 "3"
           }
         }
-        TokenCloseParen@[525; 526) ")"
+        TokenCloseParen@329..330 ")"
       }
     }
-    TokenSemicolon@[526; 527) ";"
+    TokenSemicolon@330..331 ";"
   }
-  TokenMultilineWhitespace@[527; 528) "\n"
-  NodeExprStmt@[528; 546) {
-    NodeAssignExpr@[528; 545) {
-      NodeIdent@[528; 529) {
-        TokenIdent@[528; 529) "x"
+  TokenMultilineWhitespace@331..332 "\n"
+  NodeExprStmt@332..347 {
+    NodeAssignExpr@332..346 {
+      NodeIdent@332..333 {
+        TokenIdent@332..333 "x"
       }
-      TokenUnilineWhitespace@[529; 530) " "
-      TokenEq@[530; 531) "="
-      TokenUnilineWhitespace@[531; 532) " "
-      NodeParenExpr@[532; 545) {
-        TokenOpenParen@[532; 533) "("
-        NodeSeqExpr@[533; 544) {
-          NodeNumLit@[533; 534) {
-            TokenNumLit@[533; 534) "1"
+      TokenUnilineWhitespace@333..334 " "
+      TokenEq@334..335 "="
+      TokenUnilineWhitespace@335..336 " "
+      NodeParenExpr@336..346 {
+        TokenOpenParen@336..337 "("
+        NodeSeqExpr@337..345 {
+          NodeNumLit@337..338 {
+            TokenNumLit@337..338 "1"
           }
-          TokenComa@[534; 535) ","
-          TokenUnilineWhitespace@[535; 536) " "
-          NodePrefixExpr@[536; 544) {
-            TokenDelete@[536; 542) "delete"
-            TokenUnilineWhitespace@[542; 543) " "
-            NodeIdent@[543; 544) {
-              TokenIdent@[543; 544) "z"
+          TokenComa@338..339 ","
+          TokenUnilineWhitespace@339..340 " "
+          NodeInfixExpr@340..345 {
+            NodeNumLit@340..341 {
+              TokenNumLit@340..341 "2"
             }
-          }
-        }
-        TokenCloseParen@[544; 545) ")"
-      }
-    }
-    TokenSemicolon@[545; 546) ";"
-  }
-  TokenMultilineWhitespace@[546; 547) "\n"
-  NodeExprStmt@[547; 565) {
-    NodeAssignExpr@[547; 564) {
-      NodeIdent@[547; 548) {
-        TokenIdent@[547; 548) "x"
-      }
-      TokenUnilineWhitespace@[548; 549) " "
-      TokenEq@[549; 550) "="
-      TokenUnilineWhitespace@[550; 551) " "
-      NodeParenExpr@[551; 564) {
-        TokenOpenParen@[551; 552) "("
-        NodeSeqExpr@[552; 563) {
-          NodePrefixExpr@[552; 560) {
-            TokenDelete@[552; 558) "delete"
-            TokenUnilineWhitespace@[558; 559) " "
-            NodeIdent@[559; 560) {
-              TokenIdent@[559; 560) "z"
-            }
-          }
-          TokenComa@[560; 561) ","
-          TokenUnilineWhitespace@[561; 562) " "
-          NodeNumLit@[562; 563) {
-            TokenNumLit@[562; 563) "2"
-          }
-        }
-        TokenCloseParen@[563; 564) ")"
-      }
-    }
-    TokenSemicolon@[564; 565) ";"
-  }
-  TokenMultilineWhitespace@[565; 566) "\n"
-  NodeExprStmt@[566; 578) {
-    NodeAssignExpr@[566; 577) {
-      NodeIdent@[566; 567) {
-        TokenIdent@[566; 567) "x"
-      }
-      TokenUnilineWhitespace@[567; 568) " "
-      TokenEq@[568; 569) "="
-      TokenUnilineWhitespace@[569; 570) " "
-      NodeParenExpr@[570; 577) {
-        TokenOpenParen@[570; 571) "("
-        NodeSeqExpr@[571; 576) {
-          NodeNumLit@[571; 572) {
-            TokenNumLit@[571; 572) "1"
-          }
-          TokenComa@[572; 573) ","
-          TokenUnilineWhitespace@[573; 574) " "
-          NodePrefixExpr@[574; 576) {
-            TokenPlus@[574; 575) "+"
-            NodeNumLit@[575; 576) {
-              TokenNumLit@[575; 576) "2"
+            TokenUnilineWhitespace@341..342 " "
+            TokenAmp@342..343 "&"
+            TokenUnilineWhitespace@343..344 " "
+            NodeNumLit@344..345 {
+              TokenNumLit@344..345 "3"
             }
           }
         }
-        TokenCloseParen@[576; 577) ")"
+        TokenCloseParen@345..346 ")"
       }
     }
-    TokenSemicolon@[577; 578) ";"
+    TokenSemicolon@346..347 ";"
   }
-  TokenMultilineWhitespace@[578; 579) "\n"
-  NodeExprStmt@[579; 591) {
-    NodeAssignExpr@[579; 590) {
-      NodeIdent@[579; 580) {
-        TokenIdent@[579; 580) "x"
+  TokenMultilineWhitespace@347..348 "\n"
+  NodeExprStmt@348..363 {
+    NodeAssignExpr@348..362 {
+      NodeIdent@348..349 {
+        TokenIdent@348..349 "x"
       }
-      TokenUnilineWhitespace@[580; 581) " "
-      TokenEq@[581; 582) "="
-      TokenUnilineWhitespace@[582; 583) " "
-      NodeParenExpr@[583; 590) {
-        TokenOpenParen@[583; 584) "("
-        NodeSeqExpr@[584; 589) {
-          NodePrefixExpr@[584; 586) {
-            TokenPlus@[584; 585) "+"
-            NodeNumLit@[585; 586) {
-              TokenNumLit@[585; 586) "1"
+      TokenUnilineWhitespace@349..350 " "
+      TokenEq@350..351 "="
+      TokenUnilineWhitespace@351..352 " "
+      NodeParenExpr@352..362 {
+        TokenOpenParen@352..353 "("
+        NodeSeqExpr@353..361 {
+          NodeInfixExpr@353..358 {
+            NodeNumLit@353..354 {
+              TokenNumLit@353..354 "1"
+            }
+            TokenUnilineWhitespace@354..355 " "
+            TokenAmp@355..356 "&"
+            TokenUnilineWhitespace@356..357 " "
+            NodeNumLit@357..358 {
+              TokenNumLit@357..358 "2"
             }
           }
-          TokenComa@[586; 587) ","
-          TokenUnilineWhitespace@[587; 588) " "
-          NodeNumLit@[588; 589) {
-            TokenNumLit@[588; 589) "2"
+          TokenComa@358..359 ","
+          TokenUnilineWhitespace@359..360 " "
+          NodeNumLit@360..361 {
+            TokenNumLit@360..361 "3"
           }
         }
-        TokenCloseParen@[589; 590) ")"
+        TokenCloseParen@361..362 ")"
       }
     }
-    TokenSemicolon@[590; 591) ";"
+    TokenSemicolon@362..363 ";"
   }
-  TokenMultilineWhitespace@[591; 592) "\n"
-  NodeExprStmt@[592; 605) {
-    NodeAssignExpr@[592; 604) {
-      NodeIdent@[592; 593) {
-        TokenIdent@[592; 593) "x"
+  TokenMultilineWhitespace@363..364 "\n"
+  NodeExprStmt@364..380 {
+    NodeAssignExpr@364..379 {
+      NodeIdent@364..365 {
+        TokenIdent@364..365 "x"
       }
-      TokenUnilineWhitespace@[593; 594) " "
-      TokenEq@[594; 595) "="
-      TokenUnilineWhitespace@[595; 596) " "
-      NodeParenExpr@[596; 604) {
-        TokenOpenParen@[596; 597) "("
-        NodeSeqExpr@[597; 603) {
-          NodeNumLit@[597; 598) {
-            TokenNumLit@[597; 598) "1"
+      TokenUnilineWhitespace@365..366 " "
+      TokenEq@366..367 "="
+      TokenUnilineWhitespace@367..368 " "
+      NodeParenExpr@368..379 {
+        TokenOpenParen@368..369 "("
+        NodeSeqExpr@369..378 {
+          NodeNumLit@369..370 {
+            TokenNumLit@369..370 "1"
           }
-          TokenComa@[598; 599) ","
-          TokenUnilineWhitespace@[599; 600) " "
-          NodePrefixExpr@[600; 603) {
-            TokenPlusPlus@[600; 602) "++"
-            NodeIdent@[602; 603) {
-              TokenIdent@[602; 603) "x"
+          TokenComa@370..371 ","
+          TokenUnilineWhitespace@371..372 " "
+          NodeInfixExpr@372..378 {
+            NodeNumLit@372..373 {
+              TokenNumLit@372..373 "2"
             }
-          }
-        }
-        TokenCloseParen@[603; 604) ")"
-      }
-    }
-    TokenSemicolon@[604; 605) ";"
-  }
-  TokenMultilineWhitespace@[605; 606) "\n"
-  NodeExprStmt@[606; 619) {
-    NodeAssignExpr@[606; 618) {
-      NodeIdent@[606; 607) {
-        TokenIdent@[606; 607) "x"
-      }
-      TokenUnilineWhitespace@[607; 608) " "
-      TokenEq@[608; 609) "="
-      TokenUnilineWhitespace@[609; 610) " "
-      NodeParenExpr@[610; 618) {
-        TokenOpenParen@[610; 611) "("
-        NodeSeqExpr@[611; 617) {
-          NodePrefixExpr@[611; 614) {
-            TokenPlusPlus@[611; 613) "++"
-            NodeIdent@[613; 614) {
-              TokenIdent@[613; 614) "x"
-            }
-          }
-          TokenComa@[614; 615) ","
-          TokenUnilineWhitespace@[615; 616) " "
-          NodeNumLit@[616; 617) {
-            TokenNumLit@[616; 617) "2"
-          }
-        }
-        TokenCloseParen@[617; 618) ")"
-      }
-    }
-    TokenSemicolon@[618; 619) ";"
-  }
-  TokenMultilineWhitespace@[619; 620) "\n"
-  NodeExprStmt@[620; 633) {
-    NodeAssignExpr@[620; 632) {
-      NodeIdent@[620; 621) {
-        TokenIdent@[620; 621) "x"
-      }
-      TokenUnilineWhitespace@[621; 622) " "
-      TokenEq@[622; 623) "="
-      TokenUnilineWhitespace@[623; 624) " "
-      NodeParenExpr@[624; 632) {
-        TokenOpenParen@[624; 625) "("
-        NodeSeqExpr@[625; 631) {
-          NodeNumLit@[625; 626) {
-            TokenNumLit@[625; 626) "1"
-          }
-          TokenComa@[626; 627) ","
-          TokenUnilineWhitespace@[627; 628) " "
-          NodePostfixExpr@[628; 631) {
-            NodeIdent@[628; 629) {
-              TokenIdent@[628; 629) "x"
-            }
-            TokenPlusPlus@[629; 631) "++"
-          }
-        }
-        TokenCloseParen@[631; 632) ")"
-      }
-    }
-    TokenSemicolon@[632; 633) ";"
-  }
-  TokenMultilineWhitespace@[633; 634) "\n"
-  NodeExprStmt@[634; 647) {
-    NodeAssignExpr@[634; 646) {
-      NodeIdent@[634; 635) {
-        TokenIdent@[634; 635) "x"
-      }
-      TokenUnilineWhitespace@[635; 636) " "
-      TokenEq@[636; 637) "="
-      TokenUnilineWhitespace@[637; 638) " "
-      NodeParenExpr@[638; 646) {
-        TokenOpenParen@[638; 639) "("
-        NodeSeqExpr@[639; 645) {
-          NodePostfixExpr@[639; 642) {
-            NodeIdent@[639; 640) {
-              TokenIdent@[639; 640) "x"
-            }
-            TokenPlusPlus@[640; 642) "++"
-          }
-          TokenComa@[642; 643) ","
-          TokenUnilineWhitespace@[643; 644) " "
-          NodeNumLit@[644; 645) {
-            TokenNumLit@[644; 645) "2"
-          }
-        }
-        TokenCloseParen@[645; 646) ")"
-      }
-    }
-    TokenSemicolon@[646; 647) ";"
-  }
-  TokenMultilineWhitespace@[647; 648) "\n"
-  NodeExprStmt@[648; 663) {
-    NodeAssignExpr@[648; 662) {
-      NodeIdent@[648; 649) {
-        TokenIdent@[648; 649) "x"
-      }
-      TokenUnilineWhitespace@[649; 650) " "
-      TokenEq@[650; 651) "="
-      TokenUnilineWhitespace@[651; 652) " "
-      NodeParenExpr@[652; 662) {
-        TokenOpenParen@[652; 653) "("
-        NodeSeqExpr@[653; 661) {
-          NodeNumLit@[653; 654) {
-            TokenNumLit@[653; 654) "1"
-          }
-          TokenComa@[654; 655) ","
-          TokenUnilineWhitespace@[655; 656) " "
-          NodeIdentMemberExpr@[656; 661) {
-            NodeIdent@[656; 657) {
-              TokenIdent@[656; 657) "o"
-            }
-            TokenDot@[657; 658) "."
-            NodeIdent@[658; 661) {
-              TokenIdent@[658; 661) "foo"
+            TokenUnilineWhitespace@373..374 " "
+            TokenEqEq@374..376 "=="
+            TokenUnilineWhitespace@376..377 " "
+            NodeNumLit@377..378 {
+              TokenNumLit@377..378 "3"
             }
           }
         }
-        TokenCloseParen@[661; 662) ")"
+        TokenCloseParen@378..379 ")"
       }
     }
-    TokenSemicolon@[662; 663) ";"
+    TokenSemicolon@379..380 ";"
   }
-  TokenMultilineWhitespace@[663; 664) "\n"
-  NodeExprStmt@[664; 679) {
-    NodeAssignExpr@[664; 678) {
-      NodeIdent@[664; 665) {
-        TokenIdent@[664; 665) "x"
+  TokenMultilineWhitespace@380..381 "\n"
+  NodeExprStmt@381..397 {
+    NodeAssignExpr@381..396 {
+      NodeIdent@381..382 {
+        TokenIdent@381..382 "x"
       }
-      TokenUnilineWhitespace@[665; 666) " "
-      TokenEq@[666; 667) "="
-      TokenUnilineWhitespace@[667; 668) " "
-      NodeParenExpr@[668; 678) {
-        TokenOpenParen@[668; 669) "("
-        NodeSeqExpr@[669; 677) {
-          NodeIdentMemberExpr@[669; 674) {
-            NodeIdent@[669; 670) {
-              TokenIdent@[669; 670) "o"
+      TokenUnilineWhitespace@382..383 " "
+      TokenEq@383..384 "="
+      TokenUnilineWhitespace@384..385 " "
+      NodeParenExpr@385..396 {
+        TokenOpenParen@385..386 "("
+        NodeSeqExpr@386..395 {
+          NodeInfixExpr@386..392 {
+            NodeNumLit@386..387 {
+              TokenNumLit@386..387 "1"
             }
-            TokenDot@[670; 671) "."
-            NodeIdent@[671; 674) {
-              TokenIdent@[671; 674) "foo"
+            TokenUnilineWhitespace@387..388 " "
+            TokenEqEq@388..390 "=="
+            TokenUnilineWhitespace@390..391 " "
+            NodeNumLit@391..392 {
+              TokenNumLit@391..392 "2"
             }
           }
-          TokenComa@[674; 675) ","
-          TokenUnilineWhitespace@[675; 676) " "
-          NodeNumLit@[676; 677) {
-            TokenNumLit@[676; 677) "2"
+          TokenComa@392..393 ","
+          TokenUnilineWhitespace@393..394 " "
+          NodeNumLit@394..395 {
+            TokenNumLit@394..395 "3"
           }
         }
-        TokenCloseParen@[677; 678) ")"
+        TokenCloseParen@395..396 ")"
       }
     }
-    TokenSemicolon@[678; 679) ";"
+    TokenSemicolon@396..397 ";"
   }
-  TokenMultilineWhitespace@[679; 680) "\n"
-  NodeExprStmt@[680; 698) {
-    NodeAssignExpr@[680; 697) {
-      NodeIdent@[680; 681) {
-        TokenIdent@[680; 681) "x"
+  TokenMultilineWhitespace@397..398 "\n"
+  NodeExprStmt@398..413 {
+    NodeAssignExpr@398..412 {
+      NodeIdent@398..399 {
+        TokenIdent@398..399 "x"
       }
-      TokenUnilineWhitespace@[681; 682) " "
-      TokenEq@[682; 683) "="
-      TokenUnilineWhitespace@[683; 684) " "
-      NodeParenExpr@[684; 697) {
-        TokenOpenParen@[684; 685) "("
-        NodeSeqExpr@[685; 696) {
-          NodeNumLit@[685; 686) {
-            TokenNumLit@[685; 686) "1"
+      TokenUnilineWhitespace@399..400 " "
+      TokenEq@400..401 "="
+      TokenUnilineWhitespace@401..402 " "
+      NodeParenExpr@402..412 {
+        TokenOpenParen@402..403 "("
+        NodeSeqExpr@403..411 {
+          NodeNumLit@403..404 {
+            TokenNumLit@403..404 "1"
           }
-          TokenComa@[686; 687) ","
-          TokenUnilineWhitespace@[687; 688) " "
-          NodeComputedMemberExpr@[688; 696) {
-            NodeIdent@[688; 689) {
-              TokenIdent@[688; 689) "o"
+          TokenComa@404..405 ","
+          TokenUnilineWhitespace@405..406 " "
+          NodeInfixExpr@406..411 {
+            NodeNumLit@406..407 {
+              TokenNumLit@406..407 "2"
             }
-            TokenOpenBracket@[689; 690) "["
-            NodeStrLit@[690; 695) {
-              TokenStrLit@[690; 695) "\"foo\""
+            TokenUnilineWhitespace@407..408 " "
+            TokenLt@408..409 "<"
+            TokenUnilineWhitespace@409..410 " "
+            NodeNumLit@410..411 {
+              TokenNumLit@410..411 "3"
             }
-            TokenCloseBracket@[695; 696) "]"
           }
         }
-        TokenCloseParen@[696; 697) ")"
+        TokenCloseParen@411..412 ")"
       }
     }
-    TokenSemicolon@[697; 698) ";"
+    TokenSemicolon@412..413 ";"
   }
-  TokenMultilineWhitespace@[698; 699) "\n"
-  NodeExprStmt@[699; 717) {
-    NodeAssignExpr@[699; 716) {
-      NodeIdent@[699; 700) {
-        TokenIdent@[699; 700) "x"
+  TokenMultilineWhitespace@413..414 "\n"
+  NodeExprStmt@414..429 {
+    NodeAssignExpr@414..428 {
+      NodeIdent@414..415 {
+        TokenIdent@414..415 "x"
       }
-      TokenUnilineWhitespace@[700; 701) " "
-      TokenEq@[701; 702) "="
-      TokenUnilineWhitespace@[702; 703) " "
-      NodeParenExpr@[703; 716) {
-        TokenOpenParen@[703; 704) "("
-        NodeSeqExpr@[704; 715) {
-          NodeComputedMemberExpr@[704; 712) {
-            NodeIdent@[704; 705) {
-              TokenIdent@[704; 705) "o"
+      TokenUnilineWhitespace@415..416 " "
+      TokenEq@416..417 "="
+      TokenUnilineWhitespace@417..418 " "
+      NodeParenExpr@418..428 {
+        TokenOpenParen@418..419 "("
+        NodeSeqExpr@419..427 {
+          NodeInfixExpr@419..424 {
+            NodeNumLit@419..420 {
+              TokenNumLit@419..420 "1"
             }
-            TokenOpenBracket@[705; 706) "["
-            NodeStrLit@[706; 711) {
-              TokenStrLit@[706; 711) "\"foo\""
+            TokenUnilineWhitespace@420..421 " "
+            TokenLt@421..422 "<"
+            TokenUnilineWhitespace@422..423 " "
+            NodeNumLit@423..424 {
+              TokenNumLit@423..424 "2"
             }
-            TokenCloseBracket@[711; 712) "]"
           }
-          TokenComa@[712; 713) ","
-          TokenUnilineWhitespace@[713; 714) " "
-          NodeNumLit@[714; 715) {
-            TokenNumLit@[714; 715) "2"
+          TokenComa@424..425 ","
+          TokenUnilineWhitespace@425..426 " "
+          NodeNumLit@426..427 {
+            TokenNumLit@426..427 "3"
           }
         }
-        TokenCloseParen@[715; 716) ")"
+        TokenCloseParen@427..428 ")"
       }
     }
-    TokenSemicolon@[716; 717) ";"
+    TokenSemicolon@428..429 ";"
   }
-  TokenMultilineWhitespace@[717; 718) "\n"
-  NodeExprStmt@[718; 731) {
-    NodeAssignExpr@[718; 730) {
-      NodeIdent@[718; 719) {
-        TokenIdent@[718; 719) "x"
+  TokenMultilineWhitespace@429..430 "\n"
+  NodeExprStmt@430..446 {
+    NodeAssignExpr@430..445 {
+      NodeIdent@430..431 {
+        TokenIdent@430..431 "x"
       }
-      TokenUnilineWhitespace@[719; 720) " "
-      TokenEq@[720; 721) "="
-      TokenUnilineWhitespace@[721; 722) " "
-      NodeParenExpr@[722; 730) {
-        TokenOpenParen@[722; 723) "("
-        NodeSeqExpr@[723; 729) {
-          NodeNumLit@[723; 724) {
-            TokenNumLit@[723; 724) "1"
+      TokenUnilineWhitespace@431..432 " "
+      TokenEq@432..433 "="
+      TokenUnilineWhitespace@433..434 " "
+      NodeParenExpr@434..445 {
+        TokenOpenParen@434..435 "("
+        NodeSeqExpr@435..444 {
+          NodeNumLit@435..436 {
+            TokenNumLit@435..436 "1"
           }
-          TokenComa@[724; 725) ","
-          TokenUnilineWhitespace@[725; 726) " "
-          NodeParenExpr@[726; 729) {
-            TokenOpenParen@[726; 727) "("
-            NodeNumLit@[727; 728) {
-              TokenNumLit@[727; 728) "2"
+          TokenComa@436..437 ","
+          TokenUnilineWhitespace@437..438 " "
+          NodeInfixExpr@438..444 {
+            NodeNumLit@438..439 {
+              TokenNumLit@438..439 "2"
             }
-            TokenCloseParen@[728; 729) ")"
-          }
-        }
-        TokenCloseParen@[729; 730) ")"
-      }
-    }
-    TokenSemicolon@[730; 731) ";"
-  }
-  TokenMultilineWhitespace@[731; 732) "\n"
-  NodeExprStmt@[732; 745) {
-    NodeAssignExpr@[732; 744) {
-      NodeIdent@[732; 733) {
-        TokenIdent@[732; 733) "x"
-      }
-      TokenUnilineWhitespace@[733; 734) " "
-      TokenEq@[734; 735) "="
-      TokenUnilineWhitespace@[735; 736) " "
-      NodeParenExpr@[736; 744) {
-        TokenOpenParen@[736; 737) "("
-        NodeSeqExpr@[737; 743) {
-          NodeParenExpr@[737; 740) {
-            TokenOpenParen@[737; 738) "("
-            NodeNumLit@[738; 739) {
-              TokenNumLit@[738; 739) "1"
+            TokenUnilineWhitespace@439..440 " "
+            TokenLtLt@440..442 "<<"
+            TokenUnilineWhitespace@442..443 " "
+            NodeNumLit@443..444 {
+              TokenNumLit@443..444 "3"
             }
-            TokenCloseParen@[739; 740) ")"
-          }
-          TokenComa@[740; 741) ","
-          TokenUnilineWhitespace@[741; 742) " "
-          NodeNumLit@[742; 743) {
-            TokenNumLit@[742; 743) "2"
           }
         }
-        TokenCloseParen@[743; 744) ")"
+        TokenCloseParen@444..445 ")"
       }
     }
-    TokenSemicolon@[744; 745) ";"
+    TokenSemicolon@445..446 ";"
   }
-  TokenMultilineWhitespace@[745; 746) "\n"
-  NodeExprStmt@[746; 757) {
-    NodeAssignExpr@[746; 756) {
-      NodeIdent@[746; 747) {
-        TokenIdent@[746; 747) "x"
+  TokenMultilineWhitespace@446..447 "\n"
+  NodeExprStmt@447..463 {
+    NodeAssignExpr@447..462 {
+      NodeIdent@447..448 {
+        TokenIdent@447..448 "x"
       }
-      TokenUnilineWhitespace@[747; 748) " "
-      TokenEq@[748; 749) "="
-      TokenUnilineWhitespace@[749; 750) " "
-      NodeParenExpr@[750; 756) {
-        TokenOpenParen@[750; 751) "("
-        NodeSeqExpr@[751; 755) {
-          NodeNumLit@[751; 752) {
-            TokenNumLit@[751; 752) "1"
+      TokenUnilineWhitespace@448..449 " "
+      TokenEq@449..450 "="
+      TokenUnilineWhitespace@450..451 " "
+      NodeParenExpr@451..462 {
+        TokenOpenParen@451..452 "("
+        NodeSeqExpr@452..461 {
+          NodeInfixExpr@452..458 {
+            NodeNumLit@452..453 {
+              TokenNumLit@452..453 "1"
+            }
+            TokenUnilineWhitespace@453..454 " "
+            TokenLtLt@454..456 "<<"
+            TokenUnilineWhitespace@456..457 " "
+            NodeNumLit@457..458 {
+              TokenNumLit@457..458 "2"
+            }
           }
-          TokenComa@[752; 753) ","
-          TokenUnilineWhitespace@[753; 754) " "
-          NodeIdent@[754; 755) {
-            TokenIdent@[754; 755) "y"
+          TokenComa@458..459 ","
+          TokenUnilineWhitespace@459..460 " "
+          NodeNumLit@460..461 {
+            TokenNumLit@460..461 "3"
           }
         }
-        TokenCloseParen@[755; 756) ")"
+        TokenCloseParen@461..462 ")"
       }
     }
-    TokenSemicolon@[756; 757) ";"
+    TokenSemicolon@462..463 ";"
   }
-  TokenMultilineWhitespace@[757; 758) "\n"
-  NodeExprStmt@[758; 769) {
-    NodeAssignExpr@[758; 768) {
-      NodeIdent@[758; 759) {
-        TokenIdent@[758; 759) "x"
+  TokenMultilineWhitespace@463..464 "\n"
+  NodeExprStmt@464..479 {
+    NodeAssignExpr@464..478 {
+      NodeIdent@464..465 {
+        TokenIdent@464..465 "x"
       }
-      TokenUnilineWhitespace@[759; 760) " "
-      TokenEq@[760; 761) "="
-      TokenUnilineWhitespace@[761; 762) " "
-      NodeParenExpr@[762; 768) {
-        TokenOpenParen@[762; 763) "("
-        NodeSeqExpr@[763; 767) {
-          NodeIdent@[763; 764) {
-            TokenIdent@[763; 764) "y"
+      TokenUnilineWhitespace@465..466 " "
+      TokenEq@466..467 "="
+      TokenUnilineWhitespace@467..468 " "
+      NodeParenExpr@468..478 {
+        TokenOpenParen@468..469 "("
+        NodeSeqExpr@469..477 {
+          NodeNumLit@469..470 {
+            TokenNumLit@469..470 "1"
           }
-          TokenComa@[764; 765) ","
-          TokenUnilineWhitespace@[765; 766) " "
-          NodeNumLit@[766; 767) {
-            TokenNumLit@[766; 767) "2"
+          TokenComa@470..471 ","
+          TokenUnilineWhitespace@471..472 " "
+          NodeInfixExpr@472..477 {
+            NodeNumLit@472..473 {
+              TokenNumLit@472..473 "2"
+            }
+            TokenUnilineWhitespace@473..474 " "
+            TokenPlus@474..475 "+"
+            TokenUnilineWhitespace@475..476 " "
+            NodeNumLit@476..477 {
+              TokenNumLit@476..477 "4"
+            }
           }
         }
-        TokenCloseParen@[767; 768) ")"
+        TokenCloseParen@477..478 ")"
       }
     }
-    TokenSemicolon@[768; 769) ";"
+    TokenSemicolon@478..479 ";"
   }
-  TokenMultilineWhitespace@[769; 771) "\n\n"
-  NodeExprStmt@[771; 786) {
-    NodeAssignExpr@[771; 785) {
-      NodeIdent@[771; 772) {
-        TokenIdent@[771; 772) "x"
+  TokenMultilineWhitespace@479..480 "\n"
+  NodeExprStmt@480..495 {
+    NodeAssignExpr@480..494 {
+      NodeIdent@480..481 {
+        TokenIdent@480..481 "x"
       }
-      TokenUnilineWhitespace@[772; 773) " "
-      TokenEq@[773; 774) "="
-      TokenUnilineWhitespace@[774; 775) " "
-      NodeParenExpr@[775; 785) {
-        TokenOpenParen@[775; 776) "("
-        NodePrefixExpr@[776; 784) {
-          TokenPlusPlus@[776; 778) "++"
-          NodeParenExpr@[778; 784) {
-            TokenOpenParen@[778; 779) "("
-            NodeSeqExpr@[779; 783) {
-              NodeIdent@[779; 780) {
-                TokenIdent@[779; 780) "x"
+      TokenUnilineWhitespace@481..482 " "
+      TokenEq@482..483 "="
+      TokenUnilineWhitespace@483..484 " "
+      NodeParenExpr@484..494 {
+        TokenOpenParen@484..485 "("
+        NodeSeqExpr@485..493 {
+          NodeInfixExpr@485..490 {
+            NodeNumLit@485..486 {
+              TokenNumLit@485..486 "1"
+            }
+            TokenUnilineWhitespace@486..487 " "
+            TokenPlus@487..488 "+"
+            TokenUnilineWhitespace@488..489 " "
+            NodeNumLit@489..490 {
+              TokenNumLit@489..490 "2"
+            }
+          }
+          TokenComa@490..491 ","
+          TokenUnilineWhitespace@491..492 " "
+          NodeNumLit@492..493 {
+            TokenNumLit@492..493 "4"
+          }
+        }
+        TokenCloseParen@493..494 ")"
+      }
+    }
+    TokenSemicolon@494..495 ";"
+  }
+  TokenMultilineWhitespace@495..496 "\n"
+  NodeExprStmt@496..511 {
+    NodeAssignExpr@496..510 {
+      NodeIdent@496..497 {
+        TokenIdent@496..497 "x"
+      }
+      TokenUnilineWhitespace@497..498 " "
+      TokenEq@498..499 "="
+      TokenUnilineWhitespace@499..500 " "
+      NodeParenExpr@500..510 {
+        TokenOpenParen@500..501 "("
+        NodeSeqExpr@501..509 {
+          NodeNumLit@501..502 {
+            TokenNumLit@501..502 "1"
+          }
+          TokenComa@502..503 ","
+          TokenUnilineWhitespace@503..504 " "
+          NodeInfixExpr@504..509 {
+            NodeNumLit@504..505 {
+              TokenNumLit@504..505 "2"
+            }
+            TokenUnilineWhitespace@505..506 " "
+            TokenStar@506..507 "*"
+            TokenUnilineWhitespace@507..508 " "
+            NodeNumLit@508..509 {
+              TokenNumLit@508..509 "3"
+            }
+          }
+        }
+        TokenCloseParen@509..510 ")"
+      }
+    }
+    TokenSemicolon@510..511 ";"
+  }
+  TokenMultilineWhitespace@511..512 "\n"
+  NodeExprStmt@512..527 {
+    NodeAssignExpr@512..526 {
+      NodeIdent@512..513 {
+        TokenIdent@512..513 "x"
+      }
+      TokenUnilineWhitespace@513..514 " "
+      TokenEq@514..515 "="
+      TokenUnilineWhitespace@515..516 " "
+      NodeParenExpr@516..526 {
+        TokenOpenParen@516..517 "("
+        NodeSeqExpr@517..525 {
+          NodeInfixExpr@517..522 {
+            NodeNumLit@517..518 {
+              TokenNumLit@517..518 "1"
+            }
+            TokenUnilineWhitespace@518..519 " "
+            TokenStar@519..520 "*"
+            TokenUnilineWhitespace@520..521 " "
+            NodeNumLit@521..522 {
+              TokenNumLit@521..522 "2"
+            }
+          }
+          TokenComa@522..523 ","
+          TokenUnilineWhitespace@523..524 " "
+          NodeNumLit@524..525 {
+            TokenNumLit@524..525 "3"
+          }
+        }
+        TokenCloseParen@525..526 ")"
+      }
+    }
+    TokenSemicolon@526..527 ";"
+  }
+  TokenMultilineWhitespace@527..528 "\n"
+  NodeExprStmt@528..546 {
+    NodeAssignExpr@528..545 {
+      NodeIdent@528..529 {
+        TokenIdent@528..529 "x"
+      }
+      TokenUnilineWhitespace@529..530 " "
+      TokenEq@530..531 "="
+      TokenUnilineWhitespace@531..532 " "
+      NodeParenExpr@532..545 {
+        TokenOpenParen@532..533 "("
+        NodeSeqExpr@533..544 {
+          NodeNumLit@533..534 {
+            TokenNumLit@533..534 "1"
+          }
+          TokenComa@534..535 ","
+          TokenUnilineWhitespace@535..536 " "
+          NodePrefixExpr@536..544 {
+            TokenDelete@536..542 "delete"
+            TokenUnilineWhitespace@542..543 " "
+            NodeIdent@543..544 {
+              TokenIdent@543..544 "z"
+            }
+          }
+        }
+        TokenCloseParen@544..545 ")"
+      }
+    }
+    TokenSemicolon@545..546 ";"
+  }
+  TokenMultilineWhitespace@546..547 "\n"
+  NodeExprStmt@547..565 {
+    NodeAssignExpr@547..564 {
+      NodeIdent@547..548 {
+        TokenIdent@547..548 "x"
+      }
+      TokenUnilineWhitespace@548..549 " "
+      TokenEq@549..550 "="
+      TokenUnilineWhitespace@550..551 " "
+      NodeParenExpr@551..564 {
+        TokenOpenParen@551..552 "("
+        NodeSeqExpr@552..563 {
+          NodePrefixExpr@552..560 {
+            TokenDelete@552..558 "delete"
+            TokenUnilineWhitespace@558..559 " "
+            NodeIdent@559..560 {
+              TokenIdent@559..560 "z"
+            }
+          }
+          TokenComa@560..561 ","
+          TokenUnilineWhitespace@561..562 " "
+          NodeNumLit@562..563 {
+            TokenNumLit@562..563 "2"
+          }
+        }
+        TokenCloseParen@563..564 ")"
+      }
+    }
+    TokenSemicolon@564..565 ";"
+  }
+  TokenMultilineWhitespace@565..566 "\n"
+  NodeExprStmt@566..578 {
+    NodeAssignExpr@566..577 {
+      NodeIdent@566..567 {
+        TokenIdent@566..567 "x"
+      }
+      TokenUnilineWhitespace@567..568 " "
+      TokenEq@568..569 "="
+      TokenUnilineWhitespace@569..570 " "
+      NodeParenExpr@570..577 {
+        TokenOpenParen@570..571 "("
+        NodeSeqExpr@571..576 {
+          NodeNumLit@571..572 {
+            TokenNumLit@571..572 "1"
+          }
+          TokenComa@572..573 ","
+          TokenUnilineWhitespace@573..574 " "
+          NodePrefixExpr@574..576 {
+            TokenPlus@574..575 "+"
+            NodeNumLit@575..576 {
+              TokenNumLit@575..576 "2"
+            }
+          }
+        }
+        TokenCloseParen@576..577 ")"
+      }
+    }
+    TokenSemicolon@577..578 ";"
+  }
+  TokenMultilineWhitespace@578..579 "\n"
+  NodeExprStmt@579..591 {
+    NodeAssignExpr@579..590 {
+      NodeIdent@579..580 {
+        TokenIdent@579..580 "x"
+      }
+      TokenUnilineWhitespace@580..581 " "
+      TokenEq@581..582 "="
+      TokenUnilineWhitespace@582..583 " "
+      NodeParenExpr@583..590 {
+        TokenOpenParen@583..584 "("
+        NodeSeqExpr@584..589 {
+          NodePrefixExpr@584..586 {
+            TokenPlus@584..585 "+"
+            NodeNumLit@585..586 {
+              TokenNumLit@585..586 "1"
+            }
+          }
+          TokenComa@586..587 ","
+          TokenUnilineWhitespace@587..588 " "
+          NodeNumLit@588..589 {
+            TokenNumLit@588..589 "2"
+          }
+        }
+        TokenCloseParen@589..590 ")"
+      }
+    }
+    TokenSemicolon@590..591 ";"
+  }
+  TokenMultilineWhitespace@591..592 "\n"
+  NodeExprStmt@592..605 {
+    NodeAssignExpr@592..604 {
+      NodeIdent@592..593 {
+        TokenIdent@592..593 "x"
+      }
+      TokenUnilineWhitespace@593..594 " "
+      TokenEq@594..595 "="
+      TokenUnilineWhitespace@595..596 " "
+      NodeParenExpr@596..604 {
+        TokenOpenParen@596..597 "("
+        NodeSeqExpr@597..603 {
+          NodeNumLit@597..598 {
+            TokenNumLit@597..598 "1"
+          }
+          TokenComa@598..599 ","
+          TokenUnilineWhitespace@599..600 " "
+          NodePrefixExpr@600..603 {
+            TokenPlusPlus@600..602 "++"
+            NodeIdent@602..603 {
+              TokenIdent@602..603 "x"
+            }
+          }
+        }
+        TokenCloseParen@603..604 ")"
+      }
+    }
+    TokenSemicolon@604..605 ";"
+  }
+  TokenMultilineWhitespace@605..606 "\n"
+  NodeExprStmt@606..619 {
+    NodeAssignExpr@606..618 {
+      NodeIdent@606..607 {
+        TokenIdent@606..607 "x"
+      }
+      TokenUnilineWhitespace@607..608 " "
+      TokenEq@608..609 "="
+      TokenUnilineWhitespace@609..610 " "
+      NodeParenExpr@610..618 {
+        TokenOpenParen@610..611 "("
+        NodeSeqExpr@611..617 {
+          NodePrefixExpr@611..614 {
+            TokenPlusPlus@611..613 "++"
+            NodeIdent@613..614 {
+              TokenIdent@613..614 "x"
+            }
+          }
+          TokenComa@614..615 ","
+          TokenUnilineWhitespace@615..616 " "
+          NodeNumLit@616..617 {
+            TokenNumLit@616..617 "2"
+          }
+        }
+        TokenCloseParen@617..618 ")"
+      }
+    }
+    TokenSemicolon@618..619 ";"
+  }
+  TokenMultilineWhitespace@619..620 "\n"
+  NodeExprStmt@620..633 {
+    NodeAssignExpr@620..632 {
+      NodeIdent@620..621 {
+        TokenIdent@620..621 "x"
+      }
+      TokenUnilineWhitespace@621..622 " "
+      TokenEq@622..623 "="
+      TokenUnilineWhitespace@623..624 " "
+      NodeParenExpr@624..632 {
+        TokenOpenParen@624..625 "("
+        NodeSeqExpr@625..631 {
+          NodeNumLit@625..626 {
+            TokenNumLit@625..626 "1"
+          }
+          TokenComa@626..627 ","
+          TokenUnilineWhitespace@627..628 " "
+          NodePostfixExpr@628..631 {
+            NodeIdent@628..629 {
+              TokenIdent@628..629 "x"
+            }
+            TokenPlusPlus@629..631 "++"
+          }
+        }
+        TokenCloseParen@631..632 ")"
+      }
+    }
+    TokenSemicolon@632..633 ";"
+  }
+  TokenMultilineWhitespace@633..634 "\n"
+  NodeExprStmt@634..647 {
+    NodeAssignExpr@634..646 {
+      NodeIdent@634..635 {
+        TokenIdent@634..635 "x"
+      }
+      TokenUnilineWhitespace@635..636 " "
+      TokenEq@636..637 "="
+      TokenUnilineWhitespace@637..638 " "
+      NodeParenExpr@638..646 {
+        TokenOpenParen@638..639 "("
+        NodeSeqExpr@639..645 {
+          NodePostfixExpr@639..642 {
+            NodeIdent@639..640 {
+              TokenIdent@639..640 "x"
+            }
+            TokenPlusPlus@640..642 "++"
+          }
+          TokenComa@642..643 ","
+          TokenUnilineWhitespace@643..644 " "
+          NodeNumLit@644..645 {
+            TokenNumLit@644..645 "2"
+          }
+        }
+        TokenCloseParen@645..646 ")"
+      }
+    }
+    TokenSemicolon@646..647 ";"
+  }
+  TokenMultilineWhitespace@647..648 "\n"
+  NodeExprStmt@648..663 {
+    NodeAssignExpr@648..662 {
+      NodeIdent@648..649 {
+        TokenIdent@648..649 "x"
+      }
+      TokenUnilineWhitespace@649..650 " "
+      TokenEq@650..651 "="
+      TokenUnilineWhitespace@651..652 " "
+      NodeParenExpr@652..662 {
+        TokenOpenParen@652..653 "("
+        NodeSeqExpr@653..661 {
+          NodeNumLit@653..654 {
+            TokenNumLit@653..654 "1"
+          }
+          TokenComa@654..655 ","
+          TokenUnilineWhitespace@655..656 " "
+          NodeIdentMemberExpr@656..661 {
+            NodeIdent@656..657 {
+              TokenIdent@656..657 "o"
+            }
+            TokenDot@657..658 "."
+            NodeIdent@658..661 {
+              TokenIdent@658..661 "foo"
+            }
+          }
+        }
+        TokenCloseParen@661..662 ")"
+      }
+    }
+    TokenSemicolon@662..663 ";"
+  }
+  TokenMultilineWhitespace@663..664 "\n"
+  NodeExprStmt@664..679 {
+    NodeAssignExpr@664..678 {
+      NodeIdent@664..665 {
+        TokenIdent@664..665 "x"
+      }
+      TokenUnilineWhitespace@665..666 " "
+      TokenEq@666..667 "="
+      TokenUnilineWhitespace@667..668 " "
+      NodeParenExpr@668..678 {
+        TokenOpenParen@668..669 "("
+        NodeSeqExpr@669..677 {
+          NodeIdentMemberExpr@669..674 {
+            NodeIdent@669..670 {
+              TokenIdent@669..670 "o"
+            }
+            TokenDot@670..671 "."
+            NodeIdent@671..674 {
+              TokenIdent@671..674 "foo"
+            }
+          }
+          TokenComa@674..675 ","
+          TokenUnilineWhitespace@675..676 " "
+          NodeNumLit@676..677 {
+            TokenNumLit@676..677 "2"
+          }
+        }
+        TokenCloseParen@677..678 ")"
+      }
+    }
+    TokenSemicolon@678..679 ";"
+  }
+  TokenMultilineWhitespace@679..680 "\n"
+  NodeExprStmt@680..698 {
+    NodeAssignExpr@680..697 {
+      NodeIdent@680..681 {
+        TokenIdent@680..681 "x"
+      }
+      TokenUnilineWhitespace@681..682 " "
+      TokenEq@682..683 "="
+      TokenUnilineWhitespace@683..684 " "
+      NodeParenExpr@684..697 {
+        TokenOpenParen@684..685 "("
+        NodeSeqExpr@685..696 {
+          NodeNumLit@685..686 {
+            TokenNumLit@685..686 "1"
+          }
+          TokenComa@686..687 ","
+          TokenUnilineWhitespace@687..688 " "
+          NodeComputedMemberExpr@688..696 {
+            NodeIdent@688..689 {
+              TokenIdent@688..689 "o"
+            }
+            TokenOpenBracket@689..690 "["
+            NodeStrLit@690..695 {
+              TokenStrLit@690..695 "\"foo\""
+            }
+            TokenCloseBracket@695..696 "]"
+          }
+        }
+        TokenCloseParen@696..697 ")"
+      }
+    }
+    TokenSemicolon@697..698 ";"
+  }
+  TokenMultilineWhitespace@698..699 "\n"
+  NodeExprStmt@699..717 {
+    NodeAssignExpr@699..716 {
+      NodeIdent@699..700 {
+        TokenIdent@699..700 "x"
+      }
+      TokenUnilineWhitespace@700..701 " "
+      TokenEq@701..702 "="
+      TokenUnilineWhitespace@702..703 " "
+      NodeParenExpr@703..716 {
+        TokenOpenParen@703..704 "("
+        NodeSeqExpr@704..715 {
+          NodeComputedMemberExpr@704..712 {
+            NodeIdent@704..705 {
+              TokenIdent@704..705 "o"
+            }
+            TokenOpenBracket@705..706 "["
+            NodeStrLit@706..711 {
+              TokenStrLit@706..711 "\"foo\""
+            }
+            TokenCloseBracket@711..712 "]"
+          }
+          TokenComa@712..713 ","
+          TokenUnilineWhitespace@713..714 " "
+          NodeNumLit@714..715 {
+            TokenNumLit@714..715 "2"
+          }
+        }
+        TokenCloseParen@715..716 ")"
+      }
+    }
+    TokenSemicolon@716..717 ";"
+  }
+  TokenMultilineWhitespace@717..718 "\n"
+  NodeExprStmt@718..731 {
+    NodeAssignExpr@718..730 {
+      NodeIdent@718..719 {
+        TokenIdent@718..719 "x"
+      }
+      TokenUnilineWhitespace@719..720 " "
+      TokenEq@720..721 "="
+      TokenUnilineWhitespace@721..722 " "
+      NodeParenExpr@722..730 {
+        TokenOpenParen@722..723 "("
+        NodeSeqExpr@723..729 {
+          NodeNumLit@723..724 {
+            TokenNumLit@723..724 "1"
+          }
+          TokenComa@724..725 ","
+          TokenUnilineWhitespace@725..726 " "
+          NodeParenExpr@726..729 {
+            TokenOpenParen@726..727 "("
+            NodeNumLit@727..728 {
+              TokenNumLit@727..728 "2"
+            }
+            TokenCloseParen@728..729 ")"
+          }
+        }
+        TokenCloseParen@729..730 ")"
+      }
+    }
+    TokenSemicolon@730..731 ";"
+  }
+  TokenMultilineWhitespace@731..732 "\n"
+  NodeExprStmt@732..745 {
+    NodeAssignExpr@732..744 {
+      NodeIdent@732..733 {
+        TokenIdent@732..733 "x"
+      }
+      TokenUnilineWhitespace@733..734 " "
+      TokenEq@734..735 "="
+      TokenUnilineWhitespace@735..736 " "
+      NodeParenExpr@736..744 {
+        TokenOpenParen@736..737 "("
+        NodeSeqExpr@737..743 {
+          NodeParenExpr@737..740 {
+            TokenOpenParen@737..738 "("
+            NodeNumLit@738..739 {
+              TokenNumLit@738..739 "1"
+            }
+            TokenCloseParen@739..740 ")"
+          }
+          TokenComa@740..741 ","
+          TokenUnilineWhitespace@741..742 " "
+          NodeNumLit@742..743 {
+            TokenNumLit@742..743 "2"
+          }
+        }
+        TokenCloseParen@743..744 ")"
+      }
+    }
+    TokenSemicolon@744..745 ";"
+  }
+  TokenMultilineWhitespace@745..746 "\n"
+  NodeExprStmt@746..757 {
+    NodeAssignExpr@746..756 {
+      NodeIdent@746..747 {
+        TokenIdent@746..747 "x"
+      }
+      TokenUnilineWhitespace@747..748 " "
+      TokenEq@748..749 "="
+      TokenUnilineWhitespace@749..750 " "
+      NodeParenExpr@750..756 {
+        TokenOpenParen@750..751 "("
+        NodeSeqExpr@751..755 {
+          NodeNumLit@751..752 {
+            TokenNumLit@751..752 "1"
+          }
+          TokenComa@752..753 ","
+          TokenUnilineWhitespace@753..754 " "
+          NodeIdent@754..755 {
+            TokenIdent@754..755 "y"
+          }
+        }
+        TokenCloseParen@755..756 ")"
+      }
+    }
+    TokenSemicolon@756..757 ";"
+  }
+  TokenMultilineWhitespace@757..758 "\n"
+  NodeExprStmt@758..769 {
+    NodeAssignExpr@758..768 {
+      NodeIdent@758..759 {
+        TokenIdent@758..759 "x"
+      }
+      TokenUnilineWhitespace@759..760 " "
+      TokenEq@760..761 "="
+      TokenUnilineWhitespace@761..762 " "
+      NodeParenExpr@762..768 {
+        TokenOpenParen@762..763 "("
+        NodeSeqExpr@763..767 {
+          NodeIdent@763..764 {
+            TokenIdent@763..764 "y"
+          }
+          TokenComa@764..765 ","
+          TokenUnilineWhitespace@765..766 " "
+          NodeNumLit@766..767 {
+            TokenNumLit@766..767 "2"
+          }
+        }
+        TokenCloseParen@767..768 ")"
+      }
+    }
+    TokenSemicolon@768..769 ";"
+  }
+  TokenMultilineWhitespace@769..771 "\n\n"
+  NodeExprStmt@771..786 {
+    NodeAssignExpr@771..785 {
+      NodeIdent@771..772 {
+        TokenIdent@771..772 "x"
+      }
+      TokenUnilineWhitespace@772..773 " "
+      TokenEq@773..774 "="
+      TokenUnilineWhitespace@774..775 " "
+      NodeParenExpr@775..785 {
+        TokenOpenParen@775..776 "("
+        NodePrefixExpr@776..784 {
+          TokenPlusPlus@776..778 "++"
+          NodeParenExpr@778..784 {
+            TokenOpenParen@778..779 "("
+            NodeSeqExpr@779..783 {
+              NodeIdent@779..780 {
+                TokenIdent@779..780 "x"
               }
-              TokenComa@[780; 781) ","
-              TokenUnilineWhitespace@[781; 782) " "
-              NodeIdent@[782; 783) {
-                TokenIdent@[782; 783) "y"
+              TokenComa@780..781 ","
+              TokenUnilineWhitespace@781..782 " "
+              NodeIdent@782..783 {
+                TokenIdent@782..783 "y"
               }
             }
-            TokenCloseParen@[783; 784) ")"
+            TokenCloseParen@783..784 ")"
           }
         }
-        TokenCloseParen@[784; 785) ")"
+        TokenCloseParen@784..785 ")"
       }
     }
-    TokenSemicolon@[785; 786) ";"
+    TokenSemicolon@785..786 ";"
   }
-  TokenMultilineWhitespace@[786; 787) "\n"
+  TokenMultilineWhitespace@786..787 "\n"
 }

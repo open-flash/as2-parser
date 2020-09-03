@@ -16,14 +16,11 @@ name = "as2_parser"
 path = "src/lib.rs"
 
 [dependencies]
-rowan = "^0.9.1"
-serde = { version = "^1.0.104", features = ["derive"] }
-# TODO: Use regular dependency once the following issue is fixed:
-# https://github.com/XX/variant_count/pull/2
-variant_count = {git = "https://github.com/demurgos/variant_count.git", rev="820cfeb6ed6787d6aa827c82b4ef6e27f4b850f5"}
+rowan = "^0.10.0"
+serde = { version = "^1.0.115", features = ["derive"] }
 
 [dev-dependencies]
-serde_json = "^1.0.48"
+serde_json = "^1.0.57"
 test-generator = "^0.3.0"
 
 # [replace]

@@ -5,9 +5,9 @@ use std::borrow::Cow;
 use std::convert::TryFrom;
 use std::ops::{Deref, Range};
 use std::str::Chars;
-use variant_count::VariantCount;
+use std::marker::PhantomData;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, VariantCount)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u16)]
 pub enum SyntaxKind {
   /// Invalid token
@@ -285,7 +285,7 @@ impl TryFrom<u16> for SyntaxKind {
   type Error = ();
 
   fn try_from(value: u16) -> Result<Self, Self::Error> {
-    if usize::from(value) < SyntaxKind::VARIANT_COUNT {
+    if usize::from(value) < core::mem::variant_count::<SyntaxKind>() {
       Ok(unsafe { std::mem::transmute::<u16, SyntaxKind>(value) })
     } else {
       Err(())
@@ -486,9 +486,7 @@ impl TryFrom<SyntaxNode> for Script {
 impl traits::Script<ConcreteSyntax> for Script {
   #[cfg(not(feature = "gat"))]
   fn stmts<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Stmt>> + 'a> {
-    Box::new(ScriptStmts {
-      inner: self.syntax.children(),
-    })
+    Box::new(ScriptStmts::new(self.syntax.children()))
   }
 
   #[cfg(feature = "gat")]
@@ -496,18 +494,26 @@ impl traits::Script<ConcreteSyntax> for Script {
 
   #[cfg(feature = "gat")]
   fn stmts(&self) -> Self::Stmts<'_> {
+    ScriptStmts::new(self.syntax.children())
+  }
+}
+
+pub struct ScriptStmts<'a> {
+  inner: SyntaxNodeChildren<As2Lang>,
+  phantom: PhantomData<&'a ()>,
+}
+
+impl <'a> ScriptStmts<'a> {
+  pub fn new(inner: SyntaxNodeChildren<As2Lang>) -> Self {
     ScriptStmts {
-      inner: self.syntax.children(),
+      inner,
+      phantom: PhantomData,
     }
   }
 }
 
-pub struct ScriptStmts {
-  inner: SyntaxNodeChildren<As2Lang>,
-}
-
-impl Iterator for ScriptStmts {
-  type Item = traits::MaybeOwned<'static, Stmt>;
+impl<'a> Iterator for ScriptStmts<'a> {
+  type Item = traits::MaybeOwned<'a, Stmt>;
 
   fn next(&mut self) -> Option<Self::Item> {
     while let Some(node) = self.inner.next() {
@@ -805,7 +811,7 @@ impl CallExpr {
     nodes.next().unwrap(); // Skip callee
     let args: SyntaxNode = nodes.next().unwrap();
 
-    ExprIter { inner: args.children() }
+    ExprIter::new(args.children())
   }
 }
 
@@ -903,9 +909,7 @@ impl traits::SeqExpr for SeqExpr {
 
   #[cfg(not(feature = "gat"))]
   fn exprs<'a>(&'a self) -> Box<dyn Iterator<Item = traits::MaybeOwned<'a, Expr>> + 'a> {
-    Box::new(ExprIter {
-      inner: trim_paren(self.syntax.clone()).children(),
-    })
+    Box::new(ExprIter::new(trim_paren(self.syntax.clone()).children()))
   }
 
   #[cfg(feature = "gat")]
@@ -916,12 +920,22 @@ impl traits::SeqExpr for SeqExpr {
   }
 }
 
-pub struct ExprIter {
+pub struct ExprIter<'a> {
   inner: SyntaxNodeChildren<As2Lang>,
+  phantom: PhantomData<&'a ()>,
 }
 
-impl Iterator for ExprIter {
-  type Item = traits::MaybeOwned<'static, Expr>;
+impl <'a> ExprIter<'a> {
+  pub fn new(inner: SyntaxNodeChildren<As2Lang>) -> Self {
+    ExprIter {
+      inner,
+      phantom: PhantomData,
+    }
+  }
+}
+
+impl<'a> Iterator for ExprIter<'a> {
+  type Item = traits::MaybeOwned<'a, Expr>;
 
   fn next(&mut self) -> Option<Self::Item> {
     while let Some(node) = self.inner.next() {
@@ -1129,6 +1143,6 @@ mod tests {
 
   #[test]
   fn test_syntax_kind_variant_count() {
-    assert_eq!(SyntaxKind::VARIANT_COUNT, 75);
+    assert_eq!(core::mem::variant_count::<SyntaxKind>(), 75);
   }
 }

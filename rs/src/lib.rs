@@ -1,5 +1,5 @@
 #![cfg_attr(feature = "gat", allow(incomplete_features), feature(generic_associated_types))]
-#![cfg_attr(feature = "const_if_match", allow(incomplete_features), feature(const_if_match))]
+#![feature(variant_count)]
 
 #[macro_use]
 mod macros;
