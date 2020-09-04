@@ -1,4 +1,5 @@
 {
+  "type": "Script",
   "body": [
     {
       "type": "VarDecl"
@@ -81,44 +82,9 @@
           "exprs": [
             {
               "type": "ErrorExpr"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "ExprStmt",
-      "expr": {
-        "type": "AssignExpr",
-        "value": {
-          "type": "SeqExpr",
-          "exprs": [
-            {
-              "type": "ErrorExpr"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "ExprStmt",
-      "expr": {
-        "type": "AssignExpr",
-        "value": {
-          "type": "SeqExpr",
-          "exprs": [
-            {
-              "type": "ErrorExpr"
             },
             {
-              "type": "LogicalExpr",
-              "op": "&&",
-              "left": {
-                "type": "ErrorExpr"
-              },
-              "right": {
-                "type": "ErrorExpr"
-              }
+              "type": "ErrorExpr"
             }
           ]
         }
@@ -132,14 +98,7 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "LogicalExpr",
-              "op": "&&",
-              "left": {
-                "type": "ErrorExpr"
-              },
-              "right": {
-                "type": "ErrorExpr"
-              }
+              "type": "ErrorExpr"
             },
             {
               "type": "ErrorExpr"
@@ -207,7 +166,8 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "BinExpr",
+              "type": "LogicalExpr",
+              "op": "&&",
               "left": {
                 "type": "ErrorExpr"
               },
@@ -227,53 +187,8 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "BinExpr",
-              "left": {
-                "type": "ErrorExpr"
-              },
-              "right": {
-                "type": "ErrorExpr"
-              }
-            },
-            {
-              "type": "ErrorExpr"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "ExprStmt",
-      "expr": {
-        "type": "AssignExpr",
-        "value": {
-          "type": "SeqExpr",
-          "exprs": [
-            {
-              "type": "ErrorExpr"
-            },
-            {
-              "type": "BinExpr",
-              "left": {
-                "type": "ErrorExpr"
-              },
-              "right": {
-                "type": "ErrorExpr"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "ExprStmt",
-      "expr": {
-        "type": "AssignExpr",
-        "value": {
-          "type": "SeqExpr",
-          "exprs": [
-            {
-              "type": "BinExpr",
+              "type": "LogicalExpr",
+              "op": "&&",
               "left": {
                 "type": "ErrorExpr"
               },
@@ -575,6 +490,183 @@
               "type": "ErrorExpr"
             },
             {
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "BinExpr",
+              "left": {
+                "type": "ErrorExpr"
+              },
+              "right": {
+                "type": "ErrorExpr"
+              }
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
+              "type": "ErrorExpr"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ExprStmt",
+      "expr": {
+        "type": "AssignExpr",
+        "value": {
+          "type": "SeqExpr",
+          "exprs": [
+            {
+              "type": "ErrorExpr"
+            },
+            {
               "type": "ErrorExpr"
             }
           ]
@@ -709,62 +801,6 @@
           "exprs": [
             {
               "type": "ErrorExpr"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "ExprStmt",
-      "expr": {
-        "type": "AssignExpr",
-        "value": {
-          "type": "SeqExpr",
-          "exprs": [
-            {
-              "type": "ErrorExpr"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "ExprStmt",
-      "expr": {
-        "type": "AssignExpr",
-        "value": {
-          "type": "SeqExpr",
-          "exprs": [
-            {
-              "type": "ErrorExpr"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "ExprStmt",
-      "expr": {
-        "type": "AssignExpr",
-        "value": {
-          "type": "SeqExpr",
-          "exprs": [
-            {
-              "type": "ErrorExpr"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "ExprStmt",
-      "expr": {
-        "type": "AssignExpr",
-        "value": {
-          "type": "SeqExpr",
-          "exprs": [
-            {
-              "type": "ErrorExpr"
             },
             {
               "type": "ErrorExpr"
@@ -784,7 +820,8 @@
               "type": "ErrorExpr"
             },
             {
-              "type": "ErrorExpr"
+              "type": "IdentExpr",
+              "name": "y"
             }
           ]
         }
@@ -798,24 +835,8 @@
           "type": "SeqExpr",
           "exprs": [
             {
-              "type": "ErrorExpr"
-            },
-            {
-              "type": "IdentExpr"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "ExprStmt",
-      "expr": {
-        "type": "AssignExpr",
-        "value": {
-          "type": "SeqExpr",
-          "exprs": [
-            {
-              "type": "IdentExpr"
+              "type": "IdentExpr",
+              "name": "y"
             },
             {
               "type": "ErrorExpr"

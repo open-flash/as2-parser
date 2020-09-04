@@ -1,11 +1,13 @@
 {
+  "type": "Script",
   "body": [
     {
       "type": "ExprStmt",
       "expr": {
         "type": "CallExpr",
         "callee": {
-          "type": "IdentExpr"
+          "type": "IdentExpr",
+          "name": "trace"
         },
         "args": [
           {

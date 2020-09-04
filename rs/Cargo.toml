@@ -16,6 +16,7 @@ name = "as2_parser"
 path = "src/lib.rs"
 
 [dependencies]
+ordered-float = "^2.0.0"
 rowan = "^0.10.0"
 serde = { version = "^1.0.115", features = ["derive"] }
 

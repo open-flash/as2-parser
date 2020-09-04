@@ -1,22 +1,7 @@
 use crate::lexer::{Lexer, LexerToken};
 use crate::token_set::TokenSet;
-use crate::types::owned;
-use crate::types::syntax::{SyntaxKind, SyntaxNode};
+use crate::syntax::{SyntaxKind, SyntaxNode};
 use std::convert::TryFrom;
-
-// use crate::types::cast::ExprCast;
-//
-// struct OwnedAstBuilder {}
-//
-// impl OwnedAstBuilder {
-//   fn str_lit(value: String) -> owned::StrLit {
-//     owned::StrLit { _loc: (), _value: value }
-//   }
-//
-//   fn num_lit(value: f64) -> owned::NumLit {
-//     owned::NumLit { _loc: (), _value: value }
-//   }
-// }
 
 pub struct Parsed {
   green_node: rowan::GreenNode,
@@ -631,13 +616,6 @@ const EXPR_START: TokenSet = token_set!(
   SyntaxKind::TokenExcl
 );
 
-pub fn parse_script(_input: &str) -> owned::StrLit {
-  owned::StrLit {
-    loc: (),
-    value: String::new(),
-  }
-}
-
 // TODO: Rename to just `precedence`
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 enum InfixPrecedence {
@@ -684,7 +662,7 @@ impl TryFrom<SyntaxKind> for InfixPrecedence {
 #[cfg(test)]
 mod parser_tests {
   use crate::parser::parse;
-  use crate::types::syntax::SyntaxNode;
+  use crate::syntax::SyntaxNode;
   use ::test_generator::test_resources;
   use rowan::WalkEvent;
   use std::convert::TryFrom;
@@ -726,7 +704,7 @@ mod parser_tests {
 
     assert_eq!(&actual_cst_text, &cst_text);
 
-    let actual_ast = crate::types::syntax::Script::try_from(actual_cst).unwrap();
+    let actual_ast = crate::ast::concrete::Script::try_from(actual_cst).unwrap();
     let actual_ast_json = serde_json::to_string_pretty(&actual_ast).unwrap();
     fs::write(path.join("local-main.ast.json"), &actual_ast_json).unwrap();
     let expected_ast_json: String = fs::read_to_string(path.join("main.ast.json")).expect("Failed to read AST");

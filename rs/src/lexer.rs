@@ -1,6 +1,6 @@
 use std::str::Chars;
 
-use crate::types::syntax::SyntaxKind;
+use crate::syntax::SyntaxKind;
 use rowan::SmolStr;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]

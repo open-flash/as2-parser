@@ -1,4 +1,4 @@
-use crate::types::syntax::SyntaxKind;
+use crate::syntax::SyntaxKind;
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct TokenSet(u64);
